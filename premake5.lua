@@ -1,4 +1,4 @@
-NAME="mr"
+NAME="mrg"
 
 workspace (NAME)
    configurations { "Debug", "Release" }

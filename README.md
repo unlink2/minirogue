@@ -1,4 +1,4 @@
-# mr
+# mrg
 
 ## Table of content
 
@@ -19,7 +19,7 @@ make # to compile all targets
 
 ## Usage
 
-1) Rename `mr` to the project's name in all files and folders 
+1) Rename `mrg` to the project's name in all files and folders 
 
 ## License
 

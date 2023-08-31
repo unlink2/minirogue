@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "mr.h"
+#include "mrg.h"
 #include "argtable2.h"
 
 struct arg_lit *verb = NULL;
@@ -11,25 +11,25 @@ struct arg_lit *version = NULL;
 // arg end stores errors
 struct arg_end *end = NULL;
 
-#define mr_argtable                                                          \
+#define mrg_argtable                                                          \
   { help, version, verb, end, }
 
 
-void mr_args_free(void) {
-  void *argtable[] = mr_argtable;
+void mrg_args_free(void) {
+  void *argtable[] = mrg_argtable;
   arg_freetable(argtable, sizeof(argtable) / sizeof(argtable[0]));
 }
 
-void mr_args_parse(int argc, char **argv) {
+void mrg_args_parse(int argc, char **argv) {
   help = arg_litn(NULL, "help", 0, 1, "display this help and exit");
   version = arg_litn(NULL, "version", 0, 1, "display version info and exit");
   verb = arg_litn("v", "verbose", 0, 1, "verbose output");
   end = arg_end(20);
 
-  void *argtable[] = mr_argtable;
+  void *argtable[] = mrg_argtable;
 
   // output params
-  char progname[] = "mr";
+  char progname[] = "mrg";
   char short_desc[] = "";
 
   // version info
@@ -62,23 +62,23 @@ void mr_args_parse(int argc, char **argv) {
   }
 
 exit:
-  mr_args_free();
+  mrg_args_free();
   exit(exitcode); // NOLINT
 }
 
 
 
 int main(int argc, char **argv) {
-  mr_args_parse(argc, argv);
+  mrg_args_parse(argc, argv);
   
   // map args to cfg here 
-  struct mr_config cfg;
+  struct mrg_config cfg;
   memset(&cfg, 0, sizeof(cfg));
 
   cfg.verbose = verb->count > 0;
 
-  int res = mr_main(&cfg);
+  int res = mrg_main(&cfg);
 
-  mr_args_free();
+  mrg_args_free();
   return res;
 }

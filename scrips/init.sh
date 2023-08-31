@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # rename to project specific values
-NAME="mr"
-CONST="MR"
-STRUCT="Mr"
-FN="mr"
+NAME="mrg"
+CONST="MRG"
+STRUCT="Mrg"
+FN="mrg"
 
 # will be replaced
-MR_NAME="mr"
-MR_STRUCT="Mr"
-MR_CONST="MR"
-MR_FN="mr"
+MR_NAME="mrg"
+MR_STRUCT="Mrg"
+MR_CONST="MRG"
+MR_FN="mrg"
 
 function replace() {
 	echo "Replacing $1 with $2"

@@ -1,5 +1,5 @@
 #!/bin/sh
 
 premake5 gmake && make &&
-    valgrind --leak-check=full --track-origins=yes ./bin/Debug/mr "$@"
+    valgrind --leak-check=full --track-origins=yes ./bin/Debug/mrg "$@"
 
