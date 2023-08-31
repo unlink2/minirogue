@@ -7,21 +7,21 @@
 int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
 
-  while (mrg_video_open(platform)) {
+  while (mrg_pl_video_open(platform)) {
     // input
 
     // update
 
     // draw
-    mrg_video_begin(platform);
+    mrg_pl_video_begin(platform);
 
-    mrg_camera_begin(platform, state->main_camera);
+    mrg_pl_camera_begin(platform, &state->main_camera);
 
-    mrg_video_draw_pixel(platform, 0, 0, MRG_WHITE);
+    mrg_pl_video_draw_pixel(platform, 0, 0, MRG_WHITE);
 
-    mrg_camera_end(platform, state->main_camera);
+    mrg_pl_camera_end(platform, &state->main_camera);
 
-    mrg_video_end(platform);
+    mrg_pl_video_end(platform);
   }
   return 0;
 }
@@ -31,7 +31,7 @@ int mrg_main(struct mrg_config *cfg) {
 
   struct mrg_state state;
   memset(&state, 0, sizeof(state));
-  state.main_camera = mrg_camera_init(&platform);
+  state.main_camera = mrg_pl_camera_init(&platform);
   state.platform = &platform;
   state.cfg = cfg;
 
