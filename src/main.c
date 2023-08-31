@@ -60,7 +60,7 @@ void mrg_args_parse(int argc, char **argv) {
     exitcode = 1;
     goto exit;
   }
-
+  return;
 exit:
   mrg_args_free();
   exit(exitcode); // NOLINT
@@ -76,7 +76,6 @@ int main(int argc, char **argv) {
   memset(&cfg, 0, sizeof(cfg));
 
   cfg.verbose = verb->count > 0;
-
   int res = mrg_main(&cfg);
 
   mrg_args_free();
