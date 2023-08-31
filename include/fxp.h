@@ -2,6 +2,7 @@
 #define FXP_H_
 
 #include <stdint.h>
+#include <math.h>
 
 /**
  * We use fixed point because 

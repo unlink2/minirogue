@@ -27,7 +27,7 @@ project (NAME)
    kind "ConsoleApp"
    language "C"
    targetdir "bin/%{cfg.buildcfg}"
-   links { "argtable2", "raylib" }
+   links { "argtable2", "raylib", "m" }
    -- links { "lib"..NAME }
    buildoptions { "-Wall", "-pedantic" }
 
@@ -48,7 +48,7 @@ project ("test"..NAME)
    kind "ConsoleApp"
    language "C"
    targetdir "bin/%{cfg.buildcfg}"
-   links { "cmocka", "raylib" }
+   links { "cmocka", "raylib", "m" }
    buildoptions { "-Wall", "-pedantic" }
 
    files { "include/**.h", "src/**.c" }
