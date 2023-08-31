@@ -20,9 +20,18 @@ void test_isqrt(void **state) {
   assert_int_equal(3162, mrg_isqrt(10000000));
 }
 
+void test_fixed(void **state) {
+  assert_int_equal(0xFAB, MRG_FIXED_WHOLE(0x000FAB12));
+  assert_int_equal(0x123FAB, MRG_FIXED_WHOLE(0x123FAB45));
+  
+  assert_int_equal(0x12, MRG_FIXED_FRACT(0x000FAB12));
+  assert_int_equal(0x45, MRG_FIXED_FRACT(0x123FAB45));
+}
+
 int main(int arc, char **argv) {
   const struct CMUnitTest tests[] = {
       cmocka_unit_test(test_isqrt),
+      cmocka_unit_test(test_fixed),
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
