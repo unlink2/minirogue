@@ -9,8 +9,17 @@ int mrg_main_loop(struct mrg_state *state) {
 
   while (mrg_pl_video_open(platform)) {
     // input
+    mrg_input_poll(state, &state->main_input);
 
     // update
+
+    if (MRG_PRESSED(&state->main_input, MRG_ACTION_UP)) {
+      printf("pressed!\n");
+    }
+
+    if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
+      printf("held!\n");
+    }
 
     // draw
     mrg_pl_video_begin(platform);
@@ -29,11 +38,15 @@ int mrg_main_loop(struct mrg_state *state) {
 int mrg_main(struct mrg_config *cfg) {
   mrg_platform platform = mrg_platform_init(cfg);
 
+  // TODO: directd stderr to /dev/NULL if 
+  // verbose is turned off
+
   struct mrg_state state;
   memset(&state, 0, sizeof(state));
   state.main_camera = mrg_pl_camera_init(&platform);
   state.platform = &platform;
   state.cfg = cfg;
+  state.main_input = mrg_pl_input_init();
 
   mrg_main_loop(&state);
   mrg_platform_free(&platform);

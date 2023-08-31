@@ -2,6 +2,8 @@
 #define mrgH__
 
 #include "camera.h"
+#include "input.h"
+
 
 struct mrg_platform;
 
@@ -11,6 +13,7 @@ struct mrg_config {
 
 struct mrg_state {
   struct mrg_camera main_camera;
+  struct mrg_input main_input;
 
   struct mrg_platform *platform;
   const struct mrg_config *cfg;

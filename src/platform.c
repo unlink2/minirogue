@@ -1,8 +1,10 @@
 #include "platform.h"
+#include <raylib.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include "camera.h"
+#include "input.h"
 
 #ifdef MRG_BACKEND_RAYLIB
 mrg_platform mrg_platform_init(struct mrg_config *cfg) {
@@ -56,7 +58,7 @@ int mrg_pl_video_end(mrg_platform *platform) {
   return 0;
 }
 
-int marg_pl_camera_target(mrg_platform *platform, struct mrg_camera *camera,
+int mrg_pl_camera_target(mrg_platform *platform, struct mrg_camera *camera,
                           int x, int y) {
   platform->cameras[camera->handle].target = (Vector2){(float)x, (float)y};
   return 0;
@@ -79,5 +81,27 @@ int mrg_pl_camera_end(mrg_platform *platform, struct mrg_camera *camera) {
 }
 
 void mrg_platform_free(mrg_platform *platform) { CloseWindow(); }
+
+struct mrg_input mrg_pl_input_init(void) {
+  return mrg_input_init(0);
+}
+
+uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
+  uint16_t input_state = 0;
+
+  if (IsKeyDown(KEY_W)) {
+    input_state |= MRG_ACTION_UP;
+  }
+  if (IsKeyDown(KEY_S)) {
+    input_state |= MRG_ACTION_DOWN;
+  }
+  if (IsKeyDown(KEY_A)) {
+    input_state |= MRG_ACTION_LEFT;
+  }
+  if (IsKeyDown(KEY_D)) {
+    input_state |= MRG_ACTION_RIGHT;
+  }
+  return input_state;
+}
 
 #endif
