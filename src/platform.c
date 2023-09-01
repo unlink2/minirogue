@@ -111,7 +111,7 @@ int mrg_pl_tile_set_load(struct mrg_tile_set *set,
   Texture2D texture = LoadTexture(path);
   *(Texture2D *)set->data = texture;
 
-  return -1;
+  return 0;
 }
 
 void mrg_pl_tile_set_free(struct mrg_tile_set *set,
@@ -120,4 +120,8 @@ void mrg_pl_tile_set_free(struct mrg_tile_set *set,
   free(set->data);
 }
 
+void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
+                      int tile, int x, int y) {
+  DrawTexture(*(Texture2D *)set->data, x, y, WHITE);
+}
 #endif

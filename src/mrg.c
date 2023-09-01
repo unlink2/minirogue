@@ -1,11 +1,15 @@
 #include "mrg.h"
 #include "draw.h"
 #include "platform.h"
+#include "tiles.h"
 #include <stdio.h>
 #include <string.h>
 
 int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
+
+  // test texture 
+  mrg_tile_set_load(&state->tile_tbl, state->platform, "./assets/debugset.png", 16, 16);
 
   while (mrg_pl_video_open(platform)) {
     // input
@@ -27,6 +31,7 @@ int mrg_main_loop(struct mrg_state *state) {
     mrg_pl_camera_begin(platform, &state->main_camera);
 
     mrg_pl_video_draw_pixel(platform, 0, 0, MRG_WHITE);
+    mrg_tile_draw(&state->tile_tbl, state->platform, 0, 0, 10, 10);
 
     mrg_pl_camera_end(platform, &state->main_camera);
 
@@ -47,6 +52,7 @@ int mrg_main(struct mrg_config *cfg) {
   state.platform = &platform;
   state.cfg = cfg;
   state.main_input = mrg_pl_input_init();
+  state.tile_tbl = mrg_tile_set_tbl_init();
 
   mrg_main_loop(&state);
   mrg_platform_free(&platform);

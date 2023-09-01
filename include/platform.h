@@ -75,4 +75,6 @@ int mrg_pl_tile_set_load(struct mrg_tile_set *set,
 void mrg_pl_tile_set_free(struct mrg_tile_set *set,
                        struct mrg_platform *platform, int handle); 
 
+void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
+                   int tile, int x, int y);
 #endif

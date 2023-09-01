@@ -33,6 +33,7 @@ int mrg_tile_set_load(struct mrg_tile_set_tbl *tbl,
         mrg_pl_tile_set_load(set, platform, path) != -1) {
       set->tile_h = tile_h;
       set->tile_w = tile_w;
+      set->flags |= MRG_TILE_SET_FLAG_FREE;
       return (int)i;
     }
   }
@@ -53,4 +54,15 @@ void mrg_tile_set_free(struct mrg_tile_set_tbl *tbl,
   mrg_pl_tile_set_free(set, platform, handle);
 
   set->flags = 0;
+}
+
+void mrg_tile_draw(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
+                   int handle, int tile, int x, int y) {
+  struct mrg_tile_set *set = &tbl->sets[handle];
+  if (!(set->flags & MRG_TILE_SET_FLAG_FREE)) {
+    fprintf(stderr, "Attempted to use unallocated tile set handle %d!", handle);
+    return;
+  }
+
+  mrg_pl_tile_draw(set, platform, tile, x, y);
 }

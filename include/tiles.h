@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include "defs.h"
 
-
 #define MRG_TILE_SET_TBL_LEN 4
 
 enum mrg_tile_set_flags { MRG_TILE_SET_FLAG_FREE = 1 };
@@ -33,5 +32,8 @@ int mrg_tile_set_load(struct mrg_tile_set_tbl *tbl,
 // frees a tile set with handle n
 void mrg_tile_set_free(struct mrg_tile_set_tbl *tbl,
                        struct mrg_platform *platform, int handle);
+
+void mrg_tile_draw(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
+                   int handle, int tile, int x, int y);
 
 #endif
