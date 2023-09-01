@@ -59,7 +59,7 @@ int mrg_pl_video_end(mrg_platform *platform) {
 }
 
 int mrg_pl_camera_target(mrg_platform *platform, struct mrg_camera *camera,
-                          int x, int y) {
+                         int x, int y) {
   platform->cameras[camera->handle].target = (Vector2){(float)x, (float)y};
   return 0;
 }
@@ -82,9 +82,7 @@ int mrg_pl_camera_end(mrg_platform *platform, struct mrg_camera *camera) {
 
 void mrg_platform_free(mrg_platform *platform) { CloseWindow(); }
 
-struct mrg_input mrg_pl_input_init(void) {
-  return mrg_input_init(0);
-}
+struct mrg_input mrg_pl_input_init(void) { return mrg_input_init(0); }
 
 uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   uint16_t input_state = 0;
@@ -103,5 +101,13 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   }
   return input_state;
 }
+
+int mrg_pl_tile_set_load(struct mrg_tile_set *set,
+                         struct mrg_platform *platform, const char *path) {
+  return -1;
+}
+
+void mrg_pl_tile_set_free(struct mrg_tile_set *set, struct mrg_platform *platform,
+                       int handle) {}
 
 #endif

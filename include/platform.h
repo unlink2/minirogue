@@ -3,6 +3,7 @@
 
 #include "mrg.h"
 #include "draw.h"
+#include "defs.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -62,5 +63,16 @@ int mrg_pl_camera_end(mrg_platform *platform, struct mrg_camera *camera);
 
 struct mrg_input mrg_pl_input_init(void);
 uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle);
+
+/**
+ * Tiles 
+ */
+
+int mrg_pl_tile_set_load(struct mrg_tile_set *set,
+                      struct mrg_platform *platform, const char *path); 
+
+
+void mrg_pl_tile_set_free(struct mrg_tile_set *set,
+                       struct mrg_platform *platform, int handle); 
 
 #endif

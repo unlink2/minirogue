@@ -15,6 +15,7 @@ struct mrg_entity {
   mrg_fixed x;
   mrg_fixed y;
 
+  int tileset_id;
   int tile_id;
 
   // entity stats
@@ -25,7 +26,7 @@ struct mrg_entity {
 
 #define MRG_ENTITY_SLOTS_MAX 128
 
-struct mrg_entity_slots {
+struct mrg_entity_tbl {
   struct mrg_entity slots[MRG_ENTITY_SLOTS_MAX];
   size_t nslots;
 };
