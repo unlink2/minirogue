@@ -1,6 +1,7 @@
 # Build directory
 bin/
 obj/
+assets/
 
  Prerequisites
 *.d
