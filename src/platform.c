@@ -2,9 +2,11 @@
 #include <raylib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "camera.h"
 #include "input.h"
+#include "tiles.h"
 
 #ifdef MRG_BACKEND_RAYLIB
 mrg_platform mrg_platform_init(struct mrg_config *cfg) {
@@ -104,10 +106,18 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
 
 int mrg_pl_tile_set_load(struct mrg_tile_set *set,
                          struct mrg_platform *platform, const char *path) {
+  set->data = malloc(sizeof(Texture2D));
+
+  Texture2D texture = LoadTexture(path);
+  *(Texture2D *)set->data = texture;
+
   return -1;
 }
 
-void mrg_pl_tile_set_free(struct mrg_tile_set *set, struct mrg_platform *platform,
-                       int handle) {}
+void mrg_pl_tile_set_free(struct mrg_tile_set *set,
+                          struct mrg_platform *platform, int handle) {
+  UnloadTexture(*(Texture2D *)set->data);
+  free(set->data);
+}
 
 #endif
