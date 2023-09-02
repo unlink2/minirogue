@@ -1,15 +1,19 @@
 #include "mrg.h"
 #include "draw.h"
+#include "entity.h"
 #include "platform.h"
 #include "tiles.h"
 #include <stdio.h>
 #include <string.h>
 
+const mrg_entity_tick mrg_behavior_tbl[] = {mrg_beh_nop};
+
 int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
 
-  // test texture 
-  mrg_tile_set_load(&state->tile_tbl, state->platform, "./assets/debugset.png", 16, 16);
+  // test texture
+  mrg_tile_set_load(&state->tile_tbl, state->platform, "./assets/debugset.png",
+                    16, 16);
 
   while (mrg_pl_video_open(platform)) {
     // input
@@ -43,7 +47,7 @@ int mrg_main_loop(struct mrg_state *state) {
 int mrg_main(struct mrg_config *cfg) {
   mrg_platform platform = mrg_platform_init(cfg);
 
-  // TODO: directd stderr to /dev/NULL if 
+  // TODO: directd stderr to /dev/NULL if
   // verbose is turned off
 
   struct mrg_state state;
@@ -53,6 +57,7 @@ int mrg_main(struct mrg_config *cfg) {
   state.cfg = cfg;
   state.main_input = mrg_pl_input_init();
   state.tile_tbl = mrg_tile_set_tbl_init();
+  state.behavior_tbl = mrg_behavior_tbl;
 
   mrg_main_loop(&state);
   mrg_platform_free(&platform);

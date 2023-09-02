@@ -4,5 +4,6 @@
 typedef struct mrg_platform mrg_platform;
 struct mrg_state;
 struct mrg_tile_set; 
+struct mrg_entity;
 
 #endif 

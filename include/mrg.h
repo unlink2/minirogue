@@ -2,6 +2,7 @@
 #define mrgH__
 
 #include "camera.h"
+#include "entity.h"
 #include "input.h"
 #include "tiles.h"
 
@@ -20,6 +21,9 @@ struct mrg_state {
 
   struct mrg_platform *platform;
   const struct mrg_config *cfg;
+
+  // all entity callbacks are in this table 
+  const mrg_entity_tick *behavior_tbl;
 };
 
 int mrg_main(struct mrg_config *cfg);
