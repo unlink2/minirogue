@@ -56,6 +56,14 @@ void mrg_tile_set_free(struct mrg_tile_set_tbl *tbl,
   set->flags = 0;
 }
 
+int mrg_tile_img_x(int tile, int img_w, int tile_w) {
+  return (tile % (img_w / tile_w)) * tile_w;
+}
+
+int mrg_tile_img_y(int tile, int img_w, int tile_w, int tile_h) {
+  return (tile / (img_w / tile_w)) * tile_h;
+}
+
 void mrg_tile_draw(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
                    int handle, int tile, int x, int y) {
   struct mrg_tile_set *set = &tbl->sets[handle];

@@ -29,6 +29,9 @@ int mrg_tile_set_load(struct mrg_tile_set_tbl *tbl,
                       struct mrg_platform *platform, const char *path,
                       int tile_w, int tile_h);
 
+int mrg_tile_img_x(int tile, int img_w, int tile_w);
+int mrg_tile_img_y(int tile, int img_w, int tile_w, int tile_h);
+
 // frees a tile set with handle n
 void mrg_tile_set_free(struct mrg_tile_set_tbl *tbl,
                        struct mrg_platform *platform, int handle);
