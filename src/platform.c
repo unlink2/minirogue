@@ -122,6 +122,14 @@ void mrg_pl_tile_set_free(struct mrg_tile_set *set,
 
 void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
                       int tile, int x, int y) {
-  DrawTexture(*(Texture2D *)set->data, x, y, WHITE);
+
+  Texture2D texture = *(Texture2D *)set->data;
+  Rectangle source = {
+      (float)mrg_tile_img_x(tile, texture.width, set->tile_w),
+      (float)mrg_tile_img_y(tile, texture.width, set->tile_w, set->tile_h),
+      (float)set->tile_w, (float)set->tile_h};
+  Vector2 position = {(float)x, (float)y};
+
+  DrawTextureRec(texture, source, position, WHITE);
 }
 #endif

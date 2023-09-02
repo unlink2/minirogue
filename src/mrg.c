@@ -31,7 +31,7 @@ int mrg_main_loop(struct mrg_state *state) {
     mrg_pl_camera_begin(platform, &state->main_camera);
 
     mrg_pl_video_draw_pixel(platform, 0, 0, MRG_WHITE);
-    mrg_tile_draw(&state->tile_tbl, state->platform, 0, 0, 10, 10);
+    mrg_tile_draw(&state->tile_tbl, state->platform, 0, 34, 10, 10);
 
     mrg_pl_camera_end(platform, &state->main_camera);
 
