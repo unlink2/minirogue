@@ -24,6 +24,16 @@ int mrg_entity_alloc(struct mrg_entity_tbl *tbl) {
   return -1;
 }
 
+int mrg_entity_init(struct mrg_entity *entity) {
+  memset(entity, 0, sizeof(struct mrg_entity));
+  return 0;
+}
+
+int mrg_entity_init_player(struct mrg_entity *entity) {
+  mrg_entity_init(entity);
+  return 0;
+}
+
 void mrg_entity_free(struct mrg_entity_tbl *tbl, int handle) {
   struct mrg_entity *entity = &tbl->slots[handle];
   if (!(entity->flags & MRG_ENTITY_FLAG_ALLOCED)) {
