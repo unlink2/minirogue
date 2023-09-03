@@ -68,7 +68,7 @@ void mrg_tile_draw(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
                    int handle, int tile, int x, int y) {
   struct mrg_tile_set *set = &tbl->sets[handle];
   if (!(set->flags & MRG_TILE_SET_FLAG_FREE)) {
-    fprintf(stderr, "Attempted to use unallocated tile set handle %d!", handle);
+    fprintf(stderr, "Attempted to use unallocated tile set handle %d!\n", handle);
     return;
   }
 

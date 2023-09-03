@@ -12,7 +12,7 @@ int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
 
   // test texture
-  mrg_tile_set_load(&state->tile_tbl, state->platform, "./assets/debugset.png",
+  mrg_tile_set_load(&state->tile_tbl, state->platform, "debugset.png",
                     16, 16);
 
   while (mrg_pl_video_open(platform)) {
@@ -46,6 +46,10 @@ int mrg_main_loop(struct mrg_state *state) {
 
 int mrg_main(struct mrg_config *cfg) {
   mrg_platform platform = mrg_platform_init(cfg);
+  if (mrg_platform_good(&platform) == -1) {
+    fprintf(stderr, "Unable to init window!\n");
+    return -1;
+  }
 
   // TODO: directd stderr to /dev/NULL if
   // verbose is turned off

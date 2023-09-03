@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define MRG_DIR_PATH_SEP "/"
+
 /**
  * All platform specific APIs go here
  * DO NOT rely on mrg_platform outside of platfomr specific APIs!
@@ -19,10 +21,15 @@
 #include <raylib.h>
 
 typedef struct mrg_platform {
+  int good;
   int screen_w;
   int screen_h;
   Camera2D cameras[1];
+  RenderTexture2D target;
 } mrg_platform;
+
+// join paths
+char *mrg_join(char *dst, const char *path_sep, const char *suffix);
 
 #else
 typedef struct {
@@ -31,6 +38,9 @@ typedef struct {
 #endif
 
 mrg_platform mrg_platform_init(struct mrg_config *cfg);
+
+// return >= 0 on success and -1 if the platform did not initialize correctly
+int mrg_platform_good(mrg_platform *platform);
 void mrg_platform_free(mrg_platform *platform);
 
 /**
@@ -65,16 +75,15 @@ struct mrg_input mrg_pl_input_init(void);
 uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle);
 
 /**
- * Tiles 
+ * Tiles
  */
 
 int mrg_pl_tile_set_load(struct mrg_tile_set *set,
-                      struct mrg_platform *platform, const char *path); 
-
+                         struct mrg_platform *platform, const char *path);
 
 void mrg_pl_tile_set_free(struct mrg_tile_set *set,
-                       struct mrg_platform *platform, int handle); 
+                          struct mrg_platform *platform, int handle);
 
 void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
-                   int tile, int x, int y);
+                      int tile, int x, int y);
 #endif
