@@ -14,6 +14,7 @@ struct mrg_config {
 };
 
 struct mrg_state {
+  int good;
   struct mrg_camera main_camera;
   struct mrg_input main_input;
 

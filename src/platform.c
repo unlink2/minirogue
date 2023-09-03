@@ -26,10 +26,12 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   memset(&platform, 0, sizeof(platform));
 
   platform.screen_w = 800;
-  platform.screen_h = 450;
+  platform.screen_h = 600;
 
   // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-  InitWindow(800, 450, "mrg");
+
+  // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+  InitWindow(platform.screen_w, platform.screen_h, "mrg");
 
   platform.target = LoadRenderTexture(platform.screen_w, platform.screen_h);
 
@@ -81,6 +83,8 @@ int mrg_pl_video_draw_pixel(mrg_platform *platform, int x, int y,
 int mrg_pl_video_end(mrg_platform *platform) {
   EndTextureMode();
   BeginDrawing();
+
+  // TODO: Keep aspect ratio of original source
   DrawTexturePro(
       platform->target.texture,
       (Rectangle){0, 0, (float)platform->target.texture.width,
