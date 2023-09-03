@@ -1,9 +1,12 @@
 #include "fxp.h"
+#include "platform.h"
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <setjmp.h>
 #include <cmocka.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 void test_isqrt(void **state) {
@@ -28,10 +31,18 @@ void test_fixed(void **state) {
   assert_int_equal(0x45, MRG_FIXED_FRACT(0x123FAB45));
 }
 
+
+void test_mrg_join(void **state) {
+  const char *res = mrg_join(strdup("prefix"), "/", "suffix");
+  assert_string_equal("prefix/suffix", res);
+  free((void*)res);
+}
+
 int main(int arc, char **argv) {
   const struct CMUnitTest tests[] = {
       cmocka_unit_test(test_isqrt),
       cmocka_unit_test(test_fixed),
+      cmocka_unit_test(test_mrg_join),
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

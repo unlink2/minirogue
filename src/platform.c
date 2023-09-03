@@ -21,6 +21,7 @@ char *mrg_join(char *dst, const char *path_sep, const char *suffix) {
 }
 
 #ifdef MRG_BACKEND_RAYLIB
+
 mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   mrg_platform platform;
   memset(&platform, 0, sizeof(platform));
@@ -36,7 +37,7 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   platform.target = LoadRenderTexture(platform.screen_w, platform.screen_h);
 
   SetTargetFPS(60);
-  
+
   if (!IsWindowReady()) {
     platform.good = -1;
   }
@@ -44,9 +45,7 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   return platform;
 }
 
-int mrg_platform_good(mrg_platform *platform) {
-  return platform->good;
-}
+int mrg_platform_good(mrg_platform *platform) { return platform->good; }
 
 bool mrg_pl_video_open(mrg_platform *platform) { return !WindowShouldClose(); }
 
@@ -145,6 +144,7 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
 int mrg_pl_tile_set_load(struct mrg_tile_set *set,
                          struct mrg_platform *platform, const char *path) {
   char *asset_path = "./assets";
+  // TODO: allow env to set paths here
 
   char *real_path = mrg_join(strdup(asset_path), MRG_DIR_PATH_SEP, path);
 
@@ -178,4 +178,5 @@ void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
 
   DrawTextureRec(texture, source, position, WHITE);
 }
+
 #endif
