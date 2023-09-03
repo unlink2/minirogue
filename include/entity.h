@@ -58,6 +58,6 @@ int mrg_entity_alloc(struct mrg_entity_tbl *tbl);
 
 void mrg_entity_free(struct mrg_entity_tbl *tbl, int handle);
 
-void mrg_entity_tbl_free(void);
+void mrg_entity_tbl_free(struct mrg_entity_tbl *tbl);
 
 #endif

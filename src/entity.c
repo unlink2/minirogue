@@ -13,15 +13,24 @@ struct mrg_entity_tbl mrg_entity_tbl_init(void) {
   return tbl;
 }
 
-int mrg_entity_alloc(struct mrg_entity_tbl *tbl) { return -1; }
+int mrg_entity_alloc(struct mrg_entity_tbl *tbl) {
+  for (size_t i = 0; i < tbl->slots_len; i++) {
+    struct mrg_entity *entity = &tbl->slots[i];
+    if (!(entity->flags & MRG_ENTITY_FLAG_ALLOCED)) {
+      entity->flags |= MRG_ENTITY_FLAG_ALLOCED;
+      return (int)i;
+    }
+  }
+  return -1;
+}
 
 void mrg_entity_free(struct mrg_entity_tbl *tbl, int handle) {
   struct mrg_entity *entity = &tbl->slots[handle];
-  if ((entity->flags & MRG_ENTITY_FLAG_ALLOCED) == 1) {
+  if (!(entity->flags & MRG_ENTITY_FLAG_ALLOCED)) {
     fprintf(stderr, "Double free detected for entity slot %d\n", handle);
     return;
   }
   entity->flags = 0;
 }
 
-void mrg_entity_tbl_free(void) {}
+void mrg_entity_tbl_free(struct mrg_entity_tbl *tbl) {}
