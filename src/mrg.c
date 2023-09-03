@@ -6,13 +6,15 @@
 #include <stdio.h>
 #include <string.h>
 
-const mrg_entity_tick mrg_behavior_tbl[] = {mrg_beh_nop};
-
 int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
 
   // test texture
   mrg_tile_set_load(&state->tile_tbl, state->platform, "debugset.png", 16, 16);
+
+  // TEST CODE for entity
+  int player = mrg_entity_alloc(&state->entity_tbl);
+  mrg_entity_init_player(&state->entity_tbl.slots[player]);
 
   while (mrg_pl_video_open(platform)) {
     // input
@@ -26,6 +28,9 @@ int mrg_main_loop(struct mrg_state *state) {
 
     if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
       printf("held!\n");
+    }
+    if (mrg_entity_tbl_update(state, &state->entity_tbl) == -1) {
+      fprintf(stderr, "Entity update failed!\n");
     }
 
     // draw
@@ -52,13 +57,15 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   struct mrg_state state;
   memset(&state, 0, sizeof(state));
   state.platform = platform;
-  
+
   state.main_camera = mrg_camera_init(&state);
   if (state.main_camera.handle == -1) {
     fprintf(stderr, "Unabel to init main camera!\n");
     state.good = -1;
     return state;
   }
+
+  state.entity_tbl = mrg_entity_tbl_init();
 
   state.cfg = cfg;
   state.main_input = mrg_pl_input_init();
@@ -69,7 +76,6 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   }
 
   state.tile_tbl = mrg_tile_set_tbl_init();
-  state.behavior_tbl = mrg_behavior_tbl;
 
   return state;
 }

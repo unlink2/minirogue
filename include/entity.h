@@ -18,8 +18,8 @@ enum mrg_entity_stats {
 
 enum mrg_entity_behavior { MRG_BEH_NOP, MRG_BEH_PLAYER_UPDATE };
 
-typedef void (*mrg_entity_tick)(struct mrg_state *state,
-                                struct mrg_entity *entity);
+typedef int (*mrg_entity_tick)(struct mrg_state *state,
+                               struct mrg_entity *entity);
 
 struct mrg_entity {
   enum mrg_entities type;
@@ -40,14 +40,17 @@ struct mrg_entity {
   int16_t uflags;
 };
 
-void mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity);
-void mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity);
+int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity);
+int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity);
 
 #define MRG_ENTITY_SLOTS_MAX 128
 
 struct mrg_entity_tbl {
   struct mrg_entity slots[MRG_ENTITY_SLOTS_MAX];
   size_t slots_len;
+
+  // all entity callbacks are in this table
+  const mrg_entity_tick *behavior_tbl;
 };
 
 struct mrg_entity_tbl mrg_entity_tbl_init(void);
@@ -60,6 +63,10 @@ int mrg_entity_alloc(struct mrg_entity_tbl *tbl);
 int mrg_entity_init(struct mrg_entity *entity);
 // init functions for entities
 int mrg_entity_init_player(struct mrg_entity *entity);
+
+int mrg_entity_tbl_update(struct mrg_state *state, struct mrg_entity_tbl *tbl);
+int mrg_entity_update(struct mrg_state *state, struct mrg_entity_tbl *tbl,
+                      struct mrg_entity *entity);
 
 void mrg_entity_free(struct mrg_entity_tbl *tbl, int handle);
 
