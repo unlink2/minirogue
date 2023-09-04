@@ -28,6 +28,7 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
 
   platform.screen_w = 800;
   platform.screen_h = 600;
+  platform.draw_debug = cfg->verbose;
 
   // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
@@ -53,6 +54,11 @@ int mrg_pl_video_begin(mrg_platform *platform) {
   BeginTextureMode(platform->target);
 
   ClearBackground(BLACK);
+
+  if (platform->draw_debug) {
+    DrawFPS(10, 10);
+  }
+
   return 0;
 }
 
@@ -100,8 +106,8 @@ int mrg_pl_camera_target(mrg_platform *platform, struct mrg_camera *camera,
   return 0;
 }
 
-int marg_pl_camera_offset(mrg_platform *platform, struct mrg_camera *camera,
-                          int w, int h) {
+int mrg_pl_camera_offset(mrg_platform *platform, struct mrg_camera *camera,
+                         int w, int h) {
   platform->cameras[camera->handle].offset = (Vector2){(float)w, (float)h};
   return 0;
 }

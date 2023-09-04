@@ -22,16 +22,11 @@ int mrg_main_loop(struct mrg_state *state) {
 
     // update
 
-    if (MRG_PRESSED(&state->main_input, MRG_ACTION_UP)) {
-      printf("pressed!\n");
-    }
-
-    if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
-      printf("held!\n");
-    }
     if (mrg_entity_tbl_update(state, &state->entity_tbl) == -1) {
       fprintf(stderr, "Entity update failed!\n");
     }
+
+    mrg_camera_update(state, &state->main_camera);
 
     // draw
     mrg_pl_video_begin(platform);
@@ -40,7 +35,7 @@ int mrg_main_loop(struct mrg_state *state) {
 
     mrg_pl_video_draw_pixel(platform, 0, 0, MRG_WHITE);
     mrg_tile_draw(&state->tile_tbl, state->platform, 0, 34, 10, 10);
-
+    mrg_entity_tbl_draw(state, &state->entity_tbl);
     mrg_pl_camera_end(platform, &state->main_camera);
 
     mrg_pl_video_end(platform);
@@ -50,10 +45,6 @@ int mrg_main_loop(struct mrg_state *state) {
 
 struct mrg_state mrg_state_init(struct mrg_config *cfg,
                                 mrg_platform *platform) {
-
-  // TODO: directd stderr to /dev/NULL if
-  // verbose is turned off
-
   struct mrg_state state;
   memset(&state, 0, sizeof(state));
   state.platform = platform;
@@ -83,6 +74,10 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
 void mrg_state_free(struct mrg_state *state) {}
 
 int mrg_main(struct mrg_config *cfg) {
+  if (!cfg->verbose) {
+    fclose(stdout);
+  }
+
   mrg_platform platform = mrg_platform_init(cfg);
   if (mrg_platform_good(&platform) == -1) {
     fprintf(stderr, "Unable to init window!\n");

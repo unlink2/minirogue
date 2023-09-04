@@ -26,6 +26,8 @@ typedef struct mrg_platform {
   int screen_h;
   Camera2D cameras[1];
   RenderTexture2D target;
+
+  bool draw_debug;
 } mrg_platform;
 
 // join paths
@@ -63,8 +65,8 @@ struct mrg_camera mrg_pl_camera_init(mrg_platform *platform);
 int mrg_pl_camera_begin(mrg_platform *platform, struct mrg_camera *camera);
 int mrg_pl_camera_target(mrg_platform *platform, struct mrg_camera *camera,
                          int x, int y);
-int marg_pl_camera_offset(mrg_platform *platform, struct mrg_camera *camera,
-                          int w, int h);
+int mrg_pl_camera_offset(mrg_platform *platform, struct mrg_camera *camera,
+                         int w, int h);
 int mrg_pl_camera_end(mrg_platform *platform, struct mrg_camera *camera);
 
 /**

@@ -29,6 +29,9 @@ void test_fixed(void **state) {
 
   assert_int_equal(0x12, MRG_FIXED_FRACT(0x000FAB12));
   assert_int_equal(0x45, MRG_FIXED_FRACT(0x123FAB45));
+
+
+  assert_int_equal(0x000FAB12, MRG_FIXED(0xFAB, 0x12));
 }
 
 void test_mrg_join(void **state) {
