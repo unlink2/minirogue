@@ -7,14 +7,9 @@
 #define MRG_LAYER_H 64
 #define MRG_LAYER_LEN (MRG_LAYER_W * MRG_LAYER_H)
 
-struct mrg_layer {
-  int8_t tile[MRG_LAYER_LEN];
-  int8_t flags[MRG_LAYER_LEN];
-};
-
 struct mrg_map {
-  struct mrg_layer bg;
-  struct mrg_layer fg;
+  int8_t tiles[MRG_LAYER_LEN];
+  int8_t flags[MRG_LAYER_LEN];
 };
 
 #endif
