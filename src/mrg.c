@@ -1,4 +1,5 @@
 #include "mrg.h"
+#include "command.h"
 #include "draw.h"
 #include "entity.h"
 #include "platform.h"
@@ -17,13 +18,19 @@ int mrg_main_loop(struct mrg_state *state) {
   mrg_entity_init_player(&state->entity_tbl.slots[player]);
 
   while (mrg_pl_video_open(platform)) {
+    state->cmd_tbl.cmd_len = 0;
+
     // input
     mrg_input_poll(state, &state->main_input);
 
     // update
-
     if (mrg_entity_tbl_update(state, &state->entity_tbl) == -1) {
       fprintf(stderr, "Entity update failed!\n");
+    }
+
+    // run all commands that were issued by entities
+    if (mrg_cmd_tbl_exec(state, &state->cmd_tbl) == -1) {
+      fprintf(stderr, "Cmd exec failed!\n");
     }
 
     mrg_camera_update(state, &state->main_camera);
@@ -57,6 +64,7 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   }
 
   state.entity_tbl = mrg_entity_tbl_init();
+  state.cmd_tbl = mrg_cmd_tbl_init();
 
   state.cfg = cfg;
   state.main_input = mrg_pl_input_init();

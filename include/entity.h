@@ -24,10 +24,15 @@ enum mrg_entity_behavior {
   MRG_BEH_ENTITY_DRAW
 };
 
+// update functions that translate behaviors into commands 
+// that will eventually manipulate the scene 
+// commands are kept simple so that they may be serialized 
+// later on
 typedef int (*mrg_entity_tick)(struct mrg_state *state,
                                struct mrg_entity *entity);
 
 struct mrg_entity {
+  int handle; // ref back to the entity's handle
   enum mrg_entities type;
   enum mrg_entity_behavior next_behavior;
   enum mrg_entity_behavior next_draw;

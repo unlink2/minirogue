@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "command.h"
 #include "fxp.h"
 #include "input.h"
 #include "mrg.h"
@@ -17,20 +18,28 @@ int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
   if (MRG_PRESSED(&state->main_input, MRG_ACTION_UP)) {
   }
 
+  mrg_fixed x = 0;
+  mrg_fixed y = 0;
+
   if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
-    entity->y -= MRG_FIXED(1, 0);
+    y -= MRG_FIXED(1, 0);
   }
 
   if (MRG_HELD(&state->main_input, MRG_ACTION_DOWN)) {
-    entity->y += MRG_FIXED(1, 0);
+    y += MRG_FIXED(1, 0);
   }
 
   if (MRG_HELD(&state->main_input, MRG_ACTION_LEFT)) {
-    entity->x -= MRG_FIXED(1, 0);
+    x -= MRG_FIXED(1, 0);
   }
 
   if (MRG_HELD(&state->main_input, MRG_ACTION_RIGHT)) {
-    entity->x += MRG_FIXED(1, 0);
+    x += MRG_FIXED(1, 0);
+  }
+
+  if (x || y) {
+    struct mrg_cmd cmd = {MRG_CMD_ENTITY_VEL_APPLY, entity->handle, .x = x, .y = y};
+    mrg_cmd_tbl_push(&state->cmd_tbl, cmd);
   }
 
   return 0;
@@ -57,6 +66,7 @@ int mrg_entity_alloc(struct mrg_entity_tbl *tbl) {
   for (size_t i = 0; i < tbl->slots_len; i++) {
     struct mrg_entity *entity = &tbl->slots[i];
     if (!(entity->flags & MRG_ENTITY_FLAG_ALLOCED)) {
+      entity->handle = (int)i;
       entity->flags |= MRG_ENTITY_FLAG_ALLOCED;
       return (int)i;
     }
@@ -66,8 +76,10 @@ int mrg_entity_alloc(struct mrg_entity_tbl *tbl) {
 
 int mrg_entity_init(struct mrg_entity *entity) {
   int32_t flags = entity->flags;
+  int handle = entity->handle;
   memset(entity, 0, sizeof(struct mrg_entity));
   entity->flags = flags;
+  entity->handle = handle;
   return 0;
 }
 
