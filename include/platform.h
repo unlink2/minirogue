@@ -69,6 +69,14 @@ int mrg_pl_camera_offset(mrg_platform *platform, struct mrg_camera *camera,
                          int w, int h);
 int mrg_pl_camera_end(mrg_platform *platform, struct mrg_camera *camera);
 
+void mrg_pl_camera_world_to_screen(struct mrg_platform *platform,
+                                   struct mrg_camera *camera, int ix, int iy,
+                                   int *ox, int *oy);
+
+void mrg_pl_camera_screen_to_world(struct mrg_platform *platform,
+                                struct mrg_camera *camera, int ix, int iy,
+                                int *ox, int *oy);
+
 /**
  * Input devices
  */

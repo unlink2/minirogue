@@ -19,3 +19,15 @@ int mrg_camera_update(struct mrg_state *state, struct mrg_camera *camera) {
 
   return 0;
 }
+
+void mrg_camera_world_to_screen(struct mrg_state *state,
+                                struct mrg_camera *camera, int ix, int iy,
+                                int *ox, int *oy) {
+  mrg_pl_camera_world_to_screen(state->platform, camera, ix, iy, ox, oy);
+}
+
+void mrg_camera_screen_to_world(struct mrg_state *state,
+                                struct mrg_camera *camera, int ix, int iy,
+                                int *ox, int *oy) {
+  mrg_pl_camera_screen_to_world(state->platform, camera, ix, iy, ox, oy);
+}

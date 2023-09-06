@@ -67,7 +67,7 @@ struct mrg_camera mrg_pl_camera_init(mrg_platform *platform) {
   platform->cameras[0].offset = (Vector2){(float)platform->screen_w / 2.0F,
                                           (float)platform->screen_h / 2.0F};
   platform->cameras[0].rotation = 0.0F;
-  platform->cameras[0].zoom = 1.0F;
+  platform->cameras[0].zoom = 2.0F;
 
   struct mrg_camera camera;
   memset(&camera, 0, sizeof(camera));
@@ -125,6 +125,23 @@ int mrg_pl_camera_end(mrg_platform *platform, struct mrg_camera *camera) {
 void mrg_platform_free(mrg_platform *platform) {
   UnloadRenderTexture(platform->target);
   CloseWindow();
+}
+void mrg_pl_camera_world_to_screen(struct mrg_platform *platform,
+                                   struct mrg_camera *camera, int ix, int iy,
+                                   int *ox, int *oy) {
+  Vector2 res = GetWorldToScreen2D((Vector2){(float)ix, (float)iy},
+                                   platform->cameras[camera->handle]);
+  *ox = (int)res.x;
+  *oy = (int)res.y;
+}
+
+void mrg_pl_camera_screen_to_world(struct mrg_platform *platform,
+                                struct mrg_camera *camera, int ix, int iy,
+                                int *ox, int *oy) {
+  Vector2 res = GetScreenToWorld2D((Vector2){(float)ix, (float)iy},
+                                   platform->cameras[camera->handle]);
+  *ox = (int)res.x;
+  *oy = (int)res.y;
 }
 
 struct mrg_input mrg_pl_input_init(void) { return mrg_input_init(0); }

@@ -21,6 +21,10 @@ int mrg_main_loop(struct mrg_state *state) {
     mrg_input_poll(state, &state->main_input);
 
     // update
+    if (mrg_map_update(state, &state->map) == -1) {
+      fprintf(stderr, "Map update failed!\n");
+    }
+
     if (mrg_entity_tbl_update(state, &state->entity_tbl) == -1) {
       fprintf(stderr, "Entity update failed!\n");
     }
@@ -33,7 +37,8 @@ int mrg_main_loop(struct mrg_state *state) {
     mrg_pl_camera_begin(platform, &state->main_camera);
 
     mrg_pl_video_draw_pixel(platform, 0, 0, MRG_WHITE);
-    mrg_tile_draw(&state->tile_tbl, state->platform, 0, 34, 10, 10);
+
+    mrg_map_draw(state, &state->map);
     mrg_entity_tbl_draw(state, &state->entity_tbl);
     mrg_pl_camera_end(platform, &state->main_camera);
 
@@ -56,6 +61,8 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   }
 
   state.entity_tbl = mrg_entity_tbl_init();
+
+  state.map = mrg_map_init();
 
   state.cfg = cfg;
   state.main_input = mrg_pl_input_init();

@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "input.h"
+#include "map.h"
 #include "tiles.h"
 
 struct mrg_platform;
@@ -19,6 +20,8 @@ struct mrg_state {
 
   struct mrg_tile_set_tbl tile_tbl;
   struct mrg_entity_tbl entity_tbl;
+
+  struct mrg_map map;
 
   struct mrg_platform *platform;
   const struct mrg_config *cfg;
