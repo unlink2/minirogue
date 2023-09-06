@@ -42,6 +42,8 @@ int mrg_main_loop(struct mrg_state *state) {
     mrg_entity_tbl_draw(state, &state->entity_tbl);
     mrg_pl_camera_end(platform, &state->main_camera);
 
+    mrg_pl_draw_debug(state->platform);
+
     mrg_pl_video_end(platform);
   }
   return 0;

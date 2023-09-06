@@ -56,6 +56,7 @@ int mrg_pl_video_draw_pixel(mrg_platform *platform, int x, int y,
 int mrg_pl_video_begin(mrg_platform *platform);
 int mrg_pl_video_end(mrg_platform *platform);
 
+void mrg_pl_draw_debug(mrg_platform *platform);
 /**
  * Platform specific camera details
  */

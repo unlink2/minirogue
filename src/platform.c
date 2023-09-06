@@ -55,10 +55,6 @@ int mrg_pl_video_begin(mrg_platform *platform) {
 
   ClearBackground(BLACK);
 
-  if (platform->draw_debug) {
-    DrawFPS(10, 10);
-  }
-
   return 0;
 }
 
@@ -83,6 +79,14 @@ int mrg_pl_video_draw_pixel(mrg_platform *platform, int x, int y,
   DrawPixel(x, y, (Color){color.r, color.g, color.b, color.a});
 
   return 0;
+}
+
+void mrg_pl_draw_debug(mrg_platform *platform) {
+  if (platform->draw_debug) {
+    char dbg[128];
+    sprintf(dbg, "%d fps, %f ms", GetFPS(), GetFrameTime());
+    DrawText(dbg, 10, 10, 20, WHITE);
+  }
 }
 
 int mrg_pl_video_end(mrg_platform *platform) {
