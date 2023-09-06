@@ -16,12 +16,17 @@ struct mrg_map {
   int8_t flags[MRG_LAYER_LEN];
   size_t w;
   size_t h;
+  int tile_w;
+  int tile_h;
 };
 
 struct mrg_map mrg_map_init(void);
 
 int mrg_map_update(struct mrg_state *state, struct mrg_map *map);
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map);
+
+void mrg_map_to_tile(struct mrg_map *map, int xi, int yi,
+                 int *xo, int *yo);
 
 void mrg_map_free(struct mrg_map *map);
 

@@ -130,8 +130,8 @@ void mrg_pl_camera_bounds(mrg_platform *platform, struct mrg_camera *camera,
                           int *x, int *y, int *w, int *h) {
   Camera2D *c2d = &platform->cameras[camera->handle];
 
-  *x = (int)c2d->target.x - (int)c2d->offset.x;
-  *y = (int)c2d->target.y - (int)c2d->offset.y;
+  *x = (int)(c2d->target.x - ((float)c2d->offset.x / c2d->zoom));
+  *y = (int)(c2d->target.y - ((float)c2d->offset.y / c2d->zoom));
 
   *w = (int)((float)platform->screen_w / c2d->zoom);
   *h = (int)((float)platform->screen_h / c2d->zoom);
@@ -215,6 +215,13 @@ void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
   Vector2 position = {(float)x, (float)y};
 
   DrawTextureRec(texture, source, position, WHITE);
+}
+
+bool mrg_pl_col_recs(int x1, int y1, int w1, int h1, int x2, int y2, int w2,
+                     int h2) {
+  return CheckCollisionRecs(
+      (Rectangle){(float)x1, (float)y1, (float)w1, (float)h1},
+      (Rectangle){(float)x2, (float)y2, (float)w2, (float)h2});
 }
 
 #endif

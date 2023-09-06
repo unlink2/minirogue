@@ -100,4 +100,12 @@ void mrg_pl_tile_set_free(struct mrg_tile_set *set,
 
 void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
                       int tile, int x, int y);
+
+/**
+ * Platform specific collision code
+ */
+
+bool mrg_pl_col_recs(int x1, int y1, int w1, int h1, int x2, int y2, int w2,
+                     int h2);
+
 #endif
