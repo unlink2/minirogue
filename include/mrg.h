@@ -2,7 +2,6 @@
 #define mrgH__
 
 #include "camera.h"
-#include "command.h"
 #include "entity.h"
 #include "input.h"
 #include "tiles.h"
@@ -23,8 +22,6 @@ struct mrg_state {
 
   struct mrg_platform *platform;
   const struct mrg_config *cfg;
-
-  struct mrg_cmd_tbl cmd_tbl;
 };
 
 int mrg_main(struct mrg_config *cfg);
