@@ -31,3 +31,8 @@ void mrg_camera_screen_to_world(struct mrg_state *state,
                                 int *ox, int *oy) {
   mrg_pl_camera_screen_to_world(state->platform, camera, ix, iy, ox, oy);
 }
+
+void mrg_camera_bounds(struct mrg_state *state, struct mrg_camera *camera,
+                       int *x, int *y, int *w, int *h) {
+  mrg_pl_camera_bounds(state->platform, camera, x, y, w, h); 
+}

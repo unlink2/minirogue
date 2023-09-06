@@ -122,6 +122,17 @@ int mrg_pl_camera_end(mrg_platform *platform, struct mrg_camera *camera) {
   return 0;
 }
 
+void mrg_pl_camera_bounds(mrg_platform *platform, struct mrg_camera *camera,
+                          int *x, int *y, int *w, int *h) {
+  Camera2D *c2d = &platform->cameras[camera->handle];
+
+  *x = (int)c2d->target.x - (int)c2d->offset.x;
+  *y = (int)c2d->target.y - (int)c2d->offset.y;
+
+  *w = (int)((float)platform->screen_w / c2d->zoom);
+  *h = (int)((float)platform->screen_h / c2d->zoom);
+}
+
 void mrg_platform_free(mrg_platform *platform) {
   UnloadRenderTexture(platform->target);
   CloseWindow();
@@ -136,8 +147,8 @@ void mrg_pl_camera_world_to_screen(struct mrg_platform *platform,
 }
 
 void mrg_pl_camera_screen_to_world(struct mrg_platform *platform,
-                                struct mrg_camera *camera, int ix, int iy,
-                                int *ox, int *oy) {
+                                   struct mrg_camera *camera, int ix, int iy,
+                                   int *ox, int *oy) {
   Vector2 res = GetScreenToWorld2D((Vector2){(float)ix, (float)iy},
                                    platform->cameras[camera->handle]);
   *ox = (int)res.x;

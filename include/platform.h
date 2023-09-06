@@ -74,8 +74,11 @@ void mrg_pl_camera_world_to_screen(struct mrg_platform *platform,
                                    int *ox, int *oy);
 
 void mrg_pl_camera_screen_to_world(struct mrg_platform *platform,
-                                struct mrg_camera *camera, int ix, int iy,
-                                int *ox, int *oy);
+                                   struct mrg_camera *camera, int ix, int iy,
+                                   int *ox, int *oy);
+
+void mrg_pl_camera_bounds(mrg_platform *platform, struct mrg_camera *camera,
+                          int *x, int *y, int *w, int *h);
 
 /**
  * Input devices
