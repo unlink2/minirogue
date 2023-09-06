@@ -29,10 +29,9 @@ enum mrg_entity_behavior {
 // commands are kept simple so that they may be serialized 
 // later on
 typedef int (*mrg_entity_tick)(struct mrg_state *state,
-                               struct mrg_entity *entity);
+                               int entity_handle);
 
 struct mrg_entity {
-  int handle; // ref back to the entity's handle
   enum mrg_entities type;
   enum mrg_entity_behavior next_behavior;
   enum mrg_entity_behavior next_draw;
@@ -62,9 +61,9 @@ struct mrg_entity_tbl {
 
 struct mrg_entity_tbl mrg_entity_tbl_init(void);
 
-int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity);
-int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity);
-int mrg_beh_entity_draw(struct mrg_state *state, struct mrg_entity *entity);
+int mrg_beh_nop(struct mrg_state *state, int entity_handle);
+int mrg_beh_player_update(struct mrg_state *state, int entity_handle);
+int mrg_beh_entity_draw(struct mrg_state *state, int entity_handle);
 
 // alloc a new entity
 // return a handle to the allocated entity
@@ -77,11 +76,11 @@ int mrg_entity_init_player(struct mrg_entity *entity);
 
 int mrg_entity_tbl_update(struct mrg_state *state, struct mrg_entity_tbl *tbl);
 int mrg_entity_update(struct mrg_state *state, struct mrg_entity_tbl *tbl,
-                      struct mrg_entity *entity);
+                      int entity_handle);
 
 int mrg_entity_tbl_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl);
 int mrg_entity_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl,
-                    struct mrg_entity *entity);
+                    int entity_handle);
 void mrg_entity_free(struct mrg_entity_tbl *tbl, int handle);
 
 void mrg_entity_tbl_free(struct mrg_entity_tbl *tbl);

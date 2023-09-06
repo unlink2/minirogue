@@ -9,11 +9,9 @@
 const mrg_entity_tick mrg_behavior_tbl[] = {mrg_beh_nop, mrg_beh_player_update,
                                             mrg_beh_entity_draw};
 
-int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity) {
-  return 0;
-}
+int mrg_beh_nop(struct mrg_state *state, int entity_handle) { return 0; }
 
-int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
+int mrg_beh_player_update(struct mrg_state *state, int entity_handle) {
 
   if (MRG_PRESSED(&state->main_input, MRG_ACTION_UP)) {
   }
@@ -38,14 +36,16 @@ int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
   }
 
   if (x || y) {
-    struct mrg_cmd cmd = {MRG_CMD_ENTITY_VEL_APPLY, entity->handle, .x = x, .y = y};
+    struct mrg_cmd cmd = {MRG_CMD_ENTITY_VEL_APPLY, entity_handle, .x = x,
+                          .y = y};
     mrg_cmd_tbl_push(&state->cmd_tbl, cmd);
   }
 
   return 0;
 }
 
-int mrg_beh_entity_draw(struct mrg_state *state, struct mrg_entity *entity) {
+int mrg_beh_entity_draw(struct mrg_state *state, int entity_handle) {
+  struct mrg_entity *entity = &state->entity_tbl.slots[entity_handle];
   mrg_tile_draw(&state->tile_tbl, state->platform, entity->tileset_id,
                 entity->tile_id, MRG_FIXED_WHOLE(entity->x),
                 MRG_FIXED_WHOLE(entity->y));
@@ -66,7 +66,6 @@ int mrg_entity_alloc(struct mrg_entity_tbl *tbl) {
   for (size_t i = 0; i < tbl->slots_len; i++) {
     struct mrg_entity *entity = &tbl->slots[i];
     if (!(entity->flags & MRG_ENTITY_FLAG_ALLOCED)) {
-      entity->handle = (int)i;
       entity->flags |= MRG_ENTITY_FLAG_ALLOCED;
       return (int)i;
     }
@@ -76,10 +75,8 @@ int mrg_entity_alloc(struct mrg_entity_tbl *tbl) {
 
 int mrg_entity_init(struct mrg_entity *entity) {
   int32_t flags = entity->flags;
-  int handle = entity->handle;
   memset(entity, 0, sizeof(struct mrg_entity));
   entity->flags = flags;
-  entity->handle = handle;
   return 0;
 }
 
@@ -99,7 +96,7 @@ int mrg_entity_tbl_update(struct mrg_state *state, struct mrg_entity_tbl *tbl) {
     struct mrg_entity *entity = &tbl->slots[i];
 
     if ((entity->flags & MRG_ENTITY_FLAG_ALLOCED)) {
-      if (mrg_entity_update(state, tbl, entity) == -1) {
+      if (mrg_entity_update(state, tbl, (int)i) == -1) {
         return -1;
       }
     }
@@ -112,7 +109,7 @@ int mrg_entity_tbl_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl) {
     struct mrg_entity *entity = &tbl->slots[i];
 
     if ((entity->flags & MRG_ENTITY_FLAG_ALLOCED)) {
-      if (mrg_entity_draw(state, tbl, entity) == -1) {
+      if (mrg_entity_draw(state, tbl, (int)i) == -1) {
         return -1;
       }
     }
@@ -121,13 +118,15 @@ int mrg_entity_tbl_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl) {
 }
 
 int mrg_entity_update(struct mrg_state *state, struct mrg_entity_tbl *tbl,
-                      struct mrg_entity *entity) {
-  return tbl->behavior_tbl[entity->next_behavior](state, entity);
+                      int entity_handle) {
+  return tbl->behavior_tbl[tbl->slots[entity_handle].next_behavior](
+      state, entity_handle);
 }
 
 int mrg_entity_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl,
-                    struct mrg_entity *entity) {
-  return tbl->behavior_tbl[entity->next_draw](state, entity);
+                    int entity_handle) {
+  return tbl->behavior_tbl[tbl->slots[entity_handle].next_draw](state,
+                                                               entity_handle);
 }
 
 void mrg_entity_free(struct mrg_entity_tbl *tbl, int handle) {
