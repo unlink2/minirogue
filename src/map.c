@@ -27,6 +27,11 @@ struct mrg_map mrg_map_init(void) {
 
 int mrg_map_update(struct mrg_state *state, struct mrg_map *map) { return 0; }
 
+enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
+                                     int h) {
+  return 0;
+}
+
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
   map->tile_w = state->tile_tbl.sets[map->tileset_id].tile_w;
   map->tile_h = state->tile_tbl.sets[map->tileset_id].tile_h;
@@ -64,7 +69,7 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
       mrg_tile_draw(&state->tile_tbl, state->platform, map->tileset_id,
                     map->tiles[tile], tx, ty);
 
-#ifdef MRG_DEBUG 
+#ifdef MRG_DEBUG
       if (map->flags[tile] & MRG_MAP_FLAG_COLLISION) {
         mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
                               (struct mrg_color){255, 0, 0, 255});
