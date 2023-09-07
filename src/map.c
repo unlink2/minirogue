@@ -2,6 +2,7 @@
 #include "platform.h"
 #include "tiles.h"
 #include "mrg.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,13 +22,22 @@ struct mrg_map mrg_map_init(void) {
   map.tiles = malloc(tiles * sizeof(int8_t));
   map.light = malloc(tiles * sizeof(int8_t));
 
+#ifdef MRG_DEBUG
+  map.dbg_flags = malloc(tiles * sizeof(bool));
+#endif
+
   map.tile_w = 16;
   map.tile_h = 16;
 
   return map;
 }
 
-int mrg_map_update(struct mrg_state *state, struct mrg_map *map) { return 0; }
+int mrg_map_update(struct mrg_state *state, struct mrg_map *map) {
+#ifdef MRG_DEBUG
+  memset(map->dbg_flags, 0, map->w * map->h);
+#endif
+  return 0;
+}
 
 enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
                                      int h) {
@@ -46,7 +56,11 @@ enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
         continue;
       }
 
-      result |= map->flags[MRG_MAP_COORDS_TO_TILE(map, tx, ty)];
+      int tile = MRG_MAP_COORDS_TO_TILE(map, tx, ty);
+      result |= map->flags[tile];
+#ifdef MRG_DEBUG
+      map->dbg_flags[tile] |= MRG_MAP_DBG_FLAG_DID_COLLIDE;
+#endif
     }
   }
 
@@ -96,6 +110,11 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
                               (struct mrg_color){255, 0, 0, 255});
       }
 
+      if (map->dbg_flags[tile] & MRG_MAP_DBG_FLAG_DID_COLLIDE) {
+        mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
+                              (struct mrg_color){255, 255, 128, 0xA0});
+      }
+
       if (map->flags[tile] & MRG_MAP_FLAG_DAMAGE) {
         mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
                               (struct mrg_color){255, 255, 0, 255});
@@ -120,4 +139,7 @@ void mrg_map_free(struct mrg_map *map) {
   free(map->tiles);
   free(map->flags);
   free(map->light);
+#ifdef MRG_DEBUG
+  free(map->dbg_flags);
+#endif
 }

@@ -12,11 +12,14 @@
 
 enum mrg_map_flags { MRG_MAP_FLAG_COLLISION = 1, MRG_MAP_FLAG_DAMAGE = 2 };
 
+enum mrg_map_dbg_flags { MRG_MAP_DBG_FLAG_DID_COLLIDE = 1};
+
 struct mrg_map {
   int tileset_id;
   int8_t *tiles;
   int8_t *flags;
   int8_t *light;
+  int8_t *dbg_flags;
   size_t w;
   size_t h;
   int tile_w;

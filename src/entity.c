@@ -2,6 +2,7 @@
 #include "fxp.h"
 #include "input.h"
 #include "mrg.h"
+#include "platform.h"
 #include <stdio.h>
 #include <string.h>
 
