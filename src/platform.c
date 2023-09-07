@@ -31,6 +31,7 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   platform.draw_debug = cfg->verbose;
 
   // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+  SetConfigFlags(FLAG_VSYNC_HINT);
 
   // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(platform.screen_w, platform.screen_h, "mrg");
