@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MRG_MAP_COORDS_TO_TILE(map, x, y) (y) * (map)->w + (x)
+
 struct mrg_map mrg_map_init(void) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
@@ -29,7 +31,26 @@ int mrg_map_update(struct mrg_state *state, struct mrg_map *map) { return 0; }
 
 enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
                                      int h) {
-  return 0;
+  // start in the top left, step in tile-sized increments
+  // until bottom right corner and check every tile along the way
+  enum mrg_map_flags result = 0;
+
+  for (int iy = y; iy <= y + h; iy += map->tile_h) {
+    for (int ix = x; ix <= x + w; ix += map->tile_w) {
+      int tx = 0;
+      int ty = 0;
+      mrg_map_to_tile(map, (int)ix, (int)iy, &tx, &ty);
+
+      // out of bounds!
+      if (tx > map->w || ty > map->h || tx < 0 || ty < 0) {
+        continue;
+      }
+
+      result |= map->flags[MRG_MAP_COORDS_TO_TILE(map, tx, ty)];
+    }
+  }
+
+  return result;
 }
 
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
@@ -65,7 +86,7 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
 
   for (size_t y = start_tile_y; y < end_h; y++) {
     for (size_t x = start_tile_x; x < end_w; x++) {
-      size_t tile = y * map->w + x;
+      size_t tile = MRG_MAP_COORDS_TO_TILE(map, x, y);
       mrg_tile_draw(&state->tile_tbl, state->platform, map->tileset_id,
                     map->tiles[tile], tx, ty);
 
