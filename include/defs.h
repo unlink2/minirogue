@@ -9,4 +9,6 @@ struct mrg_entity;
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
+#define MRG_DEBUG
+
 #endif

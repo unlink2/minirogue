@@ -1,4 +1,5 @@
 #include "map.h"
+#include "platform.h"
 #include "tiles.h"
 #include "mrg.h"
 #include <stdio.h>
@@ -9,10 +10,9 @@ struct mrg_map mrg_map_init(void) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
 
-
   map.w = MRG_LAYER_W;
   map.h = MRG_LAYER_H;
-  
+
   size_t tiles = map.w * map.h;
 
   map.flags = malloc(tiles * sizeof(int8_t));
@@ -39,7 +39,7 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
   mrg_camera_bounds(state, &state->main_camera, &camera_x, &camera_y, &camera_w,
                     &camera_h);
 
-  // start tile that is on screen 
+  // start tile that is on screen
   int start_tile_x = 0;
   int start_tile_y = 0;
   mrg_map_to_tile(map, camera_x, camera_y, &start_tile_x, &start_tile_y);
@@ -50,7 +50,7 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
   int tx = start_tx;
   int ty = start_tile_y * map->tile_h;
 
-  // end tile that is on screen 
+  // end tile that is on screen
   int end_h = (int)map->h;
   int end_w = (int)map->w;
   mrg_map_to_tile(map, camera_x + camera_w, camera_y + camera_h, &end_w,
@@ -60,8 +60,22 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
 
   for (size_t y = start_tile_y; y < end_h; y++) {
     for (size_t x = start_tile_x; x < end_w; x++) {
+      size_t tile = y * map->w + x;
       mrg_tile_draw(&state->tile_tbl, state->platform, map->tileset_id,
-                    map->tiles[y * map->w + x], tx, ty);
+                    map->tiles[tile], tx, ty);
+
+#ifdef MRG_DEBUG 
+      if (map->flags[tile] & MRG_MAP_FLAG_COLLISION) {
+        mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
+                              (struct mrg_color){255, 0, 0, 255});
+      }
+
+      if (map->flags[tile] & MRG_MAP_FLAG_DAMAGE) {
+        mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
+                              (struct mrg_color){255, 255, 0, 255});
+      }
+#endif
+
       tx += map->tile_w;
     }
     tx = start_tx;

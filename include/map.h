@@ -10,6 +10,11 @@
 #define MRG_LAYER_H 256 
 #define MRG_LAYER_LEN (MRG_LAYER_W * MRG_LAYER_H)
 
+enum mrg_map_flags {
+  MRG_MAP_FLAG_COLLISION = 1,
+  MRG_MAP_FLAG_DAMAGE = 2
+};
+
 struct mrg_map {
   int tileset_id;
   int8_t *tiles;

@@ -90,6 +90,15 @@ void mrg_pl_draw_debug(mrg_platform *platform) {
   }
 }
 
+void mrg_pl_draw_debug_rec(mrg_platform *platform, int x, int y, int w, int h,
+                           struct mrg_color color) {
+  if (!platform->draw_debug) {
+    return;
+  }
+
+  DrawRectangleLines(x, y, w, h, (Color){color.r, color.g, color.b, color.a});
+}
+
 int mrg_pl_video_end(mrg_platform *platform) {
   EndTextureMode();
   BeginDrawing();
