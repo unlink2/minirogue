@@ -40,6 +40,11 @@ struct mrg_entity {
   mrg_fixed x;
   mrg_fixed y;
 
+  int col_offset_x;
+  int col_offset_y;
+  int col_w;
+  int col_h;
+
   int tileset_id;
   int tile_id;
 

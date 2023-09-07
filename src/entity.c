@@ -35,9 +35,10 @@ int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
   }
 
   // check tile collision
-  enum mrg_map_flags tile_flags =
-      mrg_map_collision(&state->map, MRG_FIXED_WHOLE(entity->x),
-                        MRG_FIXED_WHOLE(entity->y), 16, 16);
+  enum mrg_map_flags tile_flags = mrg_map_collision(
+      &state->map, entity->col_offset_x + MRG_FIXED_WHOLE(entity->x),
+      entity->col_offset_y + MRG_FIXED_WHOLE(entity->y), entity->col_w,
+      entity->col_h);
 
   return 0;
 }
@@ -74,6 +75,12 @@ int mrg_entity_init(struct mrg_entity *entity) {
   int32_t flags = entity->flags;
   memset(entity, 0, sizeof(struct mrg_entity));
   entity->flags = flags;
+
+  entity->col_w = 12;
+  entity->col_h = 12;
+  entity->col_offset_x = 2;
+  entity->col_offset_y = 2;
+
   return 0;
 }
 
@@ -121,7 +128,15 @@ int mrg_entity_update(struct mrg_state *state, struct mrg_entity_tbl *tbl,
 
 int mrg_entity_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl,
                     struct mrg_entity *entity) {
-  return tbl->behavior_tbl[entity->next_draw](state, entity);
+  int res = tbl->behavior_tbl[entity->next_draw](state, entity);
+#ifdef MRG_DEBUG
+  mrg_pl_draw_debug_rec(
+      state->platform, entity->col_offset_x + MRG_FIXED_WHOLE(entity->x),
+      entity->col_offset_x + MRG_FIXED_WHOLE(entity->y), entity->col_w,
+      entity->col_h, (struct mrg_color){255, 0, 0, 255});
+#endif
+
+  return res;
 }
 
 void mrg_entity_free(struct mrg_entity_tbl *tbl, int handle) {

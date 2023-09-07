@@ -45,6 +45,11 @@ enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
   // until bottom right corner and check every tile along the way
   enum mrg_map_flags result = 0;
 
+  // for tile collision we at least need to check
+  // for a w/h of a tile
+  h = MAX(h, map->tile_h);
+  w = MAX(w, map->tile_w);
+
   for (int iy = y; iy <= y + h; iy += map->tile_h) {
     for (int ix = x; ix <= x + w; ix += map->tile_w) {
       int tx = 0;
