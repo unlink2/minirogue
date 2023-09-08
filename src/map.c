@@ -13,6 +13,8 @@ struct mrg_map mrg_map_init(void) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
 
+  map.x = 0;
+  map.y = 0;
   map.w = MRG_LAYER_W;
   map.h = MRG_LAYER_H;
 
@@ -91,9 +93,9 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
   start_tile_x = MAX(0, start_tile_x);
   start_tile_y = MAX(0, start_tile_y);
 
-  int start_tx = start_tile_x * map->tile_w;
+  int start_tx = start_tile_x * map->tile_w + map->x;
   int tx = start_tx;
-  int ty = start_tile_y * map->tile_h;
+  int ty = start_tile_y * map->tile_h + map->y;
 
   // end tile that is on screen
   int end_h = (int)map->h;
@@ -136,8 +138,8 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
 }
 
 void mrg_map_to_tile(struct mrg_map *map, int xi, int yi, int *xo, int *yo) {
-  *xo = xi / map->tile_w;
-  *yo = yi / map->tile_h;
+  *xo = (xi - map->x) / map->tile_w;
+  *yo = (yi - map->y) / map->tile_h;
 }
 
 void mrg_map_free(struct mrg_map *map) {

@@ -6,13 +6,13 @@
 #include <stdint.h>
 #include "defs.h"
 
-#define MRG_LAYER_W 256
-#define MRG_LAYER_H 256
+#define MRG_LAYER_W 16
+#define MRG_LAYER_H 16
 #define MRG_LAYER_LEN (MRG_LAYER_W * MRG_LAYER_H)
 
 enum mrg_map_flags { MRG_MAP_FLAG_COLLISION = 1, MRG_MAP_FLAG_DAMAGE = 2 };
 
-enum mrg_map_dbg_flags { MRG_MAP_DBG_FLAG_DID_COLLIDE = 1};
+enum mrg_map_dbg_flags { MRG_MAP_DBG_FLAG_DID_COLLIDE = 1 };
 
 struct mrg_map {
   int tileset_id;
@@ -20,6 +20,9 @@ struct mrg_map {
   int8_t *flags;
   int8_t *light;
   int8_t *dbg_flags;
+
+  int x;
+  int y;
   size_t w;
   size_t h;
   int tile_w;
