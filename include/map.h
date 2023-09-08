@@ -7,7 +7,7 @@
 #include "defs.h"
 
 #define MRG_LAYER_W 16
-#define MRG_LAYER_H 16
+#define MRG_LAYER_H 14
 #define MRG_LAYER_LEN (MRG_LAYER_W * MRG_LAYER_H)
 
 enum mrg_map_flags { MRG_MAP_FLAG_COLLISION = 1, MRG_MAP_FLAG_DAMAGE = 2 };
