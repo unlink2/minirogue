@@ -25,14 +25,18 @@ struct mrg_dat_header {
   int32_t directory_offset;
 };
 
+enum mrg_dat_dir_type {
+  MRG_DAT_DIR_ROOM
+};
+
 /**
  * Directory entry
- * name: 8 byte identifier for file name
+ * type: directory entry typr
  * offset: location of data in file
  * len: length of data in file
  */
 struct mrg_dat_dir {
-  const char name[8];
+  int32_t type;
   int32_t offset;
   int32_t len;
 };
