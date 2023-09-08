@@ -49,11 +49,14 @@ enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
 
   // for tile collision we at least need to check
   // for a w/h of a tile
-  h = MAX(h, map->tile_h);
-  w = MAX(w, map->tile_w);
+  // h = MAX(h, map->tile_h);
+  // w = MAX(w, map->tile_w);
 
-  for (int iy = y; iy <= y + h; iy += map->tile_h) {
-    for (int ix = x; ix <= x + w; ix += map->tile_w) {
+  int step_x = MIN(map->tile_w, w);
+  int step_y = MIN(map->tile_h, h);
+
+  for (int iy = y; iy <= y + h; iy += step_y) {
+    for (int ix = x; ix <= x + w; ix += step_x) {
       int tx = 0;
       int ty = 0;
       mrg_map_to_tile(map, (int)ix, (int)iy, &tx, &ty);
