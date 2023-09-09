@@ -1,3 +1,4 @@
+#include "arena.h"
 #include "entity.h"
 #include "fxp.h"
 #include "platform.h"
@@ -30,7 +31,6 @@ void test_fixed(void **state) {
   assert_int_equal(0x12, MRG_FIXED_FRACT(0x000FAB12));
   assert_int_equal(0x45, MRG_FIXED_FRACT(0x123FAB45));
 
-
   assert_int_equal(0x000FAB12, MRG_FIXED(0xFAB, 0x12));
 }
 
@@ -58,12 +58,51 @@ void test_entity_alloc(void **state) {
   mrg_entity_tbl_free(&tbl);
 }
 
+void test_arena(void **state) {
+  struct mrg_arena arena = mrg_arena_init(10);
+  assert_int_equal(10, arena.arena_len);
+
+  int32_t *d1 = mrg_arena_malloc(&arena, 4);
+  assert_non_null(d1);
+  assert_int_equal(4, arena.aptr);
+  *d1 = -2;
+
+  int32_t *d2 = mrg_arena_malloc(&arena, 4);
+  assert_non_null(d2);
+  assert_int_equal(8, arena.aptr);
+  *d2 = -3;
+
+  int32_t *d3 = mrg_arena_malloc(&arena, 4);
+  assert_null(d3);
+
+  int16_t *d4 = mrg_arena_malloc(&arena, 2);
+  assert_non_null(d2);
+  assert_int_equal(10, arena.aptr);
+  *d4 = -4;
+
+  assert_int_equal(-2, *d1);
+  assert_int_equal(-3, *d2);
+  assert_int_equal(-4, *d4);
+
+  void *before = arena.data;
+  assert_int_equal(0, mrg_arena_resize(&arena, 9));
+  assert_ptr_equal(before, arena.data);
+  assert_int_equal(10, arena.arena_len);
+
+  assert_int_equal(0, mrg_arena_resize(&arena, 11));
+  assert_int_equal(11, arena.arena_len);
+
+  mrg_arena_clear(&arena);
+  assert_int_equal(0, arena.aptr);
+
+  mrg_arena_free(&arena);
+}
+
 int main(int arc, char **argv) {
   const struct CMUnitTest tests[] = {
-      cmocka_unit_test(test_isqrt),
-      cmocka_unit_test(test_fixed),
-      cmocka_unit_test(test_mrg_join),
-      cmocka_unit_test(test_entity_alloc),
+      cmocka_unit_test(test_isqrt),    cmocka_unit_test(test_fixed),
+      cmocka_unit_test(test_mrg_join), cmocka_unit_test(test_entity_alloc),
+      cmocka_unit_test(test_arena),
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
