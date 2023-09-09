@@ -7,27 +7,34 @@
  * Data fromat holding all game idca
  * all numbers are in little endian
  * File extension: .idc (integrated idca container)
+ * Notes:
+ *  - Tile set handles: tile sets are stored as \0 terminated strings for
+ *    headers that required a tile set. They are then loaded and the apropriate
+ *    handle is stored in the parsed result.
+ *    Tile sets are looked for in the assets folder.
+ *    File names may not be longer than MRG_IDC_FILE_NAME_LEN
  */
 
 // magic identifier
-#define MRG_IDC_ID "idc"
-#define MRG_IDC_PATH_MAX 256
+#define MRG_IDC_MAGIC "idc"
+#define MRG_IDC_FILE_NAME_LEN 8
 
 #define MRG_IDC_LE(n) (n)
 
 /**
  * File header:
- * id: always 'mrgd'
+ * id: always MRG_IDC_MAGIC
  * n_entries: amount of entries in the directory
  * directory_offset: where the directory is located in the file
  */
 struct mrg_idc_header {
-  const char id[3];
+  const char magic[3];
   int32_t n_entries;
   int32_t directory_offset;
+  int32_t chksm;
 };
 
-enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM, MRG_IDC_DIR_TILESET };
+enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM };
 
 /**
  * Directory entry
@@ -50,6 +57,7 @@ struct mrg_idc_dir {
  * tile_map_offset: location of tile map for the room (load room_w * room_h
  * bytes) flags_offset: location of flag map for the room (load room_w * room_h
  * bytes)
+ * tile_set_handle: sett note on tile set loading
  */
 struct mrg_idc_room {
   int32_t n_entities;
@@ -58,6 +66,7 @@ struct mrg_idc_room {
   int32_t room_h;
   int32_t tile_map_offset;
   int32_t flags_offset;
+  char tile_set[MRG_IDC_FILE_NAME_LEN];
 };
 
 /**
@@ -72,14 +81,7 @@ struct mrg_idc_entity {
   int32_t y;
   int32_t flags;
   int32_t type;
-};
-
-/**
- * Load a tile set from an external resource
- */
-struct mrg_idc_tile_set {
-  // path relative to asset path where the tile set image is stored
-  char path[MRG_IDC_PATH_MAX];
+  char tile_set[MRG_IDC_FILE_NAME_LEN];
 };
 
 #endif
