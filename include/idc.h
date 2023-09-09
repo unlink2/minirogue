@@ -11,6 +11,7 @@
 
 // magic identifier
 #define MRG_IDC_ID "idc"
+#define MRG_IDC_PATH_MAX 256
 
 #define MRG_IDC_LE(n) (n)
 
@@ -26,7 +27,7 @@ struct mrg_idc_header {
   int32_t directory_offset;
 };
 
-enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM };
+enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM, MRG_IDC_DIR_TILESET };
 
 /**
  * Directory entry
@@ -71,6 +72,14 @@ struct mrg_idc_entity {
   int32_t y;
   int32_t flags;
   int32_t type;
+};
+
+/**
+ * Load a tile set from an external resource
+ */
+struct mrg_idc_tile_set {
+  // path relative to asset path where the tile set image is stored
+  char path[MRG_IDC_PATH_MAX];
 };
 
 #endif
