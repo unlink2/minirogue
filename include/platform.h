@@ -93,6 +93,20 @@ struct mrg_input mrg_pl_input_init(void);
 uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle);
 
 /**
+ * File system 
+ */
+
+// create full asset path for an input file path
+// must be freed
+char *mrg_pl_mkpath(const char *path);
+
+// read an entire file into a buffer 
+char *mrg_pl_fread(const char *path, size_t *len);
+
+// write file to asset path
+char *mrg_pl_fwrite(const char *path, const char *data, size_t len);
+
+/**
  * Tiles
  */
 

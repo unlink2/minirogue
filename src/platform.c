@@ -189,12 +189,17 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   return input_state;
 }
 
-int mrg_pl_tile_set_load(struct mrg_tile_set *set,
-                         struct mrg_platform *platform, const char *path) {
-  char *asset_path = "./assets";
+char *mrg_pl_mkpath(const char *path) {
+char *asset_path = "./assets";
   // TODO: allow env to set paths here
 
   char *real_path = mrg_join(strdup(asset_path), MRG_DIR_PATH_SEP, path);
+  return real_path;
+}
+
+int mrg_pl_tile_set_load(struct mrg_tile_set *set,
+                         struct mrg_platform *platform, const char *path) {
+  char *real_path = mrg_pl_mkpath(path); 
 
   set->data = malloc(sizeof(Texture2D));
 
