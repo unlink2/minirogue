@@ -54,10 +54,10 @@ struct mrg_idc_dir {
  * entities_offset: location of entity list in file
  * room_w: room width
  * room_h: room height
- * tile_map_offset: location of tile map for the room (load room_w * room_h
+ * tile_map_offset: location of tile map for the room (load room_w * room_h)
  * bytes) flags_offset: location of flag map for the room (load room_w * room_h
  * bytes)
- * tile_set_handle: sett note on tile set loading
+ * tile_set_handle: see note on tile set loading
  */
 struct mrg_idc_room {
   int32_t n_entities;
@@ -75,6 +75,7 @@ struct mrg_idc_room {
  * y: y position
  * flags: entity flags
  * type: entity type
+ * tile_set_handle: see note on tile set loading
  */
 struct mrg_idc_entity {
   int32_t x;
