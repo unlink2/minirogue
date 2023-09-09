@@ -38,6 +38,8 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
 
   platform.target = LoadRenderTexture(platform.screen_w, platform.screen_h);
 
+  platform.base_assets_path = "./assets";
+
   SetTargetFPS(60);
 
   if (!IsWindowReady()) {
@@ -189,17 +191,18 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   return input_state;
 }
 
-char *mrg_pl_mkpath(const char *path) {
-char *asset_path = "./assets";
-  // TODO: allow env to set paths here
-
-  char *real_path = mrg_join(strdup(asset_path), MRG_DIR_PATH_SEP, path);
+char *mrg_pl_mkpath(const char *base, const char *path) {
+  // if no base is supplied, simply dup the path
+  if (!base) {
+    return strdup(path);
+  }
+  char *real_path = mrg_join(strdup(base), MRG_DIR_PATH_SEP, path);
   return real_path;
 }
 
 int mrg_pl_tile_set_load(struct mrg_tile_set *set,
                          struct mrg_platform *platform, const char *path) {
-  char *real_path = mrg_pl_mkpath(path); 
+  char *real_path = mrg_pl_mkpath(platform->base_assets_path, path);
 
   set->data = malloc(sizeof(Texture2D));
 
