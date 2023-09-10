@@ -4,6 +4,7 @@
 #include "mrg.h"
 #include "draw.h"
 #include "defs.h"
+#include "arena.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -30,6 +31,8 @@ typedef struct mrg_platform {
   bool draw_debug;
 
   const char *base_assets_path;
+
+  struct mrg_arena arena;
 } mrg_platform;
 
 // join paths

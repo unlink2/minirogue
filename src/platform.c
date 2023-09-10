@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "arena.h"
 #include "camera.h"
 #include "input.h"
 #include "tiles.h"
@@ -41,6 +42,8 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   platform.base_assets_path = "./assets";
 
   SetTargetFPS(60);
+
+  platform.arena = mrg_arena_init(4098);
 
   if (!IsWindowReady()) {
     platform.good = -1;
@@ -152,6 +155,8 @@ void mrg_pl_camera_bounds(mrg_platform *platform, struct mrg_camera *camera,
 void mrg_platform_free(mrg_platform *platform) {
   UnloadRenderTexture(platform->target);
   CloseWindow();
+
+  mrg_arena_free(&platform->arena);
 }
 void mrg_pl_camera_world_to_screen(struct mrg_platform *platform,
                                    struct mrg_camera *camera, int ix, int iy,
