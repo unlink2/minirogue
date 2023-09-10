@@ -21,6 +21,8 @@
 #define MRG_IDC_MAGIC "idc"
 #define MRG_IDC_FILE_NAME_LEN 8
 
+#define MRG_IDC_HEADER_LEN 3 + sizeof(int32_t) * 3
+
 #define MRG_IDC_LE(n) (n)
 
 /**
@@ -30,7 +32,7 @@
  * directory_offset: where the directory is located in the file
  */
 struct mrg_idc_header {
-  const char magic[3];
+  char magic[3];
   int32_t n_entries;
   int32_t directory_offset;
   int32_t chksm;
@@ -89,6 +91,7 @@ struct mrg_idc_room {
 };
 
 struct mrg_idc_file {
+  int ok;
   struct mrg_idc_header header;
   struct mrg_idc_dir *dirs;
 };

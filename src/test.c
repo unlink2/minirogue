@@ -1,6 +1,7 @@
 #include "arena.h"
 #include "entity.h"
 #include "fxp.h"
+#include "idc.h"
 #include "platform.h"
 #include <stdarg.h>
 #include <stddef.h>
@@ -99,12 +100,27 @@ void test_arena(void **state) {
   mrg_arena_free(&arena);
 }
 
+void test_idc(void **test) {
+  struct mrg_arena a = mrg_arena_init(16);
+  {
+    const char d[] = {'i', 'd', 'c', 0,  0, 0,
+                      4,   0,   0,   0,  0, MRG_IDC_HEADER_LEN,
+                      10,  11,  12,  13, 14};
+    struct mrg_idc_file file = mrg_idc_de(&a, d, sizeof(d));
+
+    assert_int_equal(0, file.ok);
+    assert_int_equal(0x04, file.header.n_entries);
+    assert_int_equal(MRG_IDC_HEADER_LEN, file.header.directory_offset);
+    assert_int_equal(0x90a0b0c, file.header.chksm);
+  }
+  mrg_arena_free(&a);
+}
+
 int main(int arc, char **argv) {
   const struct CMUnitTest tests[] = {
       cmocka_unit_test(test_isqrt),    cmocka_unit_test(test_fixed),
       cmocka_unit_test(test_mrg_join), cmocka_unit_test(test_entity_alloc),
-      cmocka_unit_test(test_arena),
-  };
+      cmocka_unit_test(test_arena),    cmocka_unit_test(test_idc)};
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }
