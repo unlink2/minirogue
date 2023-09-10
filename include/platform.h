@@ -102,15 +102,13 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle);
  * File system
  */
 
-// create full asset path for an input file path
-char *mrg_pl_mkpath(struct mrg_arena *a, const char *base, const char *path);
 
 // read an entire file into a buffer
-char *mrg_pl_fread(struct mrg_arena *a, const char *base, const char *path,
+char *mrg_pl_fread(struct mrg_arena *a, const char *path,
                    size_t *len);
 
 // write file to asset path
-char *mrg_pl_fwrite(struct mrg_arena *a, const char *base, const char *path,
+size_t mrg_pl_fwrite(const char *path,
                     const char *data, size_t len);
 
 /**

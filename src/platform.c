@@ -1,4 +1,5 @@
 #include "platform.h"
+#include <errno.h>
 #include <raylib.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -202,19 +203,47 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   return input_state;
 }
 
-char *mrg_pl_mkpath(struct mrg_arena *a, const char *base, const char *path) {
-  // if no base is supplied, simply dup the path
-  if (!base) {
-    return mrg_join(a, path, "", "");
+char *mrg_pl_fread(struct mrg_arena *a, const char *path, size_t *len) {
+  FILE *f = fopen(path, "rbe");
+  if (!f) {
+    fprintf(stderr, "'%s': %s\n", path, strerror(errno));
+    return NULL;
   }
-  char *real_path = mrg_join(a, base, MRG_DIR_PATH_SEP, path);
-  return real_path;
+
+  fseek(f, 0, SEEK_END);
+  size_t fsize = ftell(f);
+  fseek(f, 0, SEEK_SET);
+
+  char *data = mrg_arena_mallocr(a, fsize);
+  if (!data) {
+    fprintf(stderr, "'%s' Arena malloc failed!\n", path);
+    return NULL;
+  }
+  fread(data, fsize, 1, f);
+  fclose(f);
+
+  *len = fsize;
+
+  return data;
+}
+
+size_t mrg_pl_fwrite(const char *path, const char *data, size_t len) {
+  FILE *f = fopen(path, "rbe");
+  if (!f) {
+    fprintf(stderr, "'%s': %s\n", path, strerror(errno));
+    return NULL;
+  }
+
+  size_t written = fwrite(data, len, 1, f);
+  fclose(f);
+
+  return written;
 }
 
 int mrg_pl_tile_set_load(struct mrg_tile_set *set,
                          struct mrg_platform *platform, const char *path) {
-  char *real_path =
-      mrg_pl_mkpath(&platform->arena, platform->base_assets_path, path);
+  char *real_path = mrg_join(&platform->arena, platform->base_assets_path,
+                             MRG_DIR_PATH_SEP, path);
 
   set->data = malloc(sizeof(Texture2D));
 
