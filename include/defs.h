@@ -7,6 +7,11 @@ struct mrg_tile_set;
 struct mrg_entity;
 struct mrg_arena;
 
+struct mrg_idc_header;
+struct mrg_idc_dir;
+struct mrg_idc_entity;
+struct mrg_idc_room;
+
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 

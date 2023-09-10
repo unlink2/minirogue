@@ -1,7 +1,9 @@
 #ifndef IDC_H_
 #define IDC_H_
 
+#include <stddef.h>
 #include <stdint.h>
+#include "defs.h"
 
 /**
  * Data fromat holding all game idca
@@ -34,7 +36,7 @@ struct mrg_idc_header {
   int32_t chksm;
 };
 
-enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM };
+enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM, MRG_IDC_DIR_ENTITY };
 
 /**
  * Directory entry
@@ -46,6 +48,24 @@ struct mrg_idc_dir {
   int32_t type;
   int32_t offset;
   int32_t len;
+  void *entry; // actual data of this entry
+};
+
+/**
+ * Entity entry
+ * x: x position
+ * y: y position
+ * flags: entity flags
+ * type: entity type
+ * tile_set_handle: see note on tile set loading
+ */
+struct mrg_idc_entity {
+  int32_t room_id;
+  int32_t x;
+  int32_t y;
+  int32_t flags;
+  int32_t type;
+  char tile_set[MRG_IDC_FILE_NAME_LEN];
 };
 
 /**
@@ -60,8 +80,7 @@ struct mrg_idc_dir {
  * tile_set_handle: see note on tile set loading
  */
 struct mrg_idc_room {
-  int32_t n_entities;
-  int32_t entities_offset;
+  int32_t room_id;
   int32_t room_w;
   int32_t room_h;
   int32_t tile_map_offset;
@@ -69,20 +88,14 @@ struct mrg_idc_room {
   char tile_set[MRG_IDC_FILE_NAME_LEN];
 };
 
-/**
- * Entity entry
- * x: x position
- * y: y position
- * flags: entity flags
- * type: entity type
- * tile_set_handle: see note on tile set loading
- */
-struct mrg_idc_entity {
-  int32_t x;
-  int32_t y;
-  int32_t flags;
-  int32_t type;
-  char tile_set[MRG_IDC_FILE_NAME_LEN];
+struct mrg_idc_file {
+  struct mrg_idc_header header;
+  struct mrg_idc_dir *dirs;
 };
+
+struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
+                               size_t len);
+
+const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f);
 
 #endif
