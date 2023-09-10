@@ -35,9 +35,10 @@ void test_fixed(void **state) {
 }
 
 void test_mrg_join(void **state) {
-  const char *res = mrg_join(strdup("prefix"), "/", "suffix");
+  struct mrg_arena a = mrg_arena_init(1);
+  const char *res = mrg_join(&a, "prefix", "/", "suffix");
   assert_string_equal("prefix/suffix", res);
-  free((void *)res);
+  mrg_arena_free(&a);
 }
 
 void test_entity_alloc(void **state) {

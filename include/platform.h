@@ -36,7 +36,8 @@ typedef struct mrg_platform {
 } mrg_platform;
 
 // join paths
-char *mrg_join(char *dst, const char *path_sep, const char *suffix);
+char *mrg_join(struct mrg_arena *a, const char *dst, const char *path_sep,
+               const char *suffix);
 
 #else
 typedef struct {
@@ -102,14 +103,15 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle);
  */
 
 // create full asset path for an input file path
-// must be freed
-char *mrg_pl_mkpath(const char *base, const char *path);
+char *mrg_pl_mkpath(struct mrg_arena *a, const char *base, const char *path);
 
 // read an entire file into a buffer
-char *mrg_pl_fread(const char *base, const char *path, size_t *len);
+char *mrg_pl_fread(struct mrg_arena *a, const char *base, const char *path,
+                   size_t *len);
 
 // write file to asset path
-char *mrg_pl_fwrite(const char *base, const char *path, const char *data, size_t len);
+char *mrg_pl_fwrite(struct mrg_arena *a, const char *base, const char *path,
+                    const char *data, size_t len);
 
 /**
  * Tiles

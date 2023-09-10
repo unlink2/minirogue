@@ -15,6 +15,8 @@ struct mrg_arena mrg_arena_init(size_t len);
 
 int mrg_arena_resize(struct mrg_arena *arena, size_t len);
 
+// malloc + resize
+void* mrg_arena_mallocr(struct mrg_arena *arena, size_t len);
 void* mrg_arena_malloc(struct mrg_arena *arena, size_t len);
 
 void mrg_arena_clear(struct mrg_arena *arena);

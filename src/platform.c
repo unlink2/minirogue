@@ -9,13 +9,16 @@
 #include "input.h"
 #include "tiles.h"
 
-char *mrg_join(char *dst, const char *path_sep, const char *suffix) {
+char *mrg_join(struct mrg_arena *a, const char *dst, const char *path_sep,
+               const char *suffix) {
   if (!dst || !suffix || !path_sep) {
     return NULL;
   }
 
   size_t len = strlen(dst) + strlen(suffix) + strlen(path_sep) + 1;
-  char *new_dst = realloc(dst, len);
+  char *new_dst = mrg_arena_mallocr(a, len);
+  memset(new_dst, 0, len);
+  strcat(new_dst, dst);
   strcat(new_dst, path_sep);
   strcat(new_dst, suffix);
   return new_dst;
@@ -43,7 +46,7 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
 
   SetTargetFPS(60);
 
-  platform.arena = mrg_arena_init(4098);
+  platform.arena = mrg_arena_init(256);
 
   if (!IsWindowReady()) {
     platform.good = -1;
@@ -116,6 +119,9 @@ int mrg_pl_video_end(mrg_platform *platform) {
       (Rectangle){0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()},
       (Vector2){0, 0}, 0, WHITE);
   EndDrawing();
+
+  mrg_arena_clear(&platform->arena);
+
   return 0;
 }
 
@@ -196,25 +202,25 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   return input_state;
 }
 
-char *mrg_pl_mkpath(const char *base, const char *path) {
+char *mrg_pl_mkpath(struct mrg_arena *a, const char *base, const char *path) {
   // if no base is supplied, simply dup the path
   if (!base) {
-    return strdup(path);
+    return mrg_join(a, path, "", "");
   }
-  char *real_path = mrg_join(strdup(base), MRG_DIR_PATH_SEP, path);
+  char *real_path = mrg_join(a, base, MRG_DIR_PATH_SEP, path);
   return real_path;
 }
 
 int mrg_pl_tile_set_load(struct mrg_tile_set *set,
                          struct mrg_platform *platform, const char *path) {
-  char *real_path = mrg_pl_mkpath(platform->base_assets_path, path);
+  char *real_path =
+      mrg_pl_mkpath(&platform->arena, platform->base_assets_path, path);
 
   set->data = malloc(sizeof(Texture2D));
 
   Texture2D texture = LoadTexture(real_path);
   *(Texture2D *)set->data = texture;
 
-  free(real_path);
   if (texture.id <= 0) {
     return -1;
   }

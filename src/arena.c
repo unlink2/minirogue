@@ -11,6 +11,7 @@ struct mrg_arena mrg_arena_init(size_t len) {
   return arena;
 }
 
+
 int mrg_arena_resize(struct mrg_arena *arena, size_t len) {
   if (len < arena->arena_len) {
     return 0;
@@ -23,6 +24,14 @@ int mrg_arena_resize(struct mrg_arena *arena, size_t len) {
   }
 
   return -1;
+}
+
+
+void* mrg_arena_mallocr(struct mrg_arena *arena, size_t len) {
+  if (arena->aptr + len > arena->arena_len) {
+    mrg_arena_resize(arena, arena->aptr + len);
+  }
+  return mrg_arena_malloc(arena, len);
 }
 
 void *mrg_arena_malloc(struct mrg_arena *arena, size_t len) {
