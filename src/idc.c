@@ -78,6 +78,22 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
                                          sizeof(struct mrg_idc_dir));
 
     for (size_t i = 0; i < file.header.n_entries; i++) {
+      size_t dirlen = MRG_IDC_DIR_LEN;
+      if (len - current < dirlen) {
+        file.ok = -1;
+        fprintf(stderr, "Unable to parse idc. Incomplete directory!\n");
+        return file;
+      }
+
+      struct mrg_idc_dir dir = {0, 0, NULL};
+
+      MRG_IDC_READ(&dir.type, data, sizeof(int32_t), current);
+      dir.type = (int32_t)ntohl(dir.type);
+
+      MRG_IDC_READ(&dir.offset, data, sizeof(int32_t), current);
+      dir.offset = (int32_t)ntohl(dir.offset);
+
+      file.dirs[i] = dir;
     }
   }
 

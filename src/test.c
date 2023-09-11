@@ -103,13 +103,29 @@ void test_arena(void **state) {
 void test_idc(void **test) {
   struct mrg_arena a = mrg_arena_init(16);
   {
-    const char d[] = {'i', 'd', 'c', 0, 0, 0, 0, 4, 0, 0, 0, MRG_IDC_HEADER_LEN,
-                      0,   0,   0,   0, 14};
+    const char d[] = {
+        'i', 'd', 'c', 0,
+        0,   0,   0,   2,
+        0,   0,   0,   MRG_IDC_HEADER_LEN,
+        0,   0,   0,   0, // end of header
+        0,   0,   0,   MRG_IDC_DIR_ROOM,
+        0,   0,   0,   0,
+        0,   0,   0,   MRG_IDC_DIR_ENTITY,
+        0,   0,   0,   0, // end of dir
+    };
     struct mrg_idc_file file = mrg_idc_de(&a, d, sizeof(d));
 
     assert_int_equal(0x00, file.header.version);
-    assert_int_equal(0x04, file.header.n_entries);
+    assert_int_equal(0x02, file.header.n_entries);
     assert_int_equal(MRG_IDC_HEADER_LEN, file.header.directory_offset);
+
+    assert_non_null(file.dirs);
+
+    assert_int_equal(MRG_IDC_DIR_ROOM, file.dirs[0].type);
+    assert_int_equal(0, file.dirs[0].offset);
+
+    assert_int_equal(MRG_IDC_DIR_ENTITY, file.dirs[1].type);
+    assert_int_equal(0, file.dirs[1].offset);
 
     assert_int_equal(0, file.ok);
   }

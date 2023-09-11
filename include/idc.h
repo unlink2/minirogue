@@ -22,6 +22,7 @@
 #define MRG_IDC_FILE_NAME_LEN 8
 
 #define MRG_IDC_HEADER_LEN 4 + sizeof(int32_t) * 3
+#define MRG_IDC_DIR_LEN sizeof(int32_t) * 2 
 
 #define MRG_IDC_LE(n) (n)
 
@@ -45,12 +46,10 @@ enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM, MRG_IDC_DIR_ENTITY };
  * Directory entry
  * type: directory entry typr
  * offset: location of idca in file
- * len: length of idca in file
  */
 struct mrg_idc_dir {
   int32_t type;
   int32_t offset;
-  int32_t len;
   void *entry; // actual data of this entry
 };
 
