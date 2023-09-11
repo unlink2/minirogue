@@ -1,4 +1,5 @@
 #include "idc.h"
+#include "arena.h"
 #include <stdio.h>
 #include <string.h>
 #include <arpa/inet.h>
@@ -26,8 +27,8 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
   int32_t chksm = mrg_idc_chksm(data, len);
 
   // parse header
-  struct mrg_idc_header header;
   {
+    struct mrg_idc_header header;
     size_t hlen = MRG_IDC_HEADER_LEN;
     if (len - current < hlen) {
       file.ok = -1;
@@ -70,6 +71,18 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
 
     file.header = header;
   }
+
+  // directory
+  {
+    file.dirs = mrg_arena_mallocr(a, file.header.n_entries *
+                                         sizeof(struct mrg_idc_dir));
+
+    for (size_t i = 0; i < file.header.n_entries; i++) {
+    }
+  }
+
+  // entries
+  {}
 
   return file;
 }
