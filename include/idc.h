@@ -21,7 +21,7 @@
 #define MRG_IDC_MAGIC "idc"
 #define MRG_IDC_FILE_NAME_LEN 8
 
-#define MRG_IDC_HEADER_LEN 3 + sizeof(int32_t) * 3
+#define MRG_IDC_HEADER_LEN 4 + sizeof(int32_t) * 3
 
 #define MRG_IDC_LE(n) (n)
 
@@ -33,6 +33,7 @@
  */
 struct mrg_idc_header {
   char magic[3];
+  int8_t version;
   int32_t n_entries;
   int32_t directory_offset;
   int32_t chksm;

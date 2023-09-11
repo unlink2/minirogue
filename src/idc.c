@@ -7,11 +7,23 @@
   memcpy((dst), (src) + (current), (len));                                     \
   (current) += (len);
 
+int32_t mrg_idc_chksm(const char *data, size_t len) {
+  int32_t sum = 0;
+
+  for (size_t i = 0; i < len; i++) {
+    sum += data[i];
+  }
+
+  return sum;
+}
+
 struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
                                size_t len) {
   size_t current = 0;
   struct mrg_idc_file file;
   memset(&file, 0, sizeof(file));
+
+  int32_t chksm = mrg_idc_chksm(data, len);
 
   // parse header
   struct mrg_idc_header header;
@@ -27,6 +39,7 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
     }
 
     MRG_IDC_READ(header.magic, data, 3, current);
+    MRG_IDC_READ(&header.version, data, 1, current);
 
     MRG_IDC_READ(&header.n_entries, data, sizeof(int32_t), current);
     header.n_entries = (int32_t)ntohl(header.n_entries);
@@ -42,6 +55,17 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
       fprintf(stderr, "The provided file is not an idc file %c%c%c\n",
               header.magic[0], header.magic[1], header.magic[2]);
       return file;
+    }
+
+    // chksum is skipped if all 0!
+    if (chksm != header.chksm && header.chksm != 0) {
+      file.ok = -1;
+      fprintf(stderr, "Invalid idc chekcsum: expected %x got %x!\n",
+              header.chksm, chksm);
+    }
+
+    if (header.chksm == 0) {
+      fprintf(stdout, "Warning: idc checksum is 0... skipping!\n");
     }
 
     file.header = header;
