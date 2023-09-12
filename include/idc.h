@@ -111,6 +111,6 @@ struct mrg_idc_file {
 struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
                                size_t len);
 
-const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f);
+const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f, size_t *len);
 
 #endif
