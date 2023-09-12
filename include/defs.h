@@ -11,6 +11,7 @@ struct mrg_idc_header;
 struct mrg_idc_dir;
 struct mrg_idc_entity;
 struct mrg_idc_room;
+struct mrg_idc_entry;
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))

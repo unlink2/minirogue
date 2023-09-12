@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <setjmp.h>
 #include <cmocka.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -104,17 +105,26 @@ void test_idc(void **test) {
   struct mrg_arena a = mrg_arena_init(16);
   {
     const char d[] = {
-        'i', 'd', 'c', 0,
-        0,   0,   0,   2,
-        0,   0,   0,   MRG_IDC_HEADER_LEN,
-        0,   0,   0,   0, // end of header
-        0,   0,   0,   MRG_IDC_DIR_ROOM,
-        0,   0,   0,   0,
-        0,   0,   0,   MRG_IDC_DIR_ENTITY,
-        0,   0,   0,   0, // end of dir
+        'i', 'd', 'c', 0, 0, 0, 0, 2, 0, 0, 0, MRG_IDC_HEADER_LEN, 0, 0, 0,
+        0, // end of header
+        0, 0, 0, MRG_IDC_DIR_ROOM, 0, 0, 0,
+        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN, 0, 0, 0, MRG_IDC_DIR_ENTITY,
+        0, 0, 0,
+        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN + MRG_IDC_ENTRY_LEN + 4 +
+            4, // end of
+               // dir
+        0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0,
+        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN + MRG_IDC_ENTRY_LEN, 0, 0, 0,
+        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN + MRG_IDC_ENTRY_LEN + 4, '1',
+        '2', '3', '4', '5', '6', '7', '\0', // end of room entry
+        1, 2, 3, 4,                         // end of room tile map
+        4, 3, 2, 1,                         // end of room flags map
+        0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 5, 0, 0, 0, 0, 7, '1', '2',
+        '3', '4', '5', '6', '7', '\0', // end of entity entry
     };
     struct mrg_idc_file file = mrg_idc_de(&a, d, sizeof(d));
 
+    assert_int_equal(0, file.ok);
     assert_int_equal(0x00, file.header.version);
     assert_int_equal(0x02, file.header.n_entries);
     assert_int_equal(MRG_IDC_HEADER_LEN, file.header.directory_offset);
@@ -122,12 +132,27 @@ void test_idc(void **test) {
     assert_non_null(file.dirs);
 
     assert_int_equal(MRG_IDC_DIR_ROOM, file.dirs[0].type);
-    assert_int_equal(0, file.dirs[0].offset);
+    assert_int_equal(0x20, file.dirs[0].offset);
+    assert_int_equal(1, file.dirs[0].entry->room.room_id);
+    assert_int_equal(2, file.dirs[0].entry->room.room_w);
+    assert_int_equal(2, file.dirs[0].entry->room.room_h);
+    assert_int_equal(0x3C, file.dirs[0].entry->room.tiles_offset);
+    assert_int_equal(0x40, file.dirs[0].entry->room.flags_offset);
+    assert_non_null(file.dirs[0].entry->room.tiles);
+    assert_non_null(file.dirs[0].entry->room.flags);
+    const char expected_tiles[] = {1, 2, 3, 4};
+    const char expected_flags[] = {4, 3, 2, 1};
+    assert_memory_equal(expected_tiles, file.dirs[0].entry->room.tiles, 4);
+    assert_memory_equal(expected_flags, file.dirs[0].entry->room.flags, 4);
+    assert_string_equal("1234567", file.dirs[0].entry->room.tile_set);
 
     assert_int_equal(MRG_IDC_DIR_ENTITY, file.dirs[1].type);
-    assert_int_equal(0, file.dirs[1].offset);
-
-    assert_int_equal(0, file.ok);
+    assert_int_equal(0x44, file.dirs[1].offset);
+    assert_int_equal(2, file.dirs[1].entry->entity.room_id);
+    assert_int_equal(1, file.dirs[1].entry->entity.x);
+    assert_int_equal(4, file.dirs[1].entry->entity.y);
+    assert_int_equal(0x500, file.dirs[1].entry->entity.flags);
+    assert_int_equal(0x07, file.dirs[1].entry->entity.type);
   }
   mrg_arena_free(&a);
 }

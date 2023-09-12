@@ -22,7 +22,10 @@
 #define MRG_IDC_FILE_NAME_LEN 8
 
 #define MRG_IDC_HEADER_LEN 4 + sizeof(int32_t) * 3
-#define MRG_IDC_DIR_LEN sizeof(int32_t) * 2 
+#define MRG_IDC_DIR_LEN sizeof(int32_t) * 2
+
+// an entry cannot be larger than this by default!
+#define MRG_IDC_ENTRY_LEN sizeof(int32_t) * 5 + MRG_IDC_FILE_NAME_LEN
 
 #define MRG_IDC_LE(n) (n)
 
@@ -50,7 +53,7 @@ enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM, MRG_IDC_DIR_ENTITY };
 struct mrg_idc_dir {
   int32_t type;
   int32_t offset;
-  void *entry; // actual data of this entry
+  struct mrg_idc_entry *entry; // actual data of this entry
 };
 
 /**
@@ -76,7 +79,7 @@ struct mrg_idc_entity {
  * entities_offset: location of entity list in file
  * room_w: room width
  * room_h: room height
- * tile_map_offset: location of tile map for the room (load room_w * room_h)
+ * tile_offset: location of tile map for the room (load room_w * room_h)
  * bytes) flags_offset: location of flag map for the room (load room_w * room_h
  * bytes)
  * tile_set_handle: see note on tile set loading
@@ -85,9 +88,18 @@ struct mrg_idc_room {
   int32_t room_id;
   int32_t room_w;
   int32_t room_h;
-  int32_t tile_map_offset;
+  int32_t tiles_offset;
   int32_t flags_offset;
   char tile_set[MRG_IDC_FILE_NAME_LEN];
+  int8_t *tiles;
+  int8_t *flags;
+};
+
+struct mrg_idc_entry {
+  union {
+    struct mrg_idc_entity entity;
+    struct mrg_idc_room room;
+  };
 };
 
 struct mrg_idc_file {
