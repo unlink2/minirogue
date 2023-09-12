@@ -106,7 +106,7 @@ void test_arena(void **state) {
 }
 
 void test_idc(void **test) {
-  struct mrg_arena a = mrg_arena_init(256);
+  struct mrg_arena a = mrg_arena_init(1024);
   {
     const char d[] = {
         'i', 'd', 'c', 0, 0, 0, 0, 2, 0, 0, 0, MRG_IDC_HEADER_LEN, 0, 0, 0,
@@ -126,6 +126,7 @@ void test_idc(void **test) {
         0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 5, 0, 0, 0, 0, 7, '1', '2',
         '3', '4', '5', '6', '7', '\0', // end of entity entry
     };
+
     struct mrg_idc_file file = mrg_idc_de(&a, d, sizeof(d));
 
     assert_int_equal(0, file.ok);
@@ -157,6 +158,14 @@ void test_idc(void **test) {
     assert_int_equal(4, file.dirs[1].entry->entity.y);
     assert_int_equal(0x500, file.dirs[1].entry->entity.flags);
     assert_int_equal(0x07, file.dirs[1].entry->entity.type);
+
+    // reverse
+    size_t len = 0;
+    const char *se = mrg_idc_se(&a, &file, &len);
+
+    assert_non_null(se);
+    // assert_int_equal(sizeof(d), len);
+    assert_memory_equal(d, se, len);
   }
   mrg_arena_free(&a);
 }

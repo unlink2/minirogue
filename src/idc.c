@@ -10,7 +10,7 @@
 
 #define MRG_IDC_READ_INT32(dst, src, len, current)                             \
   MRG_IDC_READ(dst, src, len, current);                                        \
-  *dst = (int32_t)ntohl(*dst);
+  *(dst) = (int32_t)ntohl(*(dst));
 
 int32_t mrg_idc_chksm(const char *data, size_t len) {
   int32_t sum = 0;
@@ -180,6 +180,74 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
   return file;
 }
 
-const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f, size_t *len) {
-  return NULL;
+#define MRG_IDC_WRITE(a, predef_dst, src, len, total)                          \
+  {                                                                            \
+    void *dst = (predef_dst);                                                  \
+    if (!dst) {                                                                \
+      return NULL;                                                             \
+    }                                                                          \
+    memcpy(dst, (src), (len));                                                 \
+  }
+
+#define MRG_IDC_WRITE_INT32(a, dst, src, total)                                \
+  {                                                                            \
+    int32_t val = (int32_t)htonl((src));                                       \
+    MRG_IDC_WRITE(a, dst, &val, sizeof(int32_t), total);                       \
+  }
+
+#define MRG_IDC_WRITE_INT8(a, dst, src, total)                                 \
+  {                                                                            \
+    int8_t val = (src);                                                        \
+    MRG_IDC_WRITE(a, dst, &val, sizeof(int8_t), total);                        \
+  }
+
+const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
+                       size_t *len) {
+  const char *start = (const char *)a->data + a->aptr;
+  *len = 0;
+  // header
+  {
+    MRG_IDC_WRITE(a, mrg_arena_malloc(a, 3), MRG_IDC_MAGIC, 3, len);
+    MRG_IDC_WRITE_INT8(a, mrg_arena_malloc(a, sizeof(int8_t)), 0, len);
+    MRG_IDC_WRITE_INT32(a, mrg_arena_malloc(a, sizeof(int32_t)), 2, len);
+    MRG_IDC_WRITE_INT32(a, mrg_arena_malloc(a, sizeof(int32_t)),
+                        MRG_IDC_HEADER_LEN, len);
+    MRG_IDC_WRITE_INT32(a, mrg_arena_malloc(a, sizeof(int32_t)), 0, len);
+  }
+
+  // directory pre-allocation
+  size_t dirs_len = f->header.n_entries * MRG_IDC_DIR_LEN;
+  *len += dirs_len;
+  int32_t *dst_dirs = mrg_arena_malloc(a, dirs_len);
+
+  // entries + filling the respective dir entry
+  {
+    for (size_t i = 0; i < f->header.n_entries; i++) {
+      struct mrg_idc_dir *dir = &f->dirs[i];
+      struct mrg_idc_entry *entry = dir->entry;
+
+      char *dst_entry = mrg_arena_malloc(a, MRG_IDC_ENTRY_LEN);
+      *len += MRG_IDC_ENTRY_LEN;
+
+      size_t offset = dst_entry - start;
+      MRG_IDC_WRITE_INT32(a, dir++, dir->type, len);
+      MRG_IDC_WRITE_INT32(a, dir++, offset, len);
+
+      switch (dir->type) {
+      case MRG_IDC_DIR_ROOM:
+        break;
+      case MRG_IDC_DIR_ENTITY:
+        break;
+      }
+    }
+  }
+
+  // TODO: implement checksum properly!
+
+  for (int i = 0; i < *len; i++) {
+    printf("%x, ", start[i]);
+  }
+  puts("");
+
+  return start;
 }
