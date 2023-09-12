@@ -102,7 +102,7 @@ void test_arena(void **state) {
 }
 
 void test_idc(void **test) {
-  struct mrg_arena a = mrg_arena_init(16);
+  struct mrg_arena a = mrg_arena_init(256);
   {
     const char d[] = {
         'i', 'd', 'c', 0, 0, 0, 0, 2, 0, 0, 0, MRG_IDC_HEADER_LEN, 0, 0, 0,

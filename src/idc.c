@@ -29,10 +29,6 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
 
   int32_t chksm = mrg_idc_chksm(data, len);
 
-  // ensure plenty of space in the arena is available before using it
-  mrg_arena_clear(a);
-  mrg_arena_resize(a, len * 2);
-
   // parse header
   {
     size_t current = 0;
@@ -82,6 +78,12 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
     file.dirs =
         mrg_arena_malloc(a, file.header.n_entries * sizeof(struct mrg_idc_dir));
 
+    if (!file.dirs) {
+      fprintf(stdout, "Failed to allocated idc directory! oom!\n");
+      file.ok = -1;
+      return file;
+    }
+
     for (size_t i = 0; i < file.header.n_entries; i++) {
       size_t dirlen = MRG_IDC_DIR_LEN;
       if (len - current < dirlen) {
@@ -112,6 +114,12 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
       }
 
       dir->entry = mrg_arena_malloc(a, sizeof(struct mrg_idc_entry));
+      if (!dir->entry) {
+        fprintf(stdout, "Failed to allocated idc entry! oom!\n");
+        file.ok = -1;
+        return file;
+      }
+
       struct mrg_idc_entry *entry = dir->entry;
       memset(entry, 0, sizeof(struct mrg_idc_entry));
 
@@ -143,6 +151,11 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
         int32_t tiles_len = entry->room.room_w * entry->room.room_h;
         entry->room.tiles = mrg_arena_malloc(a, tiles_len);
         entry->room.flags = mrg_arena_malloc(a, tiles_len);
+        if (!entry->room.tiles || !entry->room.flags) {
+          fprintf(stdout, "Failed to allocated idc room maps! oom!\n");
+          file.ok = -1;
+          return file;
+        }
 
         current = entry->room.tiles_offset;
         if (len - current < tiles_len) {
