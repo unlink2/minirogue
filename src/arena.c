@@ -36,8 +36,10 @@ void* mrg_arena_mallocr(struct mrg_arena *arena, size_t len) {
 
 void *mrg_arena_malloc(struct mrg_arena *arena, size_t len) {
   if (arena->aptr + len > arena->arena_len) {
+    arena->oom = len;
     return NULL;
   }
+  arena->oom = 0;
 
   void *data = arena->data + arena->aptr;
 

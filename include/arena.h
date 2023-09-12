@@ -19,6 +19,9 @@ struct mrg_arena {
   size_t arena_len;
 
   size_t aptr;
+
+  // > 0 if the arena had an oom fault
+  size_t oom;
 };
 
 struct mrg_arena mrg_arena_init(size_t len);

@@ -67,19 +67,23 @@ void test_arena(void **state) {
 
   int32_t *d1 = mrg_arena_malloc(&arena, 4);
   assert_non_null(d1);
+  assert_int_equal(0, arena.oom);
   assert_int_equal(4, arena.aptr);
   *d1 = -2;
 
   int32_t *d2 = mrg_arena_malloc(&arena, 4);
   assert_non_null(d2);
+  assert_int_equal(0, arena.oom);
   assert_int_equal(8, arena.aptr);
   *d2 = -3;
 
   int32_t *d3 = mrg_arena_malloc(&arena, 4);
+  assert_int_equal(4, arena.oom);
   assert_null(d3);
 
   int16_t *d4 = mrg_arena_malloc(&arena, 2);
   assert_non_null(d2);
+  assert_int_equal(0, arena.oom);
   assert_int_equal(10, arena.aptr);
   *d4 = -4;
 
