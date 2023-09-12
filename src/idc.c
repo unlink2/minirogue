@@ -230,13 +230,22 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
       *len += MRG_IDC_ENTRY_LEN;
 
       size_t offset = dst_entry - start;
-      MRG_IDC_WRITE_INT32(a, dir++, dir->type, len);
-      MRG_IDC_WRITE_INT32(a, dir++, offset, len);
+      MRG_IDC_WRITE_INT32(a, dst_dirs++, dir->type, len);
+      MRG_IDC_WRITE_INT32(a, dst_dirs++, offset, len);
 
       switch (dir->type) {
-      case MRG_IDC_DIR_ROOM:
+      case MRG_IDC_DIR_ROOM: {
+        int tiles_len = entry->room.room_w * entry->room.room_h;
+        MRG_IDC_WRITE_INT32(a, dst_entry++, entry->room.room_id, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++, entry->room.room_w, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++, entry->room.room_h, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++, offset + MRG_IDC_ENTRY_LEN, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++,
+                            offset + MRG_IDC_ENTRY_LEN + tiles_len, len);
         break;
+      }
       case MRG_IDC_DIR_ENTITY:
+        MRG_IDC_WRITE_INT32(a, dst_entry++, entry->entity.room_id, len);
         break;
       }
     }
@@ -245,7 +254,10 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
   // TODO: implement checksum properly!
 
   for (int i = 0; i < *len; i++) {
-    printf("%x, ", start[i]);
+    printf("%02x, ", start[i]);
+    if (i != 0 && i % 8 == 0) {
+      puts("");
+    }
   }
   puts("");
 
