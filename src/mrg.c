@@ -6,6 +6,17 @@
 #include <stdio.h>
 #include <string.h>
 
+int mrg_mode_game_update(struct mrg_state *state) { return 0; }
+
+int mrg_mode_game_draw(struct mrg_state *state) {
+  mrg_pl_video_draw_pixel(state->platform, 0, 0, MRG_WHITE);
+  return 0;
+}
+
+int mrg_mode_maped_update(struct mrg_state *state) { return 0; }
+
+int mrg_mode_maped_draw(struct mrg_state *state) { return 0; }
+
 int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
 
@@ -31,15 +42,16 @@ int mrg_main_loop(struct mrg_state *state) {
 
     mrg_camera_update(state, &state->main_camera);
 
+    state->mode_update(state);
+
     // draw
     mrg_pl_video_begin(platform);
 
     mrg_pl_camera_begin(platform, &state->main_camera);
 
-    mrg_pl_video_draw_pixel(platform, 0, 0, MRG_WHITE);
-
     mrg_map_draw(state, &state->map);
     mrg_entity_tbl_draw(state, &state->entity_tbl);
+    state->mode_draw(state);
     mrg_pl_camera_end(platform, &state->main_camera);
 
     mrg_pl_draw_debug(state->platform);
@@ -76,10 +88,28 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
 
   state.tile_tbl = mrg_tile_set_tbl_init();
 
+  mrg_transition(&state, MRG_MODE_GAME);
+
   return state;
 }
 
 void mrg_state_free(struct mrg_state *state) {}
+
+int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {
+  state->mode = mode;
+  switch (state->mode) {
+  case MRG_MODE_GAME:
+    state->mode_draw = mrg_mode_game_draw;
+    state->mode_update = mrg_mode_game_draw;
+    break;
+  case MRG_MODE_MAPED:
+    state->mode_draw = mrg_mode_maped_draw;
+    state->mode_update = mrg_mode_maped_update;
+    break;
+  }
+
+  return 0;
+}
 
 int mrg_main(struct mrg_config *cfg) {
   if (!cfg->verbose) {
