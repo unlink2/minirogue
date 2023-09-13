@@ -226,10 +226,10 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
       struct mrg_idc_dir *dir = &f->dirs[i];
       struct mrg_idc_entry *entry = dir->entry;
 
-      char *dst_entry = mrg_arena_malloc(a, MRG_IDC_ENTRY_LEN);
+      int32_t *dst_entry = mrg_arena_malloc(a, MRG_IDC_ENTRY_LEN);
       *len += MRG_IDC_ENTRY_LEN;
 
-      size_t offset = dst_entry - start;
+      size_t offset = (char *)dst_entry - start;
       MRG_IDC_WRITE_INT32(a, dst_dirs++, dir->type, len);
       MRG_IDC_WRITE_INT32(a, dst_dirs++, offset, len);
 
@@ -242,24 +242,30 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
         MRG_IDC_WRITE_INT32(a, dst_entry++, offset + MRG_IDC_ENTRY_LEN, len);
         MRG_IDC_WRITE_INT32(a, dst_entry++,
                             offset + MRG_IDC_ENTRY_LEN + tiles_len, len);
+        MRG_IDC_WRITE(a, dst_entry, entry->room.tile_set, MRG_IDC_FILE_NAME_LEN,
+                      len);
+
+        char *dst_tiles = mrg_arena_malloc(a, tiles_len);
+        MRG_IDC_WRITE(a, dst_tiles, entry->room.tiles, tiles_len, len);
+
+        char *dst_flags = mrg_arena_malloc(a, tiles_len);
+        MRG_IDC_WRITE(a, dst_flags, entry->room.flags, tiles_len, len);
         break;
       }
       case MRG_IDC_DIR_ENTITY:
         MRG_IDC_WRITE_INT32(a, dst_entry++, entry->entity.room_id, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++, entry->entity.x, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++, entry->entity.y, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++, entry->entity.flags, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++, entry->entity.type, len);
+        MRG_IDC_WRITE(a, dst_entry, entry->room.tile_set, MRG_IDC_FILE_NAME_LEN,
+                      len);
         break;
       }
     }
   }
 
   // TODO: implement checksum properly!
-
-  for (int i = 0; i < *len; i++) {
-    printf("%02x, ", start[i]);
-    if (i != 0 && i % 8 == 0) {
-      puts("");
-    }
-  }
-  puts("");
 
   return start;
 }
