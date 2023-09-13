@@ -1,4 +1,5 @@
 #include "mrg.h"
+#include "defaults.h"
 #include "draw.h"
 #include "entity.h"
 #include "platform.h"
@@ -61,6 +62,9 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   struct mrg_state state;
   memset(&state, 0, sizeof(state));
   state.platform = platform;
+
+  struct mrg_idc_file idc = mrg_default_idc();
+  state.room_tbl = mrg_room_tbl_from_idc(&state, &idc);
 
   state.main_camera = mrg_camera_init(&state);
   if (state.main_camera.handle == -1) {
