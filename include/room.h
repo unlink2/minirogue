@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "defs.h"
 
 #define MRG_ROOMS_MAX 64
 
@@ -11,11 +12,7 @@
  * a walkable area. It connects to other rooms in a graph
  * and it can be drawn onto the map
  */
-struct mrg_room {
-  // TODO: tile data go here
-  int8_t tiles;
-  int8_t flags;
-};
+#define mrg_room mrg_idc_room
 
 struct mrg_room_instacne {
   // room handles for all directions
@@ -34,9 +31,13 @@ struct mrg_room_graph {
 
 // collection of all room templates
 struct mrg_room_tbl {
+  int ok;
   // TODO: how do we store rooms?
-  struct mrg_room rooms[MRG_ROOMS_MAX];
+  struct mrg_room *rooms[MRG_ROOMS_MAX];
   size_t len;
 };
+
+struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
+                                          struct mrg_idc_file *f);
 
 #endif
