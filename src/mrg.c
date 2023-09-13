@@ -6,16 +6,12 @@
 #include <stdio.h>
 #include <string.h>
 
-int mrg_mode_game_update(struct mrg_state *state) { return 0; }
+int mrg_mode_maped(struct mrg_state *state) { return 0; }
 
-int mrg_mode_game_draw(struct mrg_state *state) {
+int mrg_mode_game(struct mrg_state *state) {
   mrg_pl_video_draw_pixel(state->platform, 0, 0, MRG_WHITE);
   return 0;
 }
-
-int mrg_mode_maped_update(struct mrg_state *state) { return 0; }
-
-int mrg_mode_maped_draw(struct mrg_state *state) { return 0; }
 
 int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
@@ -51,7 +47,6 @@ int mrg_main_loop(struct mrg_state *state) {
 
     mrg_map_draw(state, &state->map);
     mrg_entity_tbl_draw(state, &state->entity_tbl);
-    state->mode_draw(state);
     mrg_pl_camera_end(platform, &state->main_camera);
 
     mrg_pl_draw_debug(state->platform);
@@ -99,12 +94,10 @@ int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {
   state->mode = mode;
   switch (state->mode) {
   case MRG_MODE_GAME:
-    state->mode_draw = mrg_mode_game_draw;
-    state->mode_update = mrg_mode_game_draw;
+    state->mode_update = mrg_mode_game;
     break;
   case MRG_MODE_MAPED:
-    state->mode_draw = mrg_mode_maped_draw;
-    state->mode_update = mrg_mode_maped_update;
+    state->mode_update = mrg_mode_maped;
     break;
   }
 

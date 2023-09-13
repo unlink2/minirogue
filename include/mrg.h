@@ -23,15 +23,11 @@ typedef int (*mrg_mode_tick)(struct mrg_state *state);
 int mrg_mode_game_update(struct mrg_state *state);
 int mrg_mode_game_draw(struct mrg_state *state);
 
-int mrg_mode_maped_update(struct mrg_state *state);
-int mrg_mode_maped_draw(struct mrg_state *state);
-
 struct mrg_state {
   int good;
   enum mrg_mode mode;
 
   mrg_mode_tick mode_update;
-  mrg_mode_tick mode_draw;
 
   struct mrg_camera main_camera;
   struct mrg_input main_input;
