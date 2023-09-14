@@ -62,9 +62,10 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   struct mrg_state state;
   memset(&state, 0, sizeof(state));
   state.platform = platform;
+  state.room_arena = mrg_arena_init(4096);
 
   struct mrg_idc_file idc = mrg_default_idc();
-  state.room_tbl = mrg_room_tbl_from_idc(&state, &idc);
+  state.room_tbl = mrg_room_tbl_from_idc(&state, &state.room_arena, &idc);
 
   state.main_camera = mrg_camera_init(&state);
   if (state.main_camera.handle == -1) {
@@ -76,7 +77,7 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   state.entity_tbl = mrg_entity_tbl_init();
 
   // TODO: dynamically load rooms!
-  state.map = mrg_map_init(&state, state.room_tbl.rooms[0]);
+  state.map = mrg_map_init(&state, state.room_tbl.graph.rooms[0]);
 
   state.cfg = cfg;
   state.main_input = mrg_pl_input_init();
@@ -93,7 +94,9 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   return state;
 }
 
-void mrg_state_free(struct mrg_state *state) {}
+void mrg_state_free(struct mrg_state *state) {
+  mrg_arena_free(&state->room_arena);
+}
 
 int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {
   state->mode = mode;

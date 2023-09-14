@@ -30,7 +30,7 @@ struct mrg_map {
   int tile_h;
 };
 
-struct mrg_map mrg_map_init(struct mrg_state *state, struct mrg_room *room);
+struct mrg_map mrg_map_init(struct mrg_state *state, struct mrg_room_instance *room);
 
 int mrg_map_update(struct mrg_state *state, struct mrg_map *map);
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map);

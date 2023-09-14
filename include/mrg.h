@@ -7,6 +7,7 @@
 #include "map.h"
 #include "tiles.h"
 #include "room.h"
+#include "arena.h"
 
 struct mrg_platform;
 
@@ -41,6 +42,8 @@ struct mrg_state {
 
   struct mrg_platform *platform;
   const struct mrg_config *cfg;
+
+  struct mrg_arena room_arena;
 };
 
 int mrg_main(struct mrg_config *cfg);

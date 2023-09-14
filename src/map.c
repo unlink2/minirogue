@@ -8,10 +8,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "idc.h"
+#include "room.h"
 
 #define MRG_MAP_COORDS_TO_TILE(map, x, y) (y) * (map)->w + (x)
 
-struct mrg_map mrg_map_init(struct mrg_state *state, struct mrg_room *room) {
+struct mrg_map mrg_map_init(struct mrg_state *state,
+                            struct mrg_room_instance *room) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
 
@@ -25,8 +27,8 @@ struct mrg_map mrg_map_init(struct mrg_state *state, struct mrg_room *room) {
 
   size_t tiles = map.w * map.h;
 
-  map.flags = malloc(tiles * sizeof(int8_t));
-  map.tiles = malloc(tiles * sizeof(int8_t));
+  map.flags = room->tiles;
+  map.tiles = room->flags;
   map.light = malloc(tiles * sizeof(int8_t));
 
 #ifdef MRG_DEBUG
@@ -151,8 +153,6 @@ void mrg_map_to_tile(struct mrg_map *map, int xi, int yi, int *xo, int *yo) {
 }
 
 void mrg_map_free(struct mrg_map *map) {
-  free(map->tiles);
-  free(map->flags);
   free(map->light);
 #ifdef MRG_DEBUG
   free(map->dbg_flags);
