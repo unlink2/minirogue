@@ -8,7 +8,8 @@ project ("lib"..NAME)
    language "C"
    targetdir "bin/%{cfg.buildcfg}"
    links { }
-   buildoptions { "-Wall", "-pedantic" }
+   buildoptions { "-Wall", "-pedantic", "-fsanitize=address" }
+   linkoptions { "-fsanitize=address" }
 
    files { "include/**.h", "src/**.c" }
    includedirs { "include" }
@@ -29,7 +30,8 @@ project (NAME)
    targetdir "bin/%{cfg.buildcfg}"
    links { "argtable2", "raylib", "m" }
    -- links { "lib"..NAME }
-   buildoptions { "-Wall", "-pedantic" }
+   buildoptions { "-Wall", "-pedantic", "-fsanitize=address" }
+   linkoptions { "-fsanitize=address" }
 
    files { "include/**.h", "src/**.c" }
    includedirs { "include" }
@@ -49,7 +51,8 @@ project ("test"..NAME)
    language "C"
    targetdir "bin/%{cfg.buildcfg}"
    links { "cmocka", "raylib", "m" }
-   buildoptions { "-Wall", "-pedantic" }
+   buildoptions { "-Wall", "-pedantic", "-fsanitize=address" }
+   linkoptions { "-fsanitize=address" }
 
    files { "include/**.h", "src/**.c" }
    includedirs { "include" }
