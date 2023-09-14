@@ -9,8 +9,8 @@ int8_t flags[32 * 32];
 
 struct mrg_idc_entry room = {
     .room = {0, 32, 32, 0, 0, "dbg.png", tiles, flags}};
-struct mrg_idc_entry entity = {
-    .entity = {0, 16, 16, 0, MRG_ENTITY_PLAYER, "dbg.png"}};
+struct mrg_idc_entry entity = {.entity = {0, MRG_FIXED(64, 0), MRG_FIXED(64, 0),
+                                          0, MRG_ENTITY_PLAYER, "dbg.png"}};
 
 struct mrg_idc_dir dirs[2] = {{MRG_IDC_DIR_ROOM, 0, &room},
                               {MRG_IDC_DIR_ENTITY, 0, &entity}};
