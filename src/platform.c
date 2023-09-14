@@ -244,7 +244,6 @@ int mrg_pl_tile_set_load(struct mrg_tile_set *set,
                          struct mrg_platform *platform, const char *path) {
   char *real_path = mrg_join(&platform->arena, platform->base_assets_path,
                              MRG_DIR_PATH_SEP, path);
-
   set->data = malloc(sizeof(Texture2D));
 
   Texture2D texture = LoadTexture(real_path);

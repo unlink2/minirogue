@@ -17,9 +17,6 @@ int mrg_mode_game(struct mrg_state *state) {
 int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
 
-  // test texture
-  mrg_tile_set_load(&state->tile_tbl, state->platform, "debugset.png", 16, 16);
-
   // TEST CODE for entity
   int player = mrg_entity_alloc(&state->entity_tbl);
   mrg_entity_init_player(&state->entity_tbl.slots[player]);
@@ -64,9 +61,6 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   state.platform = platform;
   state.room_arena = mrg_arena_init(4096);
 
-  struct mrg_idc_file idc = mrg_default_idc();
-  state.room_tbl = mrg_room_tbl_from_idc(&state, &state.room_arena, &idc);
-
   state.main_camera = mrg_camera_init(&state);
   if (state.main_camera.handle == -1) {
     fprintf(stderr, "Unabel to init main camera!\n");
@@ -75,9 +69,6 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   }
 
   state.entity_tbl = mrg_entity_tbl_init();
-
-  // TODO: dynamically load rooms!
-  state.map = mrg_map_init(&state, state.room_tbl.graph.rooms[0]);
 
   state.cfg = cfg;
   state.main_input = mrg_pl_input_init();
@@ -88,6 +79,11 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   }
 
   state.tile_tbl = mrg_tile_set_tbl_init();
+
+  struct mrg_idc_file idc = mrg_default_idc();
+  state.room_tbl = mrg_room_tbl_from_idc(&state, &state.room_arena, &idc);
+  // TODO: dynamically load rooms!
+  state.map = mrg_map_init(&state, state.room_tbl.graph.rooms[0]);
 
   mrg_transition(&state, MRG_MODE_GAME);
 
