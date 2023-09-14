@@ -1,6 +1,7 @@
 #include "tiles.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "platform.h"
 
@@ -34,6 +35,7 @@ int mrg_tile_set_load(struct mrg_tile_set_tbl *tbl,
       set->tile_h = tile_h;
       set->tile_w = tile_w;
       set->flags |= MRG_TILE_SET_FLAG_FREE;
+      set->path = strdup(path);
       return (int)i;
     }
   }
@@ -48,6 +50,7 @@ void mrg_tile_set_free(struct mrg_tile_set_tbl *tbl,
   if (!(set->flags & MRG_TILE_SET_FLAG_FREE)) {
     fprintf(stderr, "Tile set %d (%s): double free detected!\n", handle,
             set->path);
+    free((void*)set->path);
     return;
   }
 

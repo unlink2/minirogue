@@ -3,6 +3,7 @@
 #include "input.h"
 #include "mrg.h"
 #include "platform.h"
+#include "idc.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -80,6 +81,42 @@ int mrg_entity_init(struct mrg_entity *entity) {
   entity->col_h = 12;
   entity->col_offset_x = 2;
   entity->col_offset_y = 2;
+
+  return 0;
+}
+
+int mrg_entities_from_idc(struct mrg_state *state, struct mrg_idc_file *f) {
+  struct mrg_entity_tbl *tbl = &state->entity_tbl;
+
+  for (size_t i = 0; i < f->header.n_entries; i++) {
+    struct mrg_idc_dir *dir = &f->dirs[i];
+    if (!(dir->type & MRG_IDC_DIR_ENTITY) &&
+        dir->entry->entity.room_id == state->map.room_id) {
+      continue;
+    }
+
+    int handle = mrg_entity_alloc(tbl);
+    if (handle == -1) {
+      return -1;
+    }
+
+    // TODO: handle room id
+    struct mrg_entity *e = &tbl->slots[handle];
+    switch (dir->entry->entity.type) {
+    case MRG_ENTITY_PLAYER:
+      mrg_entity_init_player(e);
+      break;
+    }
+    e->type = dir->entry->entity.type;
+    e->flags = dir->entry->entity.flags | e->flags;
+    e->x = dir->entry->entity.x;
+    e->y = dir->entry->entity.y;
+
+    char tile_path[MRG_IDC_FILE_NAME_LEN + 1];
+    memset(tile_path, 0, MRG_IDC_FILE_NAME_LEN + 1);
+    memcpy(tile_path, dir->entry->room.tile_set, MRG_IDC_FILE_NAME_LEN);
+    mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path, 16, 16);
+  }
 
   return 0;
 }

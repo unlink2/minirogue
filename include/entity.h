@@ -76,6 +76,9 @@ int mrg_beh_entity_draw(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_entity_alloc(struct mrg_entity_tbl *tbl);
 
 int mrg_entity_init(struct mrg_entity *entity);
+
+int mrg_entities_from_idc(struct mrg_state *state, struct mrg_idc_file *f);
+
 // init functions for entities
 int mrg_entity_init_player(struct mrg_entity *entity);
 

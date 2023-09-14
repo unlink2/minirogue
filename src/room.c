@@ -31,12 +31,11 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
     }
 
     tbl.rooms[i] = &dir->entry->room;
-    
+
     char tile_path[MRG_IDC_FILE_NAME_LEN + 1];
     memset(tile_path, 0, MRG_IDC_FILE_NAME_LEN + 1);
     memcpy(tile_path, dir->entry->room.tile_set, MRG_IDC_FILE_NAME_LEN);
-    mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path, 16,
-                      16);
+    mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path, 16, 16);
   }
 
   assert(tbl.len <= MRG_ROOMS_MAX);
@@ -54,8 +53,8 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
 struct mrg_room_instance mrg_room_instance_from(struct mrg_arena *a,
                                                 struct mrg_room *room, int w,
                                                 int e, int n, int s) {
-  struct mrg_room_instance i = {w,           e, n, s, NULL, NULL, room->room_w,
-                                room->room_h};
+  struct mrg_room_instance i = {room->room_id, w,           e, n, s, NULL, NULL,
+                                room->room_w,  room->room_h};
 
   size_t tlen = (size_t)room->room_w * room->room_h;
   i.tiles = mrg_arena_malloc(a, tlen);

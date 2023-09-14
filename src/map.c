@@ -25,6 +25,8 @@ struct mrg_map mrg_map_init(struct mrg_state *state,
   map.w = room->room_w;
   map.h = room->room_h;
 
+  map.room_id = room->room_id;
+
   size_t tiles = map.w * map.h;
 
   map.flags = room->tiles;

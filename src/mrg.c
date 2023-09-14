@@ -17,10 +17,6 @@ int mrg_mode_game(struct mrg_state *state) {
 int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
 
-  // TEST CODE for entity
-  int player = mrg_entity_alloc(&state->entity_tbl);
-  mrg_entity_init_player(&state->entity_tbl.slots[player]);
-
   while (mrg_pl_video_open(platform)) {
     // input
     mrg_input_poll(state, &state->main_input);
@@ -84,6 +80,8 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   state.room_tbl = mrg_room_tbl_from_idc(&state, &state.room_arena, &idc);
   // TODO: dynamically load rooms!
   state.map = mrg_map_init(&state, state.room_tbl.graph.rooms[0]);
+  // TODO: dynamically load entities!
+  mrg_entities_from_idc(&state, &idc); 
 
   mrg_transition(&state, MRG_MODE_GAME);
 

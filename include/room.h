@@ -15,6 +15,7 @@
 #define mrg_room mrg_idc_room
 
 struct mrg_room_instance {
+  int room_id;
   // room handles for all directions
   int room_west;
   int room_east;
