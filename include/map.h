@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "defs.h"
+#include "room.h"
 
 #define MRG_LAYER_W 16
 #define MRG_LAYER_H 14
@@ -29,7 +30,7 @@ struct mrg_map {
   int tile_h;
 };
 
-struct mrg_map mrg_map_init(void);
+struct mrg_map mrg_map_init(struct mrg_state *state, struct mrg_room *room);
 
 int mrg_map_update(struct mrg_state *state, struct mrg_map *map);
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map);

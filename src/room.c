@@ -11,7 +11,7 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
 
   for (size_t i = 0; i < f->header.n_entries; i++) {
     struct mrg_idc_dir *dir = &f->dirs[i];
-
+    
     if (dir->type != MRG_IDC_DIR_ROOM) {
       continue;
     }

@@ -2,21 +2,26 @@
 #include "platform.h"
 #include "tiles.h"
 #include "mrg.h"
+#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "idc.h"
 
 #define MRG_MAP_COORDS_TO_TILE(map, x, y) (y) * (map)->w + (x)
 
-struct mrg_map mrg_map_init(void) {
+struct mrg_map mrg_map_init(struct mrg_state *state, struct mrg_room *room) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
 
+  assert(room);
+  assert(state);
+
   map.x = 0;
   map.y = 0;
-  map.w = MRG_LAYER_W;
-  map.h = MRG_LAYER_H;
+  map.w = room->room_w;
+  map.h = room->room_h;
 
   size_t tiles = map.w * map.h;
 

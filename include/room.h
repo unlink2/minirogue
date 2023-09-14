@@ -25,7 +25,7 @@ struct mrg_room_instacne {
 };
 
 struct mrg_room_graph {
-  struct mrg_room *rooms;
+  struct mrg_room_instance *rooms;
   size_t room_len;
 };
 

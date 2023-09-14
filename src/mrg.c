@@ -75,7 +75,8 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
 
   state.entity_tbl = mrg_entity_tbl_init();
 
-  state.map = mrg_map_init();
+  // TODO: dynamically load rooms!
+  state.map = mrg_map_init(&state, state.room_tbl.rooms[0]);
 
   state.cfg = cfg;
   state.main_input = mrg_pl_input_init();
