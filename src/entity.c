@@ -115,7 +115,8 @@ int mrg_entities_from_idc(struct mrg_state *state, struct mrg_idc_file *f) {
     char tile_path[MRG_IDC_FILE_NAME_LEN + 1];
     memset(tile_path, 0, MRG_IDC_FILE_NAME_LEN + 1);
     memcpy(tile_path, dir->entry->room.tile_set, MRG_IDC_FILE_NAME_LEN);
-    mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path, 16, 16);
+    e->tileset_id =
+        mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path, 16, 16);
   }
 
   return 0;
@@ -127,6 +128,8 @@ int mrg_entity_init_player(struct mrg_entity *entity) {
   entity->type = MRG_ENTITY_PLAYER;
   entity->next_behavior = MRG_BEH_PLAYER_UPDATE;
   entity->next_draw = MRG_BEH_ENTITY_DRAW;
+
+  entity->tile_id = 1;
 
   fprintf(stdout, "Player created with behavior %d\n", entity->next_behavior);
   return 0;
