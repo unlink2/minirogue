@@ -98,6 +98,7 @@ int mrg_console_update(struct mrg_state *state, struct mrg_console *console) {
     mrg_console_puts(console, console->input.buffer);
     console->input.index = 0;
     memset(console->input.buffer, 0, MRG_CONSOLE_LINE_LEN);
+    console->line_scroll = 0;
   }
 
   if (MRG_HELD(&state->main_input, MRG_ACTION_SCRLDOWN) && !console->bs_delay) {
