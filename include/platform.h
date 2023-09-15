@@ -67,6 +67,10 @@ void mrg_pl_draw_debug(mrg_platform *platform);
 void mrg_pl_draw_debug_rec(mrg_platform *platform, int x, int y, int w, int h,
                            struct mrg_color color);
 
+
+void mrg_pl_print(mrg_platform *platform, const char *text, int x, int y,
+                  int font_size, struct mrg_color color);
+
 /**
  * Platform specific camera details
  */
@@ -98,18 +102,17 @@ void mrg_pl_camera_bounds(mrg_platform *platform, struct mrg_camera *camera,
 struct mrg_input mrg_pl_input_init(void);
 uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle);
 
+int mrg_pl_char_pressed(mrg_platform *platform);
+
 /**
  * File system
  */
 
-
 // read an entire file into a buffer
-char *mrg_pl_fread(struct mrg_arena *a, const char *path,
-                   size_t *len);
+char *mrg_pl_fread(struct mrg_arena *a, const char *path, size_t *len);
 
 // write file to asset path
-size_t mrg_pl_fwrite(const char *path,
-                    const char *data, size_t len);
+size_t mrg_pl_fwrite(const char *path, const char *data, size_t len);
 
 /**
  * Tiles

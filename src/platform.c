@@ -100,6 +100,11 @@ void mrg_pl_draw_debug(mrg_platform *platform) {
   }
 }
 
+void mrg_pl_print(mrg_platform *platform, const char *text, int x, int y,
+                  int font_size, struct mrg_color color) {
+  DrawText(text, x, y, font_size, (Color){color.r, color.g, color.b, color.a});
+}
+
 void mrg_pl_draw_debug_rec(mrg_platform *platform, int x, int y, int w, int h,
                            struct mrg_color color) {
   if (!platform->draw_debug) {
@@ -204,8 +209,16 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   if (IsKeyDown(KEY_GRAVE)) {
     input_state |= MRG_ACTION_DBG_TOGGLE_CONSOLE;
   }
+  if (IsKeyDown(KEY_BACKSPACE)) {
+    input_state |= MRG_ACTION_BACKSPACE;
+  }
+  if (IsKeyDown(KEY_ENTER)) {
+    input_state |= MRG_ACTION_ENTER;
+  }
   return input_state;
 }
+
+int mrg_pl_char_pressed(mrg_platform *platform) { return GetCharPressed(); }
 
 char *mrg_pl_fread(struct mrg_arena *a, const char *path, size_t *len) {
   FILE *f = fopen(path, "rbe");

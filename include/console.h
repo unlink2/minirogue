@@ -10,12 +10,16 @@
 
 struct mrg_console_line {
   char buffer[MRG_CONSOLE_LINE_LEN];
+  int index;
+
   int next;
 };
 
 struct mrg_console {
   struct mrg_console_line *lines;
   int bottom;
+  enum mrg_mode prev;
+  int bs_delay;
 };
 
 struct mrg_console mrg_console_init(void);

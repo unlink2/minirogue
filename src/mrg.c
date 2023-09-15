@@ -2,6 +2,7 @@
 #include "defaults.h"
 #include "draw.h"
 #include "entity.h"
+#include "input.h"
 #include "platform.h"
 #include "tiles.h"
 #include <stdio.h>
@@ -21,6 +22,14 @@ int mrg_main_loop(struct mrg_state *state) {
     // input
     mrg_input_poll(state, &state->main_input);
 
+    if (MRG_PRESSED(&state->main_input, MRG_ACTION_DBG_TOGGLE_CONSOLE)) {
+      if (state->mode == MRG_MODE_CONSOLE) {
+        mrg_transition(state, state->console.prev);
+      } else {
+        mrg_transition(state, MRG_MODE_CONSOLE);
+      }
+    }
+
     // update
     if (mrg_map_update(state, &state->map) == -1) {
       fprintf(stderr, "Map update failed!\n");
@@ -32,9 +41,17 @@ int mrg_main_loop(struct mrg_state *state) {
 
     mrg_camera_update(state, &state->main_camera);
 
-    mrg_console_update(state, &state->console);
-
-    state->mode_update(state);
+    switch (state->mode) {
+    case MRG_MODE_GAME:
+      mrg_mode_game(state);
+      break;
+    case MRG_MODE_CONSOLE:
+      mrg_console_update(state, &state->console);
+      break;
+    case MRG_MODE_MAPED:
+      mrg_mode_maped(state);
+      break;
+    }
 
     // draw
     mrg_pl_video_begin(platform);
@@ -45,7 +62,14 @@ int mrg_main_loop(struct mrg_state *state) {
     mrg_entity_tbl_draw(state, &state->entity_tbl);
     mrg_pl_camera_end(platform, &state->main_camera);
 
-    mrg_console_draw(state, &state->console);
+    switch (state->mode) {
+    case MRG_MODE_CONSOLE:
+      mrg_console_draw(state, &state->console);
+      break;
+    default:
+      break;
+    }
+
     mrg_pl_draw_debug(state->platform);
 
     mrg_pl_video_end(platform);
@@ -86,7 +110,7 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   // TODO: dynamically load rooms!
   state.map = mrg_map_init(&state, state.room_tbl.graph.rooms[0]);
   // TODO: dynamically load entities!
-  mrg_entities_from_idc(&state, &idc); 
+  mrg_entities_from_idc(&state, &idc);
 
   state.console = mrg_console_init();
 
@@ -107,15 +131,22 @@ void mrg_state_free(struct mrg_state *state) {
 }
 
 int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {
-  state->mode = mode;
   switch (state->mode) {
-  case MRG_MODE_GAME:
-    state->mode_update = mrg_mode_game;
-    break;
-  case MRG_MODE_MAPED:
-    state->mode_update = mrg_mode_maped;
+  default:
     break;
   }
+
+  switch (mode) {
+  case MRG_MODE_CONSOLE:
+    state->console.prev = state->mode;
+    // clear keyboard buffer before entering console
+    while (mrg_pl_char_pressed(state->platform)) {}
+    break;
+  default:
+    break;
+  }
+
+  state->mode = mode;
 
   return 0;
 }

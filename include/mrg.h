@@ -16,22 +16,12 @@ struct mrg_config {
   _Bool verbose;
 };
 
-enum mrg_mode {
-  MRG_MODE_GAME,
-  MRG_MODE_CONSOLE,
-  MRG_MODE_MAPED,
-};
-
-typedef int (*mrg_mode_tick)(struct mrg_state *state);
-
 int mrg_mode_game(struct mrg_state *state);
 int mrg_mode_maped(struct mrg_state *state);
 
 struct mrg_state {
   int good;
   enum mrg_mode mode;
-
-  mrg_mode_tick mode_update;
 
   struct mrg_camera main_camera;
   struct mrg_input main_input;
