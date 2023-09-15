@@ -27,6 +27,8 @@ struct mrg_console mrg_console_init(void);
 
 int mrg_console_draw(struct mrg_state *state, struct mrg_console *console);
 
+int mrg_console_exec(struct mrg_state *state, const char *cmd);
+
 int mrg_console_puts(struct mrg_console *console, const char *s);
 int mrg_console_update(struct mrg_state *state, struct mrg_console *console);
 

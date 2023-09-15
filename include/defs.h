@@ -14,6 +14,8 @@ struct mrg_idc_room;
 struct mrg_idc_entry;
 struct mrg_idc_file;
 
+struct mrg_cmd;
+
 enum mrg_mode {
   MRG_MODE_GAME,
   MRG_MODE_CONSOLE,
