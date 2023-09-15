@@ -115,8 +115,8 @@ int mrg_entities_from_idc(struct mrg_state *state, struct mrg_idc_file *f) {
     char tile_path[MRG_IDC_FILE_NAME_LEN + 1];
     memset(tile_path, 0, MRG_IDC_FILE_NAME_LEN + 1);
     memcpy(tile_path, dir->entry->room.tile_set, MRG_IDC_FILE_NAME_LEN);
-    e->tileset_id =
-        mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path, 16, 16);
+    e->tileset_id = mrg_tile_set_load(&state->tile_tbl, state->platform,
+                                      tile_path, state->tile_w, state->tile_h);
   }
 
   return 0;

@@ -32,6 +32,8 @@ int mrg_main_loop(struct mrg_state *state) {
 
     mrg_camera_update(state, &state->main_camera);
 
+    mrg_console_update(state, &state->console);
+
     state->mode_update(state);
 
     // draw
@@ -43,6 +45,7 @@ int mrg_main_loop(struct mrg_state *state) {
     mrg_entity_tbl_draw(state, &state->entity_tbl);
     mrg_pl_camera_end(platform, &state->main_camera);
 
+    mrg_console_draw(state, &state->console);
     mrg_pl_draw_debug(state->platform);
 
     mrg_pl_video_end(platform);
@@ -75,6 +78,8 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   }
 
   state.tile_tbl = mrg_tile_set_tbl_init();
+  state.tile_w = MRG_TILE_W;
+  state.tile_h = MRG_TILE_H;
 
   struct mrg_idc_file idc = mrg_default_idc();
   state.room_tbl = mrg_room_tbl_from_idc(&state, &state.room_arena, &idc);
@@ -82,6 +87,8 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   state.map = mrg_map_init(&state, state.room_tbl.graph.rooms[0]);
   // TODO: dynamically load entities!
   mrg_entities_from_idc(&state, &idc); 
+
+  state.console = mrg_console_init();
 
   mrg_transition(&state, MRG_MODE_GAME);
 
@@ -95,6 +102,8 @@ void mrg_state_free(struct mrg_state *state) {
   for (size_t i = 0; i < state->tile_tbl.len; i++) {
     mrg_tile_set_free(&state->tile_tbl, state->platform, (int)i);
   }
+
+  mrg_console_free(&state->console);
 }
 
 int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {

@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "input.h"
 #include "tiles.h"
+#include "defs.h"
 
 char *mrg_join(struct mrg_arena *a, const char *dst, const char *path_sep,
                const char *suffix) {
@@ -199,6 +200,9 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   }
   if (IsKeyDown(KEY_D)) {
     input_state |= MRG_ACTION_RIGHT;
+  }
+  if (IsKeyDown(KEY_GRAVE)) {
+    input_state |= MRG_ACTION_DBG_TOGGLE_CONSOLE;
   }
   return input_state;
 }

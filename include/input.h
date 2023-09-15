@@ -2,6 +2,7 @@
 #define INPUT_H_
 
 #include <stdint.h>
+#include "defs.h"
 
 struct mrg_state;
 
@@ -9,7 +10,10 @@ enum mrg_actions {
   MRG_ACTION_UP = 1,
   MRG_ACTION_DOWN = 2,
   MRG_ACTION_LEFT = 4,
-  MRG_ACTION_RIGHT = 8
+  MRG_ACTION_RIGHT = 8,
+#ifdef MRG_DEBUG
+  MRG_ACTION_DBG_TOGGLE_CONSOLE = 16
+#endif
 };
 
 struct mrg_input {

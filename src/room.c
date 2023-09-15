@@ -35,7 +35,8 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
     char tile_path[MRG_IDC_FILE_NAME_LEN + 1];
     memset(tile_path, 0, MRG_IDC_FILE_NAME_LEN + 1);
     memcpy(tile_path, dir->entry->room.tile_set, MRG_IDC_FILE_NAME_LEN);
-    mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path, 16, 16);
+    mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path,
+                      state->tile_w, state->tile_h);
   }
 
   assert(tbl.len <= MRG_ROOMS_MAX);

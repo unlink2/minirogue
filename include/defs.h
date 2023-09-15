@@ -17,6 +17,9 @@ struct mrg_idc_file;
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
+#define MRG_TILE_W 16
+#define MRG_TILE_H 16
+
 #define MRG_DEBUG
 
 #endif

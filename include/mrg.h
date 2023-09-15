@@ -2,6 +2,7 @@
 #define mrgH__
 
 #include "camera.h"
+#include "console.h"
 #include "entity.h"
 #include "input.h"
 #include "map.h"
@@ -17,6 +18,7 @@ struct mrg_config {
 
 enum mrg_mode {
   MRG_MODE_GAME,
+  MRG_MODE_CONSOLE,
   MRG_MODE_MAPED,
 };
 
@@ -43,7 +45,11 @@ struct mrg_state {
   struct mrg_platform *platform;
   const struct mrg_config *cfg;
 
+  int tile_w;
+  int tile_h;
+
   struct mrg_arena room_arena;
+  struct mrg_console console;
 };
 
 int mrg_main(struct mrg_config *cfg);
