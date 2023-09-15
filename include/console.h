@@ -5,8 +5,7 @@
 #include "defs.h"
 #include "arena.h"
 
-#define MRG_CONSOLE_LINE_LEN 128
-#define MRG_CONSOLE_LINES_MAX 20
+#define MRG_CONSOLE_LINE_LEN 1024
 
 struct mrg_console_line {
   char buffer[MRG_CONSOLE_LINE_LEN];
@@ -14,16 +13,21 @@ struct mrg_console_line {
 };
 
 struct mrg_console {
-  struct mrg_console_line *buffer;
+  char **lines;
+  size_t lines_len;
   struct mrg_console_line input;
   enum mrg_mode prev;
   int bs_delay;
+
+  int lines_to_draw;
+  int line_scroll;
 };
 
 struct mrg_console mrg_console_init(void);
 
 int mrg_console_draw(struct mrg_state *state, struct mrg_console *console);
 
+int mrg_console_puts(struct mrg_console *console, const char *s);
 int mrg_console_update(struct mrg_state *state, struct mrg_console *console);
 
 void mrg_console_free(struct mrg_console *console);

@@ -8,31 +8,71 @@
 
 struct mrg_console mrg_console_init(void) {
   struct mrg_console console;
+  memset(&console, 0, sizeof(console));
   console.bs_delay = 0;
-
-  size_t lineslen = sizeof(struct mrg_console_line) * MRG_CONSOLE_LINES_MAX;
-  console.buffer = malloc(lineslen);
-
-  memset(console.buffer, 0, lineslen);
+  console.lines_to_draw = 25;
+  console.line_scroll = 0;
 
   return console;
 }
 
 int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
+  int y_per_line = 20;
+  int lines_to_draw = console->lines_to_draw;
 
   int x = 10;
-  int y = 32;
-  for (size_t i = 0; i < MRG_CONSOLE_LINES_MAX; i++) {
-    mrg_pl_print(state->platform, console->buffer[i].buffer, x, y, 20,
-                 MRG_WHITE);
-    y += 20;
+  int y = 32 + y_per_line * lines_to_draw;
+  int input_y = y + y_per_line;
+
+  for (size_t i = console->line_scroll;
+       i < MIN(console->lines_len, lines_to_draw) + console->line_scroll; i++) {
+    size_t index = console->lines_len - i - 1;
+    if (index > console->lines_len) {
+      continue;
+    }
+
+    mrg_pl_print(state->platform, console->lines[index], x, y, 20, MRG_WHITE);
+    y -= y_per_line;
   }
 
-  mrg_pl_print(state->platform, ">", x, y, 20, MRG_WHITE);
-  mrg_pl_print(state->platform, console->input.buffer, x + 20, y, 20,
+  mrg_pl_print(state->platform, ">", x, input_y, 20, MRG_WHITE);
+  mrg_pl_print(state->platform, console->input.buffer, x + 20, input_y, 20,
                MRG_WHITE);
 
   return 0;
+}
+
+int mrg_console_puts(struct mrg_console *console, const char *s) {
+  // FIXME: this will malloc way too much...
+  console->lines_len++;
+  size_t lines_len = sizeof(char **) * console->lines_len;
+  char **new_lines = NULL;
+
+  if (console->lines) {
+    new_lines = realloc(console->lines, lines_len);
+  } else {
+    new_lines = malloc(lines_len);
+  }
+
+  if (!new_lines) {
+    fprintf(stderr, "Realloc failed for console lines...\n");
+    return -1;
+  }
+  console->lines = new_lines;
+
+  size_t input_len = strlen(s);
+
+  char *new_str = malloc(input_len + 1);
+  if (!new_str) {
+    fprintf(stderr, "Malloc failed for console lines...\n");
+    return -1;
+  }
+  memset(new_str, 0, input_len + 1);
+  strncpy(new_str, s, input_len);
+
+  console->lines[console->lines_len - 1] = new_str;
+
+  return (int)input_len;
 }
 
 int mrg_console_update(struct mrg_state *state, struct mrg_console *console) {
@@ -55,20 +95,17 @@ int mrg_console_update(struct mrg_state *state, struct mrg_console *console) {
   }
 
   if (MRG_PRESSED(&state->main_input, MRG_ACTION_ENTER)) {
+    mrg_console_puts(console, console->input.buffer);
     console->input.index = 0;
-
-    // move all buffers up one and drop first one
-    for (size_t i = MRG_CONSOLE_LINES_MAX - 2; i > 0;
-         i -= 2) {
-      memcpy(console->buffer[i - 1].buffer, console->buffer[i].buffer,
-             MRG_CONSOLE_LINE_LEN);
-    }
-
-    // move input buffer to last buffer
-    memcpy(console->buffer[MRG_CONSOLE_LINES_MAX - 1].buffer,
-           console->input.buffer, MRG_CONSOLE_LINE_LEN);
-
     memset(console->input.buffer, 0, MRG_CONSOLE_LINE_LEN);
+  }
+
+  if (MRG_HELD(&state->main_input, MRG_ACTION_SCRLDOWN) && !console->bs_delay) {
+    console->line_scroll = MAX(0, console->line_scroll - 1);
+  }
+
+  if (MRG_HELD(&state->main_input, MRG_ACTION_SCRLUP) && !console->bs_delay) {
+    console->line_scroll = console->line_scroll + 1;
   }
 
   if (console->bs_delay) {
@@ -78,4 +115,11 @@ int mrg_console_update(struct mrg_state *state, struct mrg_console *console) {
   return 0;
 }
 
-void mrg_console_free(struct mrg_console *console) { free(console->buffer); }
+void mrg_console_free(struct mrg_console *console) {
+  for (size_t i = 0; i < console->lines_len; i++) {
+    free(console->lines[i]);
+  }
+  if (console->lines) {
+    free(console->lines);
+  }
+}

@@ -15,7 +15,9 @@ enum mrg_actions {
   MRG_ACTION_DBG_TOGGLE_CONSOLE = 16,
 #endif
   MRG_ACTION_BACKSPACE = 32,
-  MRG_ACTION_ENTER = 64
+  MRG_ACTION_ENTER = 64,
+  MRG_ACTION_SCRLUP = 128,
+  MRG_ACTION_SCRLDOWN = 256
 };
 
 struct mrg_input {
