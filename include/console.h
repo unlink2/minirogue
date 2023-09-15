@@ -5,19 +5,17 @@
 #include "defs.h"
 #include "arena.h"
 
-#define MRG_CONSOLE_LINE_LEN 1024
+#define MRG_CONSOLE_LINE_LEN 128
 #define MRG_CONSOLE_LINES_MAX 20
 
 struct mrg_console_line {
   char buffer[MRG_CONSOLE_LINE_LEN];
   int index;
-
-  int next;
 };
 
 struct mrg_console {
-  struct mrg_console_line *lines;
-  int bottom;
+  struct mrg_console_line *buffer;
+  struct mrg_console_line input;
   enum mrg_mode prev;
   int bs_delay;
 };
