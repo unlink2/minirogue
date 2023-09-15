@@ -90,6 +90,11 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
 
 void mrg_state_free(struct mrg_state *state) {
   mrg_arena_free(&state->room_arena);
+  mrg_map_free(&state->map);
+
+  for (size_t i = 0; i < state->tile_tbl.len; i++) {
+    mrg_tile_set_free(&state->tile_tbl, state->platform, (int)i);
+  }
 }
 
 int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {
