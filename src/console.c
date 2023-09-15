@@ -29,7 +29,8 @@ int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
   }
 
   mrg_pl_print(state->platform, ">", x, y, 20, MRG_WHITE);
-  mrg_pl_print(state->platform, console->input.buffer, x+20, y, 20, MRG_WHITE);
+  mrg_pl_print(state->platform, console->input.buffer, x + 20, y, 20,
+               MRG_WHITE);
 
   return 0;
 }
@@ -55,6 +56,18 @@ int mrg_console_update(struct mrg_state *state, struct mrg_console *console) {
 
   if (MRG_PRESSED(&state->main_input, MRG_ACTION_ENTER)) {
     console->input.index = 0;
+
+    // move all buffers up one and drop first one
+    for (size_t i = MRG_CONSOLE_LINES_MAX - 2; i > 0;
+         i -= 2) {
+      memcpy(console->buffer[i - 1].buffer, console->buffer[i].buffer,
+             MRG_CONSOLE_LINE_LEN);
+    }
+
+    // move input buffer to last buffer
+    memcpy(console->buffer[MRG_CONSOLE_LINES_MAX - 1].buffer,
+           console->input.buffer, MRG_CONSOLE_LINE_LEN);
+
     memset(console->input.buffer, 0, MRG_CONSOLE_LINE_LEN);
   }
 

@@ -21,6 +21,11 @@ int mrg_main_loop(struct mrg_state *state) {
   while (mrg_pl_video_open(platform)) {
     // input
     mrg_input_poll(state, &state->main_input);
+    if (state->mode == MRG_MODE_CONSOLE) {
+      // ignore all inputs but console ones
+      state->main_input.state &= MRG_ACTION_ENTER | MRG_ACTION_BACKSPACE |
+                                 MRG_ACTION_DBG_TOGGLE_CONSOLE;
+    }
 
     if (MRG_PRESSED(&state->main_input, MRG_ACTION_DBG_TOGGLE_CONSOLE)) {
       if (state->mode == MRG_MODE_CONSOLE) {
@@ -140,7 +145,8 @@ int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {
   case MRG_MODE_CONSOLE:
     state->console.prev = state->mode;
     // clear keyboard buffer before entering console
-    while (mrg_pl_char_pressed(state->platform)) {}
+    while (mrg_pl_char_pressed(state->platform)) {
+    }
     break;
   default:
     break;
