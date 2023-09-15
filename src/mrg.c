@@ -108,7 +108,7 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   struct mrg_idc_file idc = mrg_default_idc();
   state.room_tbl = mrg_room_tbl_from_idc(&state, &state.room_arena, &idc);
   // TODO: dynamically load rooms!
-  state.map = mrg_map_init(&state, state.room_tbl.graph.rooms[0]);
+  state.map = mrg_map_init(&state, 0);
   // TODO: dynamically load entities!
   mrg_entities_from_idc(&state, &idc);
 

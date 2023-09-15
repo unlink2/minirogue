@@ -91,7 +91,7 @@ int mrg_entities_from_idc(struct mrg_state *state, struct mrg_idc_file *f) {
   for (size_t i = 0; i < f->header.n_entries; i++) {
     struct mrg_idc_dir *dir = &f->dirs[i];
     if (!(dir->type & MRG_IDC_DIR_ENTITY) &&
-        dir->entry->entity.room_id == state->map.room_id) {
+        dir->entry->entity.room_id == state->map.room->room_id) {
       continue;
     }
 

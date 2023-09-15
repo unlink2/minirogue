@@ -14,16 +14,15 @@
  */
 #define mrg_room mrg_idc_room
 
+enum mrg_room_flags { MRG_ROOM_ALLOC };
+
 struct mrg_room_instance {
   int room_id;
-  // room handles for all directions
-  int room_west;
-  int room_east;
-  int room_north;
-  int room_south;
 
   int8_t *tiles;
   int8_t *flags;
+
+  enum mrg_room_flags iflags;
 
   int32_t room_w;
   int32_t room_h;
@@ -31,13 +30,14 @@ struct mrg_room_instance {
 
 struct mrg_room_graph {
   struct mrg_room_instance *rooms[MRG_ROOMS_MAX];
-  size_t room_len;
+  // dimension of the graph
+  size_t g_w;
+  size_t g_h;
 };
 
 // collection of all room templates
 struct mrg_room_tbl {
   int ok;
-  // TODO: how do we store rooms?
   struct mrg_room *rooms[MRG_ROOMS_MAX];
 
   struct mrg_room_graph graph;

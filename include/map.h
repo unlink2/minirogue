@@ -17,9 +17,10 @@ enum mrg_map_dbg_flags { MRG_MAP_DBG_FLAG_DID_COLLIDE = 1 };
 
 struct mrg_map {
   int tileset_id;
-  int room_id;
-  int8_t *tiles;
-  int8_t *flags;
+
+  int room_handle;
+  struct mrg_room_instance *room;
+
   int8_t *light;
   int8_t *dbg_flags;
 
@@ -31,8 +32,7 @@ struct mrg_map {
   int tile_h;
 };
 
-struct mrg_map mrg_map_init(struct mrg_state *state,
-                            struct mrg_room_instance *room);
+struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle);
 
 int mrg_map_update(struct mrg_state *state, struct mrg_map *map);
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map);

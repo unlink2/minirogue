@@ -13,24 +13,24 @@
 #define MRG_MAP_COORDS_TO_TILE(map, x, y) (y) * (map)->w + (x)
 
 struct mrg_map mrg_map_init(struct mrg_state *state,
-                            struct mrg_room_instance *room) {
+                            int room_handle) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
 
+  struct mrg_room_instance *room = state->room_tbl.graph.rooms[room_handle];
   assert(room);
   assert(state);
+
+  map.room = room;
 
   map.x = 0;
   map.y = 0;
   map.w = room->room_w;
   map.h = room->room_h;
 
-  map.room_id = room->room_id;
 
   size_t tiles = map.w * map.h;
 
-  map.flags = room->tiles;
-  map.tiles = room->flags;
   map.light = malloc(tiles * sizeof(int8_t));
 
 #ifdef MRG_DEBUG
@@ -76,7 +76,7 @@ enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
       }
 
       int tile = MRG_MAP_COORDS_TO_TILE(map, tx, ty);
-      result |= map->flags[tile];
+      result |= map->room->flags[tile];
 #ifdef MRG_DEBUG
       map->dbg_flags[tile] |= MRG_MAP_DBG_FLAG_DID_COLLIDE;
 #endif
@@ -121,10 +121,10 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
     for (size_t x = start_tile_x; x < end_w; x++) {
       size_t tile = MRG_MAP_COORDS_TO_TILE(map, x, y);
       mrg_tile_draw(&state->tile_tbl, state->platform, map->tileset_id,
-                    map->tiles[tile], tx, ty);
+                    map->room->tiles[tile], tx, ty);
 
 #ifdef MRG_DEBUG
-      if (map->flags[tile] & MRG_MAP_FLAG_COLLISION) {
+      if (map->room->flags[tile] & MRG_MAP_FLAG_COLLISION) {
         mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
                               (struct mrg_color){255, 0, 0, 255});
       }
@@ -134,7 +134,7 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
                               (struct mrg_color){255, 255, 128, 0xA0});
       }
 
-      if (map->flags[tile] & MRG_MAP_FLAG_DAMAGE) {
+      if (map->room->flags[tile] & MRG_MAP_FLAG_DAMAGE) {
         mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
                               (struct mrg_color){255, 255, 0, 255});
       }

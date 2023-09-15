@@ -45,7 +45,8 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
     tbl.graph.rooms[0] = mrg_arena_malloc(a, sizeof(struct mrg_room_instance));
     *tbl.graph.rooms[0] =
         mrg_room_instance_from(a, tbl.rooms[0], -1, -1, -1, -1);
-    tbl.graph.room_len = 1;
+    tbl.graph.g_w = 1;
+    tbl.graph.g_h = 1;
   }
 
   return tbl;
@@ -54,8 +55,8 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
 struct mrg_room_instance mrg_room_instance_from(struct mrg_arena *a,
                                                 struct mrg_room *room, int w,
                                                 int e, int n, int s) {
-  struct mrg_room_instance i = {room->room_id, w,           e, n, s, NULL, NULL,
-                                room->room_w,  room->room_h};
+  struct mrg_room_instance i = {room->room_id,  NULL,         NULL,
+                                MRG_ROOM_ALLOC, room->room_w, room->room_h};
 
   size_t tlen = (size_t)room->room_w * room->room_h;
   i.tiles = mrg_arena_malloc(a, tlen);
