@@ -19,20 +19,22 @@ int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
   mrg_fixed px = entity->x;
   mrg_fixed py = entity->y;
 
-  if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
-    entity->y -= MRG_FIXED(1, 0);
-  }
+  if (state->mode == MRG_MODE_GAME) {
+    if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
+      entity->y -= MRG_FIXED(1, 0);
+    }
 
-  if (MRG_HELD(&state->main_input, MRG_ACTION_DOWN)) {
-    entity->y += MRG_FIXED(1, 0);
-  }
+    if (MRG_HELD(&state->main_input, MRG_ACTION_DOWN)) {
+      entity->y += MRG_FIXED(1, 0);
+    }
 
-  if (MRG_HELD(&state->main_input, MRG_ACTION_LEFT)) {
-    entity->x -= MRG_FIXED(1, 0);
-  }
+    if (MRG_HELD(&state->main_input, MRG_ACTION_LEFT)) {
+      entity->x -= MRG_FIXED(1, 0);
+    }
 
-  if (MRG_HELD(&state->main_input, MRG_ACTION_RIGHT)) {
-    entity->x += MRG_FIXED(1, 0);
+    if (MRG_HELD(&state->main_input, MRG_ACTION_RIGHT)) {
+      entity->x += MRG_FIXED(1, 0);
+    }
   }
 
   // check tile collision
