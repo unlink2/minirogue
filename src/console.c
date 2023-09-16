@@ -1,4 +1,5 @@
 #include "console.h"
+#include "command.h"
 #include "input.h"
 #include "mrg.h"
 #include "platform.h"
@@ -12,6 +13,8 @@ struct mrg_console mrg_console_init(void) {
   console.bs_delay = 0;
   console.lines_to_draw = 25;
   console.line_scroll = 0;
+
+  console.cmd_tbl = mrg_cmd_tbl;
 
   return console;
 }
@@ -42,12 +45,15 @@ int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
   return 0;
 }
 
-int mrg_console_exec(struct mrg_state *state, const char *cmd) { return 0; }
+int mrg_console_exec(struct mrg_state *state, struct mrg_console *console,
+                     const char *cmd) {
+  return mrg_cmd_exec(console, mrg_console_puts, cmd, console->cmd_tbl);
+}
 
 int mrg_console_puts(const char *s, void *fp) {
   struct mrg_console *console = fp;
-      // FIXME: this will malloc way too often...
-      console->lines_len++;
+  // FIXME: this will malloc way too often...
+  console->lines_len++;
   size_t lines_len = sizeof(char **) * console->lines_len;
   char **new_lines = NULL;
 
@@ -99,7 +105,7 @@ int mrg_console_update(struct mrg_state *state, struct mrg_console *console) {
 
   if (MRG_PRESSED(&state->main_input, MRG_ACTION_ENTER)) {
     mrg_console_puts(console->input.buffer, console);
-    mrg_console_exec(state, console->input.buffer);
+    mrg_console_exec(state, console, console->input.buffer);
 
     console->input.index = 0;
     memset(console->input.buffer, 0, MRG_CONSOLE_LINE_LEN);

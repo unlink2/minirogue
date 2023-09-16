@@ -7,7 +7,7 @@
 
 typedef int (*mrg_fputs)(const char *s, void *fp);
 
-typedef int (*mrg_cmd_handler)(void *fp, mrg_fputs puts, struct mrg_cmd *cmd,
+typedef int (*mrg_cmd_handler)(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
                                const char *args, const struct mrg_cmd *tbl);
 
 enum mrg_arg_type { MRG_ARG_STRING, MRG_ARG_INT, MRG_ARG_FLOAT };
@@ -35,7 +35,13 @@ struct mrg_cmd {
   struct mrg_arg *args;
 };
 
-const char *mrg_tok(char *dst, const char *tok, size_t *len);
+/**
+ * Get the next token and insert it into dst
+ * dst_len is the length of the buffer
+ * dst_len also gets replaced by the amount of bytes
+ * used from tok
+ */
+const char *mrg_tok(char *dst, const char *tok, size_t dst_len, size_t *read);
 
 int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,
                  const struct mrg_cmd *tbl);

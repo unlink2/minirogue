@@ -1,4 +1,5 @@
 #include "arena.h"
+#include "command.h"
 #include "entity.h"
 #include "fxp.h"
 #include "idc.h"
@@ -170,11 +171,38 @@ void test_idc(void **test) {
   mrg_arena_free(&a);
 }
 
+void test_mrg_tok(void **state) {
+  const size_t dst_len = 128;
+  char dst[dst_len];
+  memset(dst, 1, dst_len);
+  size_t read = 1;
+
+  assert_null(mrg_tok(dst, "   ", dst_len, &read));
+  assert_int_equal(3, read);
+
+  assert_null(mrg_tok(dst, "", dst_len, &read));
+  assert_int_equal(0, read);
+
+  assert_null(mrg_tok(dst, NULL, dst_len, &read));
+  assert_int_equal(0, read);
+
+  assert_string_equal("test", mrg_tok(dst, "test", dst_len, &read));
+  assert_int_equal(4, read);
+  assert_string_equal("test", mrg_tok(dst, "   test", dst_len, &read));
+  assert_int_equal(7, read);
+  assert_string_equal("another", mrg_tok(dst, "another test", dst_len, &read));
+  assert_int_equal(7, read);
+  assert_string_equal("another",
+                      mrg_tok(dst, "   another test", dst_len, &read));
+  assert_int_equal(10, read);
+}
+
 int main(int arc, char **argv) {
   const struct CMUnitTest tests[] = {
       cmocka_unit_test(test_isqrt),    cmocka_unit_test(test_fixed),
       cmocka_unit_test(test_mrg_join), cmocka_unit_test(test_entity_alloc),
-      cmocka_unit_test(test_arena),    cmocka_unit_test(test_idc)};
+      cmocka_unit_test(test_arena),    cmocka_unit_test(test_idc),
+      cmocka_unit_test(test_mrg_tok)};
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }
