@@ -47,7 +47,7 @@ int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
 
 int mrg_console_exec(struct mrg_state *state, struct mrg_console *console,
                      const char *cmd) {
-  return mrg_cmd_exec(console, mrg_console_puts, cmd, console->cmd_tbl);
+  return mrg_cmd_exec(console, mrg_console_puts, cmd, console->cmd_tbl, state);
 }
 
 int mrg_console_puts(const char *s, void *fp) {

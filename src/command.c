@@ -5,7 +5,7 @@
 #include <string.h>
 
 int mrg_cmd_help(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
-                 const char *args, const struct mrg_cmd *tbl) {
+                 const char *args, const struct mrg_cmd *tbl, struct mrg_state *state) {
   const size_t buffer_len = 512;
   char buffer[buffer_len];
   while (tbl->name) {
@@ -83,7 +83,7 @@ int mrg_arg_parse(void *out, size_t out_len, const struct mrg_arg *arg,
 }
 
 int mrg_cmd_exit(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
-                 const char *args, const struct mrg_cmd *tbl) {
+                 const char *args, const struct mrg_cmd *tbl, struct mrg_state *state) {
   int exit_code = 0;
   size_t read = 0;
   mrg_arg_parse(&exit_code, sizeof(exit_code), &cmd->args[0], args, &read);
@@ -128,7 +128,7 @@ const char *mrg_tok(char *dst, const char *tok, size_t dst_len, size_t *read) {
 }
 
 int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,
-                 const struct mrg_cmd *tbl) {
+                 const struct mrg_cmd *tbl, struct mrg_state *state) {
   const size_t buffer_len = 256;
   char buffer[buffer_len];
 
@@ -144,7 +144,7 @@ int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,
   while (tbl->name) {
     if (strncmp(tbl->name, cmd_name, buffer_len) == 0) {
       const struct mrg_cmd *cmd = tbl;
-      return cmd->exec(fp, puts, cmd, args + tok_read, tbl);
+      return cmd->exec(fp, puts, cmd, args + tok_read, tbl, state);
     }
     tbl++;
   }

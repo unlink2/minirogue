@@ -9,7 +9,8 @@ typedef int (*mrg_fputs)(const char *s, void *fp);
 
 typedef int (*mrg_cmd_handler)(void *fp, mrg_fputs puts,
                                const struct mrg_cmd *cmd, const char *args,
-                               const struct mrg_cmd *tbl);
+                               const struct mrg_cmd *tbl,
+                               struct mrg_state *state);
 
 enum mrg_arg_type { MRG_ARG_STRING, MRG_ARG_INT, MRG_ARG_FLOAT };
 
@@ -45,7 +46,7 @@ struct mrg_cmd {
 const char *mrg_tok(char *dst, const char *tok, size_t dst_len, size_t *read);
 
 int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,
-                 const struct mrg_cmd *tbl);
+                 const struct mrg_cmd *tbl, struct mrg_state *state);
 
 int mrg_arg_int(int *out, const char *args, size_t *read);
 int mrg_arg_float(float *out, const char *args, size_t *read);
