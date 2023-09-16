@@ -133,6 +133,36 @@ int mrg_cmd_entity_goto(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
   return 0;
 }
 
+int mrg_cmd_entity_pos(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                       const char *args, const struct mrg_cmd *tbl,
+                       struct mrg_state *state) {
+  int handle = 0;
+  size_t read = 0;
+
+  char buffer[64];
+  memset(buffer, 0, 64);
+
+  mrg_arg_parse(&handle, sizeof(handle), &cmd->args[0], args, &read);
+  args += read;
+
+  if (handle >= state->entity_tbl.slots_len) {
+    puts("Invalid entity handle", fp);
+    return -1;
+  }
+  struct mrg_entity *e = &state->entity_tbl.slots[handle];
+  if (!(e->flags & MRG_ENTITY_FLAG_ALLOCED)) {
+    puts("Entity is not allocated!", fp);
+    return -1;
+  }
+
+  sprintf(buffer, "Entity %d is at %d.%d/%d.%d\n", handle,
+          MRG_FIXED_WHOLE(e->x), MRG_FIXED_FRACT(e->x), MRG_FIXED_WHOLE(e->y),
+          MRG_FIXED_FRACT(e->y));
+  puts(buffer, fp);
+
+  return 0;
+}
+
 int mrg_cmd_find_player(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
                         const char *args, const struct mrg_cmd *tbl,
                         struct mrg_state *state) {
@@ -227,4 +257,8 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
       {"y", true, MRG_ARG_INT},
       {NULL}}},
     {"player", "Find payer entity", mrg_cmd_find_player, NULL},
+    {"pos",
+     "Entity position",
+     mrg_cmd_entity_pos,
+     {{"entity-handle", true, MRG_ARG_INT}, {NULL}}},
     {NULL}};
