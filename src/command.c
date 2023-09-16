@@ -15,7 +15,13 @@ int mrg_cmd_help(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
 
     struct mrg_arg *args = (struct mrg_arg *)tbl->args;
     while (args && args->name) {
+      if (args->optional) {
+        strncat(buffer, "[", buffer_len);
+      }
       strncat(buffer, args->name, buffer_len);
+      if (args->optional) {
+        strncat(buffer, "]", buffer_len);
+      }
       strncat(buffer, " ", buffer_len);
       args++;
     }
@@ -54,14 +60,33 @@ int mrg_arg_float(float *out, const char *args, size_t *read) {
   return 0;
 }
 
-const char *mrg_arg_string(const char *args, char *buffer, size_t buffer_len,
-                           size_t *read) {
-  return mrg_tok(buffer, args, buffer_len, read);
+int mrg_arg_string(const char *args, char *buffer, size_t buffer_len,
+                   size_t *read) {
+  if (mrg_tok(buffer, args, buffer_len, read)) {
+    return 0;
+  }
+  return -1;
+}
+
+int mrg_arg_parse(void *out, size_t out_len, const struct mrg_arg *arg,
+                  const char *args, size_t *read) {
+  switch (arg->type) {
+  case MRG_ARG_STRING:
+    return mrg_arg_string(args, out, out_len, read);
+  case MRG_ARG_INT:
+    return mrg_arg_int(out, args, read);
+  case MRG_ARG_FLOAT:
+    return mrg_arg_float(out, args, read);
+  }
+
+  return -1;
 }
 
 int mrg_cmd_exit(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
                  const char *args, const struct mrg_cmd *tbl) {
   int exit_code = 0;
+  size_t read = 0;
+  mrg_arg_parse(&exit_code, sizeof(exit_code), &cmd->args[0], args, &read);
 
   fprintf(stderr, "Exiting with code %d\n", exit_code);
   exit(exit_code);

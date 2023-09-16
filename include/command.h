@@ -49,8 +49,10 @@ int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,
 
 int mrg_arg_int(int *out, const char *args, size_t *read);
 int mrg_arg_float(float *out, const char *args, size_t *read);
-const char *mrg_arg_string(const char *args, char *buffer, size_t buffer_len,
-                           size_t *read);
+int mrg_arg_string(const char *args, char *buffer, size_t buffer_len,
+                   size_t *read);
+int mrg_arg_parse(void *out, size_t out_len, const struct mrg_arg *arg,
+                  const char *args, size_t *read);
 
 /**
  * A command table

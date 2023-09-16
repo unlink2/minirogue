@@ -236,7 +236,7 @@ void test_mrg_arg(void **state) {
   {
     char buffer[64];
     size_t read = 0;
-    assert_non_null(mrg_arg_string("123.456", buffer, 64, &read));
+    assert_int_equal(0, mrg_arg_string("123.456", buffer, 64, &read));
     assert_int_equal(7, read);
     assert_string_equal("123.456", buffer);
   }
