@@ -44,9 +44,10 @@ int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
 
 int mrg_console_exec(struct mrg_state *state, const char *cmd) { return 0; }
 
-int mrg_console_puts(struct mrg_console *console, const char *s) {
-  // FIXME: this will malloc way too often...
-  console->lines_len++;
+int mrg_console_puts(const char *s, void *fp) {
+  struct mrg_console *console = fp;
+      // FIXME: this will malloc way too often...
+      console->lines_len++;
   size_t lines_len = sizeof(char **) * console->lines_len;
   char **new_lines = NULL;
 
@@ -97,7 +98,7 @@ int mrg_console_update(struct mrg_state *state, struct mrg_console *console) {
   }
 
   if (MRG_PRESSED(&state->main_input, MRG_ACTION_ENTER)) {
-    mrg_console_puts(console, console->input.buffer);
+    mrg_console_puts(console->input.buffer, console);
     mrg_console_exec(state, console->input.buffer);
 
     console->input.index = 0;
