@@ -122,13 +122,30 @@ int mrg_cmd_entity_goto(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
     return -1;
   }
   struct mrg_entity *e = &state->entity_tbl.slots[handle];
-  if (!(e->flags && MRG_ENTITY_FLAG_ALLOCED)) {
+  if (!(e->flags & MRG_ENTITY_FLAG_ALLOCED)) {
     puts("Entity is not allocated!", fp);
     return -1;
   }
 
   e->x = MRG_FIXED(x, 0);
   e->y = MRG_FIXED(y, 0);
+
+  return 0;
+}
+
+int mrg_cmd_find_player(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                        const char *args, const struct mrg_cmd *tbl,
+                        struct mrg_state *state) {
+  char buffer[64];
+  memset(buffer, 0, 64);
+
+  for (size_t i = 0; i < state->entity_tbl.slots_len; i++) {
+    struct mrg_entity *e = &state->entity_tbl.slots[i];
+    if (e->flags & MRG_ENTITY_FLAG_ALLOCED && e->type == MRG_ENTITY_PLAYER) {
+      sprintf(buffer, "Player handle %ld", i);
+      puts(buffer, fp);
+    }
+  }
 
   return 0;
 }
@@ -209,4 +226,5 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
       {"x", true, MRG_ARG_INT},
       {"y", true, MRG_ARG_INT},
       {NULL}}},
-    {NULL, false, 0, {{NULL}}}};
+    {"player", "Find payer entity", mrg_cmd_find_player, NULL},
+    {NULL}};
