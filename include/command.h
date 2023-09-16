@@ -18,11 +18,6 @@ struct mrg_arg {
   const char *name;
   bool optional;
   enum mrg_arg_type type;
-  union {
-    const char *default_str;
-    int default_int;
-    float default_float;
-  };
 };
 
 struct mrg_cmd {

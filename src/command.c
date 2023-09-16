@@ -1,11 +1,14 @@
 #include "command.h"
+#include "entity.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "mrg.h"
 
 int mrg_cmd_help(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
-                 const char *args, const struct mrg_cmd *tbl, struct mrg_state *state) {
+                 const char *args, const struct mrg_cmd *tbl,
+                 struct mrg_state *state) {
   const size_t buffer_len = 512;
   char buffer[buffer_len];
   while (tbl->name) {
@@ -83,13 +86,49 @@ int mrg_arg_parse(void *out, size_t out_len, const struct mrg_arg *arg,
 }
 
 int mrg_cmd_exit(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
-                 const char *args, const struct mrg_cmd *tbl, struct mrg_state *state) {
+                 const char *args, const struct mrg_cmd *tbl,
+                 struct mrg_state *state) {
   int exit_code = 0;
   size_t read = 0;
   mrg_arg_parse(&exit_code, sizeof(exit_code), &cmd->args[0], args, &read);
 
   fprintf(stderr, "Exiting with code %d\n", exit_code);
   exit(exit_code);
+
+  return 0;
+}
+
+int mrg_cmd_entity_goto(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                        const char *args, const struct mrg_cmd *tbl,
+                        struct mrg_state *state) {
+  int handle = 0;
+  int x = 0;
+  int y = 0;
+  size_t read = 0;
+
+  mrg_arg_parse(&handle, sizeof(handle), &cmd->args[0], args, &read);
+  args += read;
+
+  mrg_arg_parse(&x, sizeof(x), &cmd->args[0], args, &read);
+  args += read;
+
+  mrg_arg_parse(&y, sizeof(y), &cmd->args[0], args, &read);
+  args += read;
+
+  fprintf(stderr, "Moving entity %d to %d/%d\n", handle, x, y);
+
+  if (handle >= state->entity_tbl.slots_len) {
+    puts("Invalid entity handle", fp);
+    return -1;
+  }
+  struct mrg_entity *e = &state->entity_tbl.slots[handle];
+  if (!(e->flags && MRG_ENTITY_FLAG_ALLOCED)) {
+    puts("Entity is not allocated!", fp);
+    return -1;
+  }
+
+  e->x = MRG_FIXED(x, 0);
+  e->y = MRG_FIXED(y, 0);
 
   return 0;
 }
@@ -163,4 +202,11 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
      "Exit the program",
      mrg_cmd_exit,
      {{"exit-code", true, MRG_ARG_INT}, {NULL}}},
-    {NULL}};
+    {"goto",
+     "Move entity to position",
+     mrg_cmd_entity_goto,
+     {{"entity-handle", true, MRG_ARG_INT},
+      {"x", true, MRG_ARG_INT},
+      {"y", true, MRG_ARG_INT},
+      {NULL}}},
+    {NULL, false, 0, {{NULL}}}};
