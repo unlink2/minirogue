@@ -220,20 +220,6 @@ void test_mrg_arg(void **state) {
   }
 
   {
-    float out = 0;
-    size_t read = 0;
-    assert_int_equal(0, mrg_arg_float(&out, "123.456", &read));
-    assert_int_equal(7, read);
-    assert_int_equal(123, out);
-  }
-  {
-    float out = 0;
-    size_t read = 0;
-    assert_int_equal(-1, mrg_arg_float(&out, "", &read));
-    assert_int_equal(0, read);
-  }
-
-  {
     char buffer[64];
     size_t read = 0;
     assert_int_equal(0, mrg_arg_string("123.456", buffer, 64, &read));

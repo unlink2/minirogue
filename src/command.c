@@ -51,18 +51,6 @@ int mrg_arg_int(int *out, const char *args, size_t *read) {
   return 0;
 }
 
-int mrg_arg_float(float *out, const char *args, size_t *read) {
-  char buffer[64];
-  const char *tok = mrg_tok(buffer, args, 64, read);
-
-  if (!tok) {
-    return -1;
-  }
-
-  *out = strtof(tok, NULL);
-  return 0;
-}
-
 int mrg_arg_string(const char *args, char *buffer, size_t buffer_len,
                    size_t *read) {
   if (mrg_tok(buffer, args, buffer_len, read)) {
@@ -78,8 +66,6 @@ int mrg_arg_parse(void *out, size_t out_len, const struct mrg_arg *arg,
     return mrg_arg_string(args, out, out_len, read);
   case MRG_ARG_INT:
     return mrg_arg_int(out, args, read);
-  case MRG_ARG_FLOAT:
-    return mrg_arg_float(out, args, read);
   }
 
   return -1;
