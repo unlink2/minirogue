@@ -197,12 +197,57 @@ void test_mrg_tok(void **state) {
   assert_int_equal(10, read);
 }
 
+void test_mrg_arg(void **state) {
+  {
+    int out = 0;
+    size_t read = 0;
+    assert_int_equal(0, mrg_arg_int(&out, "123", &read));
+    assert_int_equal(3, read);
+    assert_int_equal(123, out);
+  }
+  {
+    int out = 0;
+    size_t read = 0;
+    assert_int_equal(0, mrg_arg_int(&out, "0xA123", &read));
+    assert_int_equal(6, read);
+    assert_int_equal(0xA123, out);
+  }
+  {
+    int out = 0;
+    size_t read = 0;
+    assert_int_equal(-1, mrg_arg_int(&out, "", &read));
+    assert_int_equal(0, read);
+  }
+
+  {
+    float out = 0;
+    size_t read = 0;
+    assert_int_equal(0, mrg_arg_float(&out, "123.456", &read));
+    assert_int_equal(7, read);
+    assert_int_equal(123, out);
+  }
+  {
+    float out = 0;
+    size_t read = 0;
+    assert_int_equal(-1, mrg_arg_float(&out, "", &read));
+    assert_int_equal(0, read);
+  }
+
+  {
+    char buffer[64];
+    size_t read = 0;
+    assert_non_null(mrg_arg_string("123.456", buffer, 64, &read));
+    assert_int_equal(7, read);
+    assert_string_equal("123.456", buffer);
+  }
+}
+
 int main(int arc, char **argv) {
   const struct CMUnitTest tests[] = {
       cmocka_unit_test(test_isqrt),    cmocka_unit_test(test_fixed),
       cmocka_unit_test(test_mrg_join), cmocka_unit_test(test_entity_alloc),
       cmocka_unit_test(test_arena),    cmocka_unit_test(test_idc),
-      cmocka_unit_test(test_mrg_tok)};
+      cmocka_unit_test(test_mrg_tok),  cmocka_unit_test(test_mrg_arg)};
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }

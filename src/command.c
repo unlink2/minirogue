@@ -13,7 +13,7 @@ int mrg_cmd_help(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
     strncat(buffer, tbl->name, buffer_len);
     strncat(buffer, " ", buffer_len);
 
-    struct mrg_arg *args = tbl->args;
+    struct mrg_arg *args = (struct mrg_arg *)tbl->args;
     while (args && args->name) {
       strncat(buffer, args->name, buffer_len);
       strncat(buffer, " ", buffer_len);
@@ -30,10 +30,40 @@ int mrg_cmd_help(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
   return 0;
 }
 
+int mrg_arg_int(int *out, const char *args, size_t *read) {
+  char buffer[64];
+  const char *tok = mrg_tok(buffer, args, 64, read);
+
+  if (!tok) {
+    return -1;
+  }
+
+  *out = (int)strtol(tok, NULL, 0);
+  return 0;
+}
+
+int mrg_arg_float(float *out, const char *args, size_t *read) {
+  char buffer[64];
+  const char *tok = mrg_tok(buffer, args, 64, read);
+
+  if (!tok) {
+    return -1;
+  }
+
+  *out = strtof(tok, NULL);
+  return 0;
+}
+
+const char *mrg_arg_string(const char *args, char *buffer, size_t buffer_len,
+                           size_t *read) {
+  return mrg_tok(buffer, args, buffer_len, read);
+}
+
 int mrg_cmd_exit(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
                  const char *args, const struct mrg_cmd *tbl) {
   int exit_code = 0;
 
+  fprintf(stderr, "Exiting with code %d\n", exit_code);
   exit(exit_code);
 
   return 0;
@@ -98,12 +128,14 @@ int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,
   strncat(out_buffer, "Unknown command: ", buffer_len);
   strncat(out_buffer, cmd_name, buffer_len);
 
-  fprintf(stderr, "%s\n", out_buffer);
   puts(out_buffer, fp);
   return -1;
 }
 
 const struct mrg_cmd mrg_cmd_tbl[] = {
     {"help", "Display this help message", mrg_cmd_help, NULL},
-    {"exit", "Exit the program", mrg_cmd_exit, NULL},
+    {"exit",
+     "Exit the program",
+     mrg_cmd_exit,
+     {{"exit-code", true, MRG_ARG_INT}, {NULL}}},
     {NULL}};
