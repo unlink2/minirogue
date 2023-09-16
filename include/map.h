@@ -19,7 +19,7 @@ struct mrg_map {
   int tileset_id;
 
   int room_handle;
-  struct mrg_room_instance *room;
+  struct mrg_room *room;
 
   int8_t *light;
   int8_t *dbg_flags;

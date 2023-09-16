@@ -12,8 +12,7 @@
 
 #define MRG_MAP_COORDS_TO_TILE(map, x, y) (y) * (map)->w + (x)
 
-struct mrg_map mrg_map_init(struct mrg_state *state,
-                            int room_handle) {
+struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
 
@@ -21,13 +20,13 @@ struct mrg_map mrg_map_init(struct mrg_state *state,
   assert(room);
   assert(state);
 
-  map.room = room;
+  map.room = &room->instanced;
 
+  map.room_handle = room_handle;
   map.x = 0;
   map.y = 0;
-  map.w = room->room_w;
-  map.h = room->room_h;
-
+  map.w = room->instanced.room_w;
+  map.h = room->instanced.room_h;
 
   size_t tiles = map.w * map.h;
 

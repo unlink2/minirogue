@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "defs.h"
+#include "idc.h"
 
 #define MRG_ROOMS_MAX 64
 
@@ -17,15 +18,9 @@
 enum mrg_room_flags { MRG_ROOM_ALLOC };
 
 struct mrg_room_instance {
-  int room_id;
-
-  int8_t *tiles;
-  int8_t *flags;
+  struct mrg_room instanced;
 
   enum mrg_room_flags iflags;
-
-  int32_t room_w;
-  int32_t room_h;
 };
 
 struct mrg_room_graph {

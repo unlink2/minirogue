@@ -55,15 +55,15 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
 struct mrg_room_instance mrg_room_instance_from(struct mrg_arena *a,
                                                 struct mrg_room *room, int w,
                                                 int e, int n, int s) {
-  struct mrg_room_instance i = {room->room_id,  NULL,         NULL,
-                                MRG_ROOM_ALLOC, room->room_w, room->room_h};
+  struct mrg_room_instance i = {{room->room_id, room->room_w, room->room_h},
+                                MRG_ROOM_ALLOC};
 
   size_t tlen = (size_t)room->room_w * room->room_h;
-  i.tiles = mrg_arena_malloc(a, tlen);
-  i.flags = mrg_arena_malloc(a, tlen);
+  i.instanced.tiles = mrg_arena_malloc(a, tlen);
+  i.instanced.flags = mrg_arena_malloc(a, tlen);
 
-  memcpy(i.tiles, room->tiles, tlen);
-  memcpy(i.flags, room->flags, tlen);
+  memcpy(i.instanced.tiles, room->tiles, tlen);
+  memcpy(i.instanced.flags, room->flags, tlen);
 
   return i;
 }
