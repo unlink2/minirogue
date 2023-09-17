@@ -19,7 +19,6 @@
 
 // magic identifier
 #define MRG_IDC_MAGIC "idc"
-#define MRG_IDC_FILE_NAME_LEN 8
 
 #define MRG_IDC_HEADER_LEN 4 + sizeof(int32_t) * 3
 #define MRG_IDC_DIR_LEN sizeof(int32_t) * 2
@@ -56,44 +55,8 @@ struct mrg_idc_dir {
   struct mrg_idc_entry *entry; // actual data of this entry
 };
 
-/**
- * Entity entry
- * x: x position
- * y: y position
- * flags: entity flags
- * type: entity type
- * tile_set_handle: see note on tile set loading
- */
-struct mrg_idc_entity {
-  int32_t room_id;
-  int32_t x;
-  int32_t y;
-  int32_t flags;
-  int32_t type;
-  char tile_set[MRG_IDC_FILE_NAME_LEN];
-};
-
-/**
- * Room definition
- * n_entities: amount of entities to load
- * entities_offset: location of entity list in file
- * room_w: room width
- * room_h: room height
- * tile_offset: location of tile map for the room (load room_w * room_h)
- * bytes) flags_offset: location of flag map for the room (load room_w * room_h
- * bytes)
- * tile_set_handle: see note on tile set loading
- */
-struct mrg_idc_room {
-  int32_t room_id;
-  int32_t room_w;
-  int32_t room_h;
-  int32_t tiles_offset;
-  int32_t flags_offset;
-  char tile_set[MRG_IDC_FILE_NAME_LEN];
-  int8_t *tiles;
-  int8_t *flags;
-};
+#define mrg_idc_room mrg_room
+#define mrg_idc_entity mrg_entity
 
 struct mrg_idc_entry {
   union {

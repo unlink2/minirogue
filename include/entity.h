@@ -5,62 +5,6 @@
 #include "defs.h"
 #include <stddef.h>
 
-#define MRG_ENTITY_SLOTS_MAX 128
-
-enum mrg_entities { MRG_ENTITY_PLAYER, MRG_ENTITY_CURSOR, MRG_ENTITY_BAT };
-
-enum mrg_entity_flags { MRG_ENTITY_FLAG_ALLOCED = 1 };
-
-enum mrg_entity_stats {
-  MRG_STAT_LEVEL,
-  MRG_STAT_HP,
-  MRG_STAT_HP_MAX,
-
-  // generic stats for per-entity config
-  MRG_STAT_USTAT1,
-  MRG_STAT_USTAT2,
-  MRG_STATS_LEN
-};
-
-enum mrg_entity_behavior {
-  MRG_BEH_NOP,
-  MRG_BEH_PLAYER_UPDATE,
-  MRG_BEH_ENTITY_DRAW,
-  MRG_BEH_CURSOR_UPDATE,
-  MRG_BEH_CURSOR_DRAW
-};
-
-// update functions that translate behaviors into commands
-// that will eventually manipulate the scene
-// commands are kept simple so that they may be serialized
-// later on
-typedef int (*mrg_entity_tick)(struct mrg_state *state,
-                               struct mrg_entity *entity);
-
-struct mrg_entity {
-  enum mrg_entities type;
-  enum mrg_entity_behavior next_behavior;
-  enum mrg_entity_behavior next_draw;
-
-  // position
-  mrg_fixed x;
-  mrg_fixed y;
-
-  int col_offset_x;
-  int col_offset_y;
-  int col_w;
-  int col_h;
-
-  int tileset_id;
-  int tile_id;
-
-  // entity stats
-  int stats[MRG_STATS_LEN];
-
-  int32_t flags;
-  // entity specific flags
-  int16_t uflags;
-};
 
 struct mrg_entity_tbl {
   struct mrg_entity slots[MRG_ENTITY_SLOTS_MAX];

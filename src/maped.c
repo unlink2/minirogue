@@ -35,7 +35,7 @@ int mrg_maped_load_room(struct mrg_state *state, int handle) {
 
   struct mrg_room_tbl *tbl = &state->room_tbl;
   if (tbl->len > 0) {
-    tbl->graph.rooms[0] = mrg_arena_malloc(a, sizeof(struct mrg_room_instance));
+    tbl->graph.rooms[0] = mrg_arena_malloc(a, sizeof(struct mrg_room));
     tbl->graph.g_w = 1;
     tbl->graph.g_h = 1;
 

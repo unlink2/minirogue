@@ -1,6 +1,9 @@
 #ifndef DEFS_H_
 #define DEFS_H_
 
+#include <stdint.h>
+#include "fxp.h"
+
 typedef struct mrg_platform mrg_platform;
 struct mrg_state;
 struct mrg_tile_set;
@@ -20,6 +23,103 @@ enum mrg_mode {
   MRG_MODE_GAME,
   MRG_MODE_CONSOLE,
   MRG_MODE_MAPED,
+};
+
+/**
+ * Room defs
+ */
+
+#define MRG_IDC_FILE_NAME_LEN 8
+
+enum mrg_room_flags { MRG_ROOM_ALLOC };
+
+/**
+ * Room definition
+ * n_entities: amount of entities to load
+ * entities_offset: location of entity list in file
+ * room_w: room width
+ * room_h: room height
+ * tile_offset: location of tile map for the room (load room_w * room_h)
+ * bytes) flags_offset: location of flag map for the room (load room_w * room_h
+ * bytes)
+ * tile_set_handle: see note on tile set loading
+ */
+struct mrg_room {
+  int32_t room_id;
+  int32_t room_w;
+  int32_t room_h;
+  int32_t tiles_offset;
+  int32_t flags_offset;
+  char tile_set[MRG_IDC_FILE_NAME_LEN];
+  int8_t *tiles;
+  int8_t *flags;
+
+  int ok;
+
+  int tileset_id;
+  enum mrg_room_flags iflags;
+};
+
+/**
+ * Entity defs
+ */
+#define MRG_ENTITY_SLOTS_MAX 128
+
+enum mrg_entities { MRG_ENTITY_PLAYER, MRG_ENTITY_CURSOR, MRG_ENTITY_BAT };
+
+enum mrg_entity_flags { MRG_ENTITY_FLAG_ALLOCED = 1 };
+
+enum mrg_entity_stats {
+  MRG_STAT_LEVEL,
+  MRG_STAT_HP,
+  MRG_STAT_HP_MAX,
+
+  // generic stats for per-entity config
+  MRG_STAT_USTAT1,
+  MRG_STAT_USTAT2,
+  MRG_STATS_LEN
+};
+
+enum mrg_entity_behavior {
+  MRG_BEH_NOP,
+  MRG_BEH_PLAYER_UPDATE,
+  MRG_BEH_ENTITY_DRAW,
+  MRG_BEH_CURSOR_UPDATE,
+  MRG_BEH_CURSOR_DRAW
+};
+
+// update functions that translate behaviors into commands
+// that will eventually manipulate the scene
+// commands are kept simple so that they may be serialized
+// later on
+typedef int (*mrg_entity_tick)(struct mrg_state *state,
+                               struct mrg_entity *entity);
+
+struct mrg_entity {
+  int32_t room_id;
+  // position
+  mrg_fixed x;
+  mrg_fixed y;
+  int32_t flags;
+  enum mrg_entities type;
+  char tile_set[MRG_IDC_FILE_NAME_LEN];
+
+  enum mrg_entity_behavior next_behavior;
+  enum mrg_entity_behavior next_draw;
+
+  int col_offset_x;
+  int col_offset_y;
+  int col_w;
+  int col_h;
+
+  int tileset_id;
+  int tile_id;
+
+  // entity stats
+  int stats[MRG_STATS_LEN];
+
+  // entity specific flags
+  int16_t uflags;
 };
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))

@@ -14,11 +14,11 @@ struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
 
-  struct mrg_room_instance *room = state->room_tbl.graph.rooms[room_handle];
+  struct mrg_room *room = state->room_tbl.graph.rooms[room_handle];
   assert(room);
   assert(state);
 
-  map.room = &room->instanced;
+  map.room = room;
   map.tileset_id = room->tileset_id;
 
   if (room->ok == -1 || map.tileset_id == -1) {
@@ -31,8 +31,8 @@ struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle) {
   map.room_handle = room_handle;
   map.x = 0;
   map.y = 0;
-  map.w = room->instanced.room_w;
-  map.h = room->instanced.room_h;
+  map.w = room->room_w;
+  map.h = room->room_h;
 
   size_t tiles = map.w * map.h;
   map.light = malloc(tiles * sizeof(int8_t));
@@ -189,5 +189,5 @@ void mrg_map_free(struct mrg_map *map) {
 #ifdef MRG_DEBUG
   free(map->dbg_flags);
   map->dbg_flags = NULL;
-#endif 
+#endif
 }
