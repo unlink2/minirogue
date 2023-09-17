@@ -269,3 +269,7 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
 
   return start;
 }
+
+int mrg_idc_save(struct mrg_state *state, const char *path) { return -1; }
+
+int mrg_idc_load(struct mrg_state *state, const char *path) { return -1; }

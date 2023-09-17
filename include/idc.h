@@ -111,6 +111,13 @@ struct mrg_idc_file {
 struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
                                size_t len);
 
-const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f, size_t *len);
+const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
+                       size_t *len);
+
+// save id from state into path
+int mrg_idc_save(struct mrg_state *state, const char *path);
+
+// load idc from path into state
+int mrg_idc_load(struct mrg_state *state, const char *path);
 
 #endif
