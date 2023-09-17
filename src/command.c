@@ -96,10 +96,10 @@ int mrg_cmd_entity_goto(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
   mrg_arg_parse(&handle, sizeof(handle), &cmd->args[0], args, &read);
   args += read;
 
-  mrg_arg_parse(&x, sizeof(x), &cmd->args[0], args, &read);
+  mrg_arg_parse(&x, sizeof(x), &cmd->args[1], args, &read);
   args += read;
 
-  mrg_arg_parse(&y, sizeof(y), &cmd->args[0], args, &read);
+  mrg_arg_parse(&y, sizeof(y), &cmd->args[2], args, &read);
   args += read;
 
   fprintf(stderr, "Moving entity %d to %d/%d\n", handle, x, y);
@@ -116,6 +116,41 @@ int mrg_cmd_entity_goto(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
 
   e->x = MRG_FIXED(x, 0);
   e->y = MRG_FIXED(y, 0);
+
+  return 0;
+}
+
+int mrg_cmd_set_stat(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                     const char *args, const struct mrg_cmd *tbl,
+                     struct mrg_state *state) {
+  int handle = 0;
+  int slot = 0;
+  int stat = 0;
+  size_t read = 0;
+
+  mrg_arg_parse(&handle, sizeof(handle), &cmd->args[0], args, &read);
+  args += read;
+
+  mrg_arg_parse(&slot, sizeof(slot), &cmd->args[1], args, &read);
+  args += read;
+
+  mrg_arg_parse(&stat, sizeof(stat), &cmd->args[2], args, &read);
+  args += read;
+
+  if (slot >= MRG_STATS_LEN) {
+    puts("Stat slot is out of bounds!", fp);
+  }
+  if (handle >= state->entity_tbl.slots_len) {
+    puts("Invalid entity handle", fp);
+    return -1;
+  }
+  struct mrg_entity *e = &state->entity_tbl.slots[handle];
+  if (!(e->flags & MRG_ENTITY_FLAG_ALLOCED)) {
+    puts("Entity is not allocated!", fp);
+    return -1;
+  }
+
+  e->stats[slot] = stat;
 
   return 0;
 }
@@ -255,4 +290,11 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
      mrg_cmd_entity_pos,
      {{"entity-handle", true, MRG_ARG_INT}, {NULL}}},
     {"maped", "Enter map editor", mrg_cmd_init_maped, {{NULL}}},
+    {"setstat",
+     "Set entity stats",
+     mrg_cmd_set_stat,
+     {{"entity-handle", true, MRG_ARG_INT},
+      {"stat-slot", true, MRG_ARG_INT},
+      {"stat-value", true, MRG_ARG_INT},
+      {NULL}}},
     {NULL}};
