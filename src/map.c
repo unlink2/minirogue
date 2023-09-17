@@ -35,7 +35,6 @@ struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle) {
   map.h = room->instanced.room_h;
 
   size_t tiles = map.w * map.h;
-
   map.light = malloc(tiles * sizeof(int8_t));
 
 #ifdef MRG_DEBUG
@@ -97,11 +96,26 @@ void mrg_map_tile_set(struct mrg_map *map, int x, int y, int8_t tile) {
   mrg_map_to_tile(map, x, y, &xi, &yi);
   int update_index = MRG_MAP_COORDS_TO_TILE(map, xi, yi);
 
-  if (update_index >= map->room->room_w * map->room->room_h) {
+  if (update_index < 0 ||
+      update_index >= map->room->room_w * map->room->room_h) {
     return;
   }
 
   map->room->tiles[update_index] = tile;
+}
+
+void mrg_map_flag_set(struct mrg_map *map, int x, int y, int8_t flag) {
+  int xi = -1;
+  int yi = -1;
+  mrg_map_to_tile(map, x, y, &xi, &yi);
+  int update_index = MRG_MAP_COORDS_TO_TILE(map, xi, yi);
+
+  if (update_index < 0 ||
+      update_index >= map->room->room_w * map->room->room_h) {
+    return;
+  }
+
+  map->room->flags[update_index] = flag;
 }
 
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
@@ -171,7 +185,9 @@ void mrg_map_to_tile(struct mrg_map *map, int xi, int yi, int *xo, int *yo) {
 
 void mrg_map_free(struct mrg_map *map) {
   free(map->light);
+  map->light = NULL;
 #ifdef MRG_DEBUG
   free(map->dbg_flags);
-#endif
+  map->dbg_flags = NULL;
+#endif 
 }

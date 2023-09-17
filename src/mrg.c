@@ -88,6 +88,7 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   memset(&state, 0, sizeof(state));
   state.platform = platform;
   state.room_arena = mrg_arena_init(4096);
+  state.idc_arena = mrg_arena_init(4096);
 
   state.main_camera = mrg_camera_init(&state);
   if (state.main_camera.handle == -1) {
@@ -131,6 +132,7 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
 
 void mrg_state_free(struct mrg_state *state) {
   mrg_arena_free(&state->room_arena);
+  mrg_arena_free(&state->idc_arena);
   mrg_map_free(&state->map);
 
   for (size_t i = 0; i < state->tile_tbl.len; i++) {

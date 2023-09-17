@@ -49,7 +49,10 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
 // create an instance of a room from a room template
 struct mrg_room_instance mrg_room_instance_from(struct mrg_state *state,
                                                 struct mrg_arena *a,
-                                                struct mrg_room *room, int w,
-                                                int e, int n, int s);
+                                                struct mrg_room *room);
+
+// crates a room without cloning. use for map editor!
+struct mrg_room_instance mrg_room_instance_ed(struct mrg_state *state,
+                                              struct mrg_room *room);
 
 #endif

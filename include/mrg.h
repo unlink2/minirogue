@@ -41,6 +41,7 @@ struct mrg_state {
   int tile_h;
 
   struct mrg_arena room_arena;
+  struct mrg_arena idc_arena;
   struct mrg_console console;
 };
 

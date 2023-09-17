@@ -93,6 +93,12 @@ int mrg_beh_cursor_update(struct mrg_state *state, struct mrg_entity *entity) {
                        MRG_FIXED_WHOLE(entity->y),
                        (int8_t)entity->stats[MRG_STAT_USTAT1]);
     }
+
+    if (MRG_HELD(&state->main_input, MRG_ACTION_B)) {
+      mrg_map_flag_set(&state->map, MRG_FIXED_WHOLE(entity->x),
+                       MRG_FIXED_WHOLE(entity->y),
+                       (int8_t)entity->stats[MRG_STAT_USTAT2]);
+    }
   }
 
   if (entity->uflags > 0) {

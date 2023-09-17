@@ -222,11 +222,11 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
     input_state |= MRG_ACTION_SCRLDOWN;
   }
 
-  if (IsKeyDown(KEY_SPACE)) {
+  if (IsKeyDown(KEY_J)) {
     input_state |= MRG_ACTION_A;
   }
 
-  if (IsKeyDown(KEY_V)) {
+  if (IsKeyDown(KEY_K)) {
     input_state |= MRG_ACTION_B;
   }
 

@@ -45,6 +45,7 @@ enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
                                      int h);
 
 void mrg_map_tile_set(struct mrg_map *map, int x, int y, int8_t tile);
+void mrg_map_flag_set(struct mrg_map *map, int x, int y, int8_t flag);
 
 void mrg_map_free(struct mrg_map *map);
 
