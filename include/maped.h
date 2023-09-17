@@ -5,4 +5,6 @@
 
 int mrg_maped_init(struct mrg_state *state);
 
+int mrg_maped_load_room(struct mrg_state *state, int handle);
+
 #endif

@@ -23,6 +23,11 @@ int mrg_maped_init(struct mrg_state *state) {
   e->tileset_id = mrg_tile_set_load(&state->tile_tbl, state->platform,
                                     "dbg.png", state->tile_w, state->tile_h);
 
+  mrg_maped_load_room(state, 0);
+  return 0;
+}
+
+int mrg_maped_load_room(struct mrg_state *state, int handle) {
   // load map directly from table instead of creating a dedicated cloned
   // instance
   struct mrg_arena *a = &state->room_arena;
@@ -39,7 +44,10 @@ int mrg_maped_init(struct mrg_state *state) {
 
     mrg_map_free(&state->map);
     state->map = mrg_map_init(state, 0);
+
+    return 0;
   }
 
-  return 0;
+  fprintf(stderr, "Unabel to load room %d\n", handle);
+  return -1;
 }
