@@ -3,10 +3,11 @@
 
 #include "fxp.h"
 #include "defs.h"
+#include "room.h"
 #include <stddef.h>
 
-
 struct mrg_entity_tbl {
+  // currently used entities
   struct mrg_entity slots[MRG_ENTITY_SLOTS_MAX];
   size_t slots_len;
 

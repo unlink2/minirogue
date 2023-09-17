@@ -19,6 +19,8 @@ struct mrg_console {
   enum mrg_mode prev;
   int bs_delay;
 
+  char *prev_idc_path;
+
   int lines_to_draw;
   int line_scroll;
 

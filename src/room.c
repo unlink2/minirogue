@@ -4,17 +4,18 @@
 #include "tiles.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "mrg.h"
 
 struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
                                           struct mrg_arena *a,
                                           struct mrg_idc_file *f) {
+  mrg_arena_clear(a);
   struct mrg_room_tbl tbl;
-  tbl.len = 0;
-  tbl.ok = 0;
-  memset(&tbl.graph, 0, sizeof(struct mrg_room_graph));
+  memset(&tbl, 0, sizeof(struct mrg_room_tbl));
 
+  size_t room_handle = 0;
   for (size_t i = 0; i < f->header.n_entries; i++) {
     struct mrg_idc_dir *dir = &f->dirs[i];
 
@@ -30,55 +31,29 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
       return tbl;
     }
 
-    tbl.rooms[i] = &dir->entry->room;
+    tbl.rooms[room_handle] = mrg_arena_malloc(a, sizeof(struct mrg_room));
+    *tbl.rooms[room_handle] = mrg_room_instance_from(state, &dir->entry->room);
 
     char tile_path[MRG_IDC_FILE_NAME_LEN + 1];
     memset(tile_path, 0, MRG_IDC_FILE_NAME_LEN + 1);
     memcpy(tile_path, dir->entry->room.tile_set, MRG_IDC_FILE_NAME_LEN);
     mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path,
                       state->tile_w, state->tile_h);
+
+    room_handle++;
   }
 
   assert(tbl.len <= MRG_ROOMS_MAX);
 
   if (tbl.len > 0) {
-    tbl.graph.rooms[0] = mrg_arena_malloc(a, sizeof(struct mrg_room));
-    *tbl.graph.rooms[0] = mrg_room_instance_from(state, a, tbl.rooms[0]);
-    tbl.graph.g_w = 1;
-    tbl.graph.g_h = 1;
+    tbl.g_w = 1;
+    tbl.g_h = 1;
   }
 
   return tbl;
 }
 
 struct mrg_room mrg_room_instance_from(struct mrg_state *state,
-                                       struct mrg_arena *a,
-                                       struct mrg_room *room) {
-  struct mrg_room i;
-  memset(&i, 0, sizeof(i));
-  i.ok = 0;
-  i.room_id = room->room_id;
-  i.room_w = room->room_w;
-  i.room_h = room->room_h;
-  i.iflags = MRG_ROOM_ALLOC;
-
-  size_t tlen = (size_t)room->room_w * room->room_h;
-  i.tiles = mrg_arena_malloc(a, tlen);
-  i.flags = mrg_arena_malloc(a, tlen);
-
-  memcpy(i.tiles, room->tiles, tlen);
-  memcpy(i.flags, room->flags, tlen);
-
-  char tile_path[MRG_IDC_FILE_NAME_LEN];
-  strncpy(tile_path, room->tile_set, sizeof(tile_path) - 1);
-
-  i.tileset_id = mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path,
-                                   MRG_TILE_W, MRG_TILE_H);
-
-  return i;
-}
-
-struct mrg_room mrg_room_instance_ed(struct mrg_state *state,
                                      struct mrg_room *room) {
   struct mrg_room i;
   memset(&i, 0, sizeof(i));

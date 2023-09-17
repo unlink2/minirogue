@@ -42,7 +42,11 @@ struct mrg_state {
 
   struct mrg_arena room_arena;
   struct mrg_arena idc_arena;
+  struct mrg_arena tmp_arena;
+
   struct mrg_console console;
+
+  struct mrg_idc_file idc;
 };
 
 int mrg_main(struct mrg_config *cfg);

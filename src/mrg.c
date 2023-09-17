@@ -78,9 +78,7 @@ int mrg_main_loop(struct mrg_state *state) {
   return 0;
 }
 
-int mrg_std_fputs(const char *s, void *fp) {
-  return fputs(s, fp);
-}
+int mrg_std_fputs(const char *s, void *fp) { return fputs(s, fp); }
 
 struct mrg_state mrg_state_init(struct mrg_config *cfg,
                                 mrg_platform *platform) {
@@ -89,6 +87,7 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   state.platform = platform;
   state.room_arena = mrg_arena_init(4096);
   state.idc_arena = mrg_arena_init(4096);
+  state.tmp_arena = mrg_arena_init(4096);
 
   state.main_camera = mrg_camera_init(&state);
   if (state.main_camera.handle == -1) {
@@ -111,18 +110,18 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   state.tile_w = MRG_TILE_W;
   state.tile_h = MRG_TILE_H;
 
-  struct mrg_idc_file idc = mrg_default_idc();
-  state.room_tbl = mrg_room_tbl_from_idc(&state, &state.room_arena, &idc);
+  state.idc = mrg_default_idc();
+  state.room_tbl = mrg_room_tbl_from_idc(&state, &state.room_arena, &state.idc);
   // TODO: dynamically load rooms!
   state.map = mrg_map_init(&state, 0);
   // TODO: dynamically load entities!
-  mrg_entities_from_idc(&state, &idc);
+  mrg_entities_from_idc(&state, &state.idc);
 
   state.console = mrg_console_init();
 
   mrg_transition(&state, MRG_MODE_GAME);
 
-  // exec startup commands 
+  // exec startup commands
   for (size_t i = 0; i < cfg->exec_len; i++) {
     mrg_cmd_exec(stdout, mrg_std_fputs, cfg->exec[i], mrg_cmd_tbl, &state);
   }
@@ -133,6 +132,7 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
 void mrg_state_free(struct mrg_state *state) {
   mrg_arena_free(&state->room_arena);
   mrg_arena_free(&state->idc_arena);
+  mrg_arena_free(&state->tmp_arena);
   mrg_map_free(&state->map);
 
   for (size_t i = 0; i < state->tile_tbl.len; i++) {

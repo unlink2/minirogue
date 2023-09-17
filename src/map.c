@@ -14,7 +14,7 @@ struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
 
-  struct mrg_room *room = state->room_tbl.graph.rooms[room_handle];
+  struct mrg_room *room = state->room_tbl.rooms[room_handle];
   assert(room);
   assert(state);
 

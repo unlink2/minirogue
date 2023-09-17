@@ -1,5 +1,6 @@
 #include "idc.h"
 #include "arena.h"
+#include "mrg.h"
 #include <stdio.h>
 #include <string.h>
 #include <arpa/inet.h>
@@ -270,6 +271,15 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
   return start;
 }
 
-int mrg_idc_save(struct mrg_state *state, const char *path) { return -1; }
+int mrg_idc_save(struct mrg_state *state, const char *path) {
+  struct mrg_arena *a = &state->tmp_arena;
+  mrg_arena_clear(a);
+
+  struct mrg_idc_file f;
+  f.ok = 0;
+  f.header = (struct mrg_idc_header){MRG_IDC_MAGIC, 0, 0, 0, 0};
+
+  return 0;
+}
 
 int mrg_idc_load(struct mrg_state *state, const char *path) { return -1; }

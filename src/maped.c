@@ -9,6 +9,8 @@ int mrg_maped_init(struct mrg_state *state) {
   fprintf(stderr, "Launching maped...\n");
   state->mode = MRG_MODE_MAPED;
 
+  state->room_tbl =
+      mrg_room_tbl_from_idc(state, &state->room_arena, &state->idc);
   mrg_entity_tbl_clear(&state->entity_tbl);
 
   int handle = mrg_entity_alloc(&state->entity_tbl);
@@ -28,22 +30,12 @@ int mrg_maped_init(struct mrg_state *state) {
 }
 
 int mrg_maped_load_room(struct mrg_state *state, int handle) {
-  // load map directly from table instead of creating a dedicated cloned
-  // instance
-  struct mrg_arena *a = &state->room_arena;
-  mrg_arena_clear(a);
-
   struct mrg_room_tbl *tbl = &state->room_tbl;
-  if (tbl->len > 0) {
-    tbl->graph.rooms[0] = mrg_arena_malloc(a, sizeof(struct mrg_room));
-    tbl->graph.g_w = 1;
-    tbl->graph.g_h = 1;
-
-    *tbl->graph.rooms[0] =
-        mrg_room_instance_ed(state, state->room_tbl.rooms[0]);
-
-    mrg_map_free(&state->map);
-    state->map = mrg_map_init(state, 0);
+  for (size_t i = 0; i < tbl->len; i++) {
+    if (tbl->rooms[i]->iflags & MRG_ROOM_ALLOC) {
+      mrg_map_free(&state->map);
+      state->map = mrg_map_init(state, 0);
+    }
 
     return 0;
   }
