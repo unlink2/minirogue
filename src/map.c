@@ -21,6 +21,14 @@ struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle) {
   assert(state);
 
   map.room = &room->instanced;
+  map.tileset_id = room->tileset_id;
+
+  if (room->ok == -1 || map.tileset_id == -1) {
+    map.ok = -1;
+  }
+
+  map.tile_w = state->tile_tbl.sets[map.tileset_id].tile_w;
+  map.tile_h = state->tile_tbl.sets[map.tileset_id].tile_h;
 
   map.room_handle = room_handle;
   map.x = 0;
@@ -86,9 +94,6 @@ enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
 }
 
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
-  map->tile_w = state->tile_tbl.sets[map->tileset_id].tile_w;
-  map->tile_h = state->tile_tbl.sets[map->tileset_id].tile_h;
-
   int camera_x = 0;
   int camera_y = 0;
   int camera_w = 0;

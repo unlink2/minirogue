@@ -18,8 +18,10 @@
 enum mrg_room_flags { MRG_ROOM_ALLOC };
 
 struct mrg_room_instance {
+  int ok;
   struct mrg_room instanced;
 
+  int tileset_id;
   enum mrg_room_flags iflags;
 };
 
@@ -45,7 +47,8 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
                                           struct mrg_idc_file *f);
 
 // create an instance of a room from a room template
-struct mrg_room_instance mrg_room_instance_from(struct mrg_arena *a,
+struct mrg_room_instance mrg_room_instance_from(struct mrg_state *state,
+                                                struct mrg_arena *a,
                                                 struct mrg_room *room, int w,
                                                 int e, int n, int s);
 

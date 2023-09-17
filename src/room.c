@@ -44,7 +44,7 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
   if (tbl.len > 0) {
     tbl.graph.rooms[0] = mrg_arena_malloc(a, sizeof(struct mrg_room_instance));
     *tbl.graph.rooms[0] =
-        mrg_room_instance_from(a, tbl.rooms[0], -1, -1, -1, -1);
+        mrg_room_instance_from(state, a, tbl.rooms[0], -1, -1, -1, -1);
     tbl.graph.g_w = 1;
     tbl.graph.g_h = 1;
   }
@@ -52,11 +52,12 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
   return tbl;
 }
 
-struct mrg_room_instance mrg_room_instance_from(struct mrg_arena *a,
+struct mrg_room_instance mrg_room_instance_from(struct mrg_state *state,
+                                                struct mrg_arena *a,
                                                 struct mrg_room *room, int w,
                                                 int e, int n, int s) {
-  struct mrg_room_instance i = {{room->room_id, room->room_w, room->room_h},
-                                MRG_ROOM_ALLOC};
+  struct mrg_room_instance i = {
+      0, {room->room_id, room->room_w, room->room_h}, 0, MRG_ROOM_ALLOC};
 
   size_t tlen = (size_t)room->room_w * room->room_h;
   i.instanced.tiles = mrg_arena_malloc(a, tlen);
@@ -64,6 +65,12 @@ struct mrg_room_instance mrg_room_instance_from(struct mrg_arena *a,
 
   memcpy(i.instanced.tiles, room->tiles, tlen);
   memcpy(i.instanced.flags, room->flags, tlen);
+
+  char tile_path[MRG_IDC_FILE_NAME_LEN];
+  strncpy(tile_path, room->tile_set, sizeof(tile_path) - 1);
+
+  i.tileset_id = mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path,
+                                   MRG_TILE_W, MRG_TILE_H);
 
   return i;
 }

@@ -16,6 +16,7 @@ enum mrg_map_flags { MRG_MAP_FLAG_COLLISION = 1, MRG_MAP_FLAG_DAMAGE = 2 };
 enum mrg_map_dbg_flags { MRG_MAP_DBG_FLAG_DID_COLLIDE = 1 };
 
 struct mrg_map {
+  int ok;
   int tileset_id;
 
   int room_handle;
