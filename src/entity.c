@@ -8,7 +8,8 @@
 #include <string.h>
 
 const mrg_entity_tick mrg_behavior_tbl[] = {mrg_beh_nop, mrg_beh_player_update,
-                                            mrg_beh_entity_draw};
+                                            mrg_beh_entity_draw,
+                                            mrg_beh_cursor_update};
 
 int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity) {
   return 0;
@@ -42,6 +43,41 @@ int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
       &state->map, entity->col_offset_x + MRG_FIXED_WHOLE(entity->x),
       entity->col_offset_y + MRG_FIXED_WHOLE(entity->y), entity->col_w,
       entity->col_h);
+
+  return 0;
+}
+
+int mrg_beh_cursor_update(struct mrg_state *state, struct mrg_entity *entity) {
+  int step_x = state->map.tile_w;
+  int step_y = state->map.tile_h;
+
+  int16_t cursor_delay = 4;
+
+  if (state->mode == MRG_MODE_MAPED && entity->uflags == 0) {
+    if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
+      entity->y -= MRG_FIXED(step_y, 0);
+      entity->uflags = cursor_delay;
+    }
+
+    if (MRG_HELD(&state->main_input, MRG_ACTION_DOWN)) {
+      entity->y += MRG_FIXED(step_y, 0);
+      entity->uflags = cursor_delay;
+    }
+
+    if (MRG_HELD(&state->main_input, MRG_ACTION_LEFT)) {
+      entity->x -= MRG_FIXED(step_x, 0);
+      entity->uflags = cursor_delay;
+    }
+
+    if (MRG_HELD(&state->main_input, MRG_ACTION_RIGHT)) {
+      entity->x += MRG_FIXED(step_x, 0);
+      entity->uflags = cursor_delay;
+    }
+  }
+
+  if (entity->uflags > 0) {
+    entity->uflags--;
+  }
 
   return 0;
 }
@@ -150,7 +186,7 @@ int mrg_entity_init_cursor(struct mrg_entity *entity) {
   mrg_entity_init(entity);
   entity->type = MRG_ENTITY_CURSOR;
   entity->tile_id = 16;
-  entity->next_behavior = MRG_BEH_PLAYER_UPDATE;
+  entity->next_behavior = MRG_BEH_CURSOR_UPDATE;
   entity->next_draw = MRG_BEH_ENTITY_DRAW;
 
   return 0;

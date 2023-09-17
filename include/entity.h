@@ -21,7 +21,8 @@ enum mrg_entity_stats {
 enum mrg_entity_behavior {
   MRG_BEH_NOP,
   MRG_BEH_PLAYER_UPDATE,
-  MRG_BEH_ENTITY_DRAW
+  MRG_BEH_ENTITY_DRAW,
+  MRG_BEH_CURSOR_UPDATE
 };
 
 // update functions that translate behaviors into commands
@@ -68,6 +69,7 @@ struct mrg_entity_tbl mrg_entity_tbl_init(void);
 
 int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity);
+int mrg_beh_cursor_update(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_beh_entity_draw(struct mrg_state *state, struct mrg_entity *entity);
 
 // alloc a new entity
