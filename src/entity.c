@@ -104,11 +104,7 @@ int mrg_entities_from_idc(struct mrg_state *state, struct mrg_idc_file *f) {
 
     // TODO: handle room id
     struct mrg_entity *e = &tbl->slots[handle];
-    switch (dir->entry->entity.type) {
-    case MRG_ENTITY_PLAYER:
-      mrg_entity_init_player(e);
-      break;
-    }
+    mrg_entity_init_type(e, dir->entry->entity.type);
     e->type = dir->entry->entity.type;
     e->flags = dir->entry->entity.flags | e->flags;
     e->x = dir->entry->entity.x;
@@ -122,6 +118,18 @@ int mrg_entities_from_idc(struct mrg_state *state, struct mrg_idc_file *f) {
   }
 
   return 0;
+}
+
+int mrg_entity_init_type(struct mrg_entity *entity, enum mrg_entities type) {
+  switch (type) {
+  case MRG_ENTITY_PLAYER:
+    return mrg_entity_init_player(entity);
+  case MRG_ENTITY_CURSOR:
+  case MRG_ENTITY_BAT:
+    break;
+  }
+
+  return -1;
 }
 
 int mrg_entity_init_player(struct mrg_entity *entity) {
@@ -188,6 +196,16 @@ void mrg_entity_free(struct mrg_entity_tbl *tbl, int handle) {
     return;
   }
   entity->flags = 0;
+}
+
+void mrg_entity_tbl_clear(struct mrg_entity_tbl *tbl) {
+  fprintf(stderr, "Clearing entity table!\n");
+  for (int i = 0; i < tbl->slots_len; i++) {
+    struct mrg_entity *entity = &tbl->slots[i];
+    if (entity->flags & MRG_ENTITY_FLAG_ALLOCED) {
+      mrg_entity_free(tbl, i);
+    }
+  }
 }
 
 void mrg_entity_tbl_free(struct mrg_entity_tbl *tbl) {}
