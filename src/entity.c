@@ -125,6 +125,7 @@ int mrg_entity_init_type(struct mrg_entity *entity, enum mrg_entities type) {
   case MRG_ENTITY_PLAYER:
     return mrg_entity_init_player(entity);
   case MRG_ENTITY_CURSOR:
+    return mrg_entity_init_cursor(entity);
   case MRG_ENTITY_BAT:
     break;
   }
@@ -142,6 +143,16 @@ int mrg_entity_init_player(struct mrg_entity *entity) {
   entity->tile_id = 1;
 
   fprintf(stdout, "Player created with behavior %d\n", entity->next_behavior);
+  return 0;
+}
+
+int mrg_entity_init_cursor(struct mrg_entity *entity) {
+  mrg_entity_init(entity);
+  entity->type = MRG_ENTITY_CURSOR;
+  entity->tile_id = 16;
+  entity->next_behavior = MRG_BEH_PLAYER_UPDATE;
+  entity->next_draw = MRG_BEH_ENTITY_DRAW;
+
   return 0;
 }
 
