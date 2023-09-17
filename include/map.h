@@ -11,6 +11,8 @@
 #define MRG_LAYER_H 14
 #define MRG_LAYER_LEN (MRG_LAYER_W * MRG_LAYER_H)
 
+#define MRG_MAP_COORDS_TO_TILE(map, x, y) (y) * (map)->w + (x)
+
 enum mrg_map_flags { MRG_MAP_FLAG_COLLISION = 1, MRG_MAP_FLAG_DAMAGE = 2 };
 
 enum mrg_map_dbg_flags { MRG_MAP_DBG_FLAG_DID_COLLIDE = 1 };
@@ -41,6 +43,8 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map);
 void mrg_map_to_tile(struct mrg_map *map, int xi, int yi, int *xo, int *yo);
 enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
                                      int h);
+
+void mrg_map_tile_set(struct mrg_map *map, int x, int y, int8_t tile);
 
 void mrg_map_free(struct mrg_map *map);
 

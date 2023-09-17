@@ -15,6 +15,10 @@ enum mrg_entity_stats {
   MRG_STAT_LEVEL,
   MRG_STAT_HP,
   MRG_STAT_HP_MAX,
+
+  // generic stats for per-entity config
+  MRG_STAT_USTAT1,
+  MRG_STAT_USTAT2,
   MRG_STATS_LEN
 };
 
@@ -22,7 +26,8 @@ enum mrg_entity_behavior {
   MRG_BEH_NOP,
   MRG_BEH_PLAYER_UPDATE,
   MRG_BEH_ENTITY_DRAW,
-  MRG_BEH_CURSOR_UPDATE
+  MRG_BEH_CURSOR_UPDATE,
+  MRG_BEH_CURSOR_DRAW
 };
 
 // update functions that translate behaviors into commands
@@ -71,6 +76,7 @@ int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_beh_cursor_update(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_beh_entity_draw(struct mrg_state *state, struct mrg_entity *entity);
+int mrg_beh_cursor_draw(struct mrg_state *state, struct mrg_entity *entity);
 
 // alloc a new entity
 // return a handle to the allocated entity

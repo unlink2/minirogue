@@ -10,8 +10,6 @@
 #include "idc.h"
 #include "room.h"
 
-#define MRG_MAP_COORDS_TO_TILE(map, x, y) (y) * (map)->w + (x)
-
 struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle) {
   struct mrg_map map;
   memset(&map, 0, sizeof(map));
@@ -91,6 +89,19 @@ enum mrg_map_flags mrg_map_collision(struct mrg_map *map, int x, int y, int w,
   }
 
   return result;
+}
+
+void mrg_map_tile_set(struct mrg_map *map, int x, int y, int8_t tile) {
+  int xi = -1;
+  int yi = -1;
+  mrg_map_to_tile(map, x, y, &xi, &yi);
+  int update_index = MRG_MAP_COORDS_TO_TILE(map, xi, yi);
+
+  if (update_index >= map->room->room_w * map->room->room_h) {
+    return;
+  }
+
+  map->room->tiles[update_index] = tile;
 }
 
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
