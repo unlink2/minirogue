@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "maped.h"
 #include "mrg.h"
 
 int mrg_cmd_help(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,

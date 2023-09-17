@@ -266,7 +266,7 @@ size_t mrg_pl_fwrite(const char *path, const char *data, size_t len) {
   FILE *f = fopen(path, "rbe");
   if (!f) {
     fprintf(stderr, "'%s': %s\n", path, strerror(errno));
-    return NULL;
+    return 0;
   }
 
   size_t written = fwrite(data, len, 1, f);

@@ -47,6 +47,11 @@ int mrg_tile_set_load(struct mrg_tile_set_tbl *tbl,
 void mrg_tile_set_free(struct mrg_tile_set_tbl *tbl,
                        struct mrg_platform *platform, int handle) {
   struct mrg_tile_set *set = &tbl->sets[handle];
+
+  if (!set->data) {
+    return;
+  }
+
   if (!(set->flags & MRG_TILE_SET_FLAG_FREE)) {
     fprintf(stderr, "Tile set %d (%s): double free detected!\n", handle,
             set->path);
@@ -55,6 +60,7 @@ void mrg_tile_set_free(struct mrg_tile_set_tbl *tbl,
 
   mrg_pl_tile_set_free(set, platform, handle);
   free((void *)set->path);
+  set->data = NULL;
 
   set->flags = 0;
 }

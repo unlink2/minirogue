@@ -7,7 +7,7 @@
 
 #define MRG_ENTITY_SLOTS_MAX 128
 
-enum mrg_entities { MRG_ENTITY_PLAYER, MRG_ENTITY_BAT };
+enum mrg_entities { MRG_ENTITY_PLAYER, MRG_ENTITY_CURSOR, MRG_ENTITY_BAT };
 
 enum mrg_entity_flags { MRG_ENTITY_FLAG_ALLOCED = 1 };
 
@@ -24,9 +24,9 @@ enum mrg_entity_behavior {
   MRG_BEH_ENTITY_DRAW
 };
 
-// update functions that translate behaviors into commands 
-// that will eventually manipulate the scene 
-// commands are kept simple so that they may be serialized 
+// update functions that translate behaviors into commands
+// that will eventually manipulate the scene
+// commands are kept simple so that they may be serialized
 // later on
 typedef int (*mrg_entity_tick)(struct mrg_state *state,
                                struct mrg_entity *entity);

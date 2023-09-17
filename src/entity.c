@@ -16,8 +16,8 @@ int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity) {
 
 int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
 
-  mrg_fixed px = entity->x;
-  mrg_fixed py = entity->y;
+  // mrg_fixed px = entity->x;
+  // mrg_fixed py = entity->y;
 
   if (state->mode == MRG_MODE_GAME) {
     if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
