@@ -199,6 +199,12 @@ const char *mrg_tok(char *dst, const char *tok, size_t dst_len, size_t *read) {
   return dst_start;
 }
 
+int mrg_cmd_init_maped(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                       const char *args, const struct mrg_cmd *tbl,
+                       struct mrg_state *state) {
+  return mrg_maped_init(state);
+}
+
 int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,
                  const struct mrg_cmd *tbl, struct mrg_state *state) {
   const size_t buffer_len = 256;
@@ -247,4 +253,5 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
      "Entity position",
      mrg_cmd_entity_pos,
      {{"entity-handle", true, MRG_ARG_INT}, {NULL}}},
+    {"maped", "Enter map editor", mrg_cmd_init_maped, {{NULL}}},
     {NULL}};

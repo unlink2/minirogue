@@ -221,6 +221,18 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   if (IsKeyDown(KEY_DOWN)) {
     input_state |= MRG_ACTION_SCRLDOWN;
   }
+
+  if (IsKeyDown(KEY_SPACE)) {
+    input_state |= MRG_ACTION_A;
+  }
+
+  if (IsKeyDown(KEY_V)) {
+    input_state |= MRG_ACTION_B;
+  }
+
+  if (IsKeyDown(KEY_P)) {
+    input_state |= MRG_ACTION_PAUSE;
+  }
   return input_state;
 }
 
