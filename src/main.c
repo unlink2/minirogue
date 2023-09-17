@@ -8,12 +8,14 @@ struct arg_lit *verb = NULL;
 struct arg_lit *help = NULL;
 struct arg_lit *version = NULL;
 
+// execute a command at startup
+struct arg_str *exec = NULL;
+
 // arg end stores errors
 struct arg_end *end = NULL;
 
-#define mrg_argtable                                                          \
-  { help, version, verb, end, }
-
+#define mrg_argtable                                                           \
+  { help, version, verb, exec, end, }
 
 void mrg_args_free(void) {
   void *argtable[] = mrg_argtable;
@@ -24,6 +26,7 @@ void mrg_args_parse(int argc, char **argv) {
   help = arg_litn(NULL, "help", 0, 1, "display this help and exit");
   version = arg_litn(NULL, "version", 0, 1, "display version info and exit");
   verb = arg_litn("v", "verbose", 0, 1, "verbose output");
+  exec = arg_strn("e", "exec", "Engine command", 0, 256, "Execute a command");
   end = arg_end(20);
 
   void *argtable[] = mrg_argtable;
@@ -66,14 +69,15 @@ exit:
   exit(exitcode); // NOLINT
 }
 
-
-
 int main(int argc, char **argv) {
   mrg_args_parse(argc, argv);
-  
-  // map args to cfg here 
+
+  // map args to cfg here
   struct mrg_config cfg;
   memset(&cfg, 0, sizeof(cfg));
+
+  cfg.exec = exec->sval;
+  cfg.exec_len = exec->count;
 
   cfg.verbose = verb->count > 0;
   int res = mrg_main(&cfg);

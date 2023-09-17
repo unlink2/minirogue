@@ -1,4 +1,5 @@
 #include "mrg.h"
+#include "command.h"
 #include "defaults.h"
 #include "draw.h"
 #include "entity.h"
@@ -77,6 +78,10 @@ int mrg_main_loop(struct mrg_state *state) {
   return 0;
 }
 
+int mrg_std_fputs(const char *s, void *fp) {
+  return fputs(s, fp);
+}
+
 struct mrg_state mrg_state_init(struct mrg_config *cfg,
                                 mrg_platform *platform) {
   struct mrg_state state;
@@ -115,6 +120,11 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   state.console = mrg_console_init();
 
   mrg_transition(&state, MRG_MODE_GAME);
+
+  // exec startup commands 
+  for (size_t i = 0; i < cfg->exec_len; i++) {
+    mrg_cmd_exec(stdout, mrg_std_fputs, cfg->exec[i], mrg_cmd_tbl, &state);
+  }
 
   return state;
 }

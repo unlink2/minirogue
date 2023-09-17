@@ -14,6 +14,8 @@ struct mrg_platform;
 
 struct mrg_config {
   _Bool verbose;
+  const char **exec;
+  size_t exec_len;
 };
 
 int mrg_mode_game(struct mrg_state *state);
