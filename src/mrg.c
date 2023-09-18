@@ -19,7 +19,7 @@ int mrg_mode_game(struct mrg_state *state) {
 int mrg_main_loop(struct mrg_state *state) {
   mrg_platform *platform = state->platform;
 
-  while (mrg_pl_video_open(platform)) {
+  while (mrg_pl_video_open(platform) && state->idc.ok != -1) {
     // input
     mrg_input_poll(state, &state->main_input);
 
