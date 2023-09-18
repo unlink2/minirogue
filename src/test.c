@@ -167,6 +167,8 @@ void test_idc(void **test) {
     assert_non_null(se);
     // assert_int_equal(sizeof(d), len);
     assert_memory_equal(d, se, len);
+
+    mrg_idc_free(&file);
   }
   mrg_arena_free(&a);
 }

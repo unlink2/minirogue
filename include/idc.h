@@ -69,6 +69,8 @@ struct mrg_idc_file {
   int ok;
   struct mrg_idc_header header;
   struct mrg_idc_dir *dirs;
+
+  size_t prealloced_len;
 };
 
 struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
@@ -82,5 +84,7 @@ int mrg_idc_save(struct mrg_state *state, const char *path);
 
 // load idc from path into state
 int mrg_idc_load(struct mrg_state *state, const char *path);
+
+void mrg_idc_free(struct mrg_idc_file *f);
 
 #endif

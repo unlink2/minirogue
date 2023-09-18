@@ -3,6 +3,7 @@
 #include "mrg.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
 
@@ -77,8 +78,7 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
   // directory
   {
     size_t current = file.header.directory_offset;
-    file.dirs =
-        mrg_arena_malloc(a, file.header.n_entries * sizeof(struct mrg_idc_dir));
+    file.dirs = malloc(file.header.n_entries * sizeof(struct mrg_idc_dir));
 
     if (!file.dirs) {
       fprintf(stdout, "Failed to allocated idc directory! oom!\n");
@@ -277,3 +277,7 @@ int mrg_idc_save(struct mrg_state *state, const char *path) {
 }
 
 int mrg_idc_load(struct mrg_state *state, const char *path) { return -1; }
+
+void mrg_idc_free(struct mrg_idc_file *f) {
+  free(f->dirs);
+}
