@@ -60,7 +60,7 @@ struct mrg_idc_entry {
  * offset: location of idca in file
  */
 struct mrg_idc_dir {
-  int32_t type;
+  enum mrg_idc_dir_type type;
   int32_t offset;
   struct mrg_idc_entry entry; // actual data of this entry
 };
