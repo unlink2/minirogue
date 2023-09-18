@@ -12,7 +12,7 @@ typedef int (*mrg_cmd_handler)(void *fp, mrg_fputs puts,
                                const struct mrg_cmd *tbl,
                                struct mrg_state *state);
 
-enum mrg_arg_type { MRG_ARG_STRING, MRG_ARG_INT };
+enum mrg_arg_type { MRG_ARG_STRING, MRG_ARG_INT, MRG_ARG_LITERAL };
 
 struct mrg_arg {
   const char *name;

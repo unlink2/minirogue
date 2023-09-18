@@ -263,7 +263,7 @@ char *mrg_pl_fread(struct mrg_arena *a, const char *path, size_t *len) {
 }
 
 size_t mrg_pl_fwrite(const char *path, const char *data, size_t len) {
-  FILE *f = fopen(path, "rbe");
+  FILE *f = fopen(path, "wbe");
   if (!f) {
     fprintf(stderr, "'%s': %s\n", path, strerror(errno));
     return 0;

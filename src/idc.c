@@ -1,6 +1,7 @@
 #include "idc.h"
 #include "arena.h"
 #include "mrg.h"
+#include "platform.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -265,24 +266,31 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
   return start;
 }
 
-int mrg_idc_save(struct mrg_state *state, const char *path) {
-  struct mrg_arena *a = &state->tmp_arena;
-  mrg_arena_clear(a);
+int mrg_idc_save(struct mrg_arena *a, struct mrg_idc_file *f,
+                 const char *path) {
+  size_t len = 0;
+  const char *data = mrg_idc_se(a, f, &len);
 
-  struct mrg_idc_file f;
-  f.ok = 0;
-  f.header = (struct mrg_idc_header){MRG_IDC_MAGIC, 0, 0, 0, 0};
+  if (!data || !path || strlen(path) == 0) {
+    fprintf(stderr, "Unabel to serialize idc %s\n", path);
+    return -1;
+  }
+
+  fprintf(stdout, "Writing idc to '%s'\n", path);
+
+  mrg_pl_fwrite(path, data, len);
 
   return 0;
 }
 
 int mrg_idc_load(struct mrg_state *state, const char *path) { return -1; }
 
-void mrg_idc_free(struct mrg_idc_file *f) { 
+void mrg_idc_free(struct mrg_idc_file *f) {
   for (size_t i = 0; i < f->header.n_entries; i++) {
     if (f->dirs[i].type == MRG_IDC_DIR_ROOM) {
       free(f->dirs[i].entry.room.tiles);
       free(f->dirs[i].entry.room.flags);
     }
   }
-  free(f->dirs); }
+  free(f->dirs);
+}

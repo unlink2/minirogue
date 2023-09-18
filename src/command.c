@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "idc.h"
 #include "maped.h"
 #include "mrg.h"
 
@@ -40,6 +41,23 @@ int mrg_cmd_help(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
   return 0;
 }
 
+int mrg_cmd_idc_write(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                      const char *args, const struct mrg_cmd *tbl,
+                      struct mrg_state *state) {
+  size_t read = 0;
+  if (mrg_arg_parse(state->console.prev_idc_path, sizeof(char *), &cmd->args[0],
+                    args, &read) == -1 &&
+      state->console.prev_idc_path[0] == '\0') {
+    puts("Missing argument!\n", fp);
+    return -1;
+  }
+  puts(state->console.prev_idc_path, fp);
+
+  mrg_arena_clear(&state->tmp_arena);
+  return mrg_idc_save(&state->tmp_arena, &state->idc,
+                      state->console.prev_idc_path);
+}
+
 int mrg_arg_int(int *out, const char *args, size_t *read) {
   char buffer[64];
   const char *tok = mrg_tok(buffer, args, 64, read);
@@ -67,6 +85,12 @@ int mrg_arg_parse(void *out, size_t out_len, const struct mrg_arg *arg,
     return mrg_arg_string(args, out, out_len, read);
   case MRG_ARG_INT:
     return mrg_arg_int(out, args, read);
+  case MRG_ARG_LITERAL:
+    while (*args && isspace(*args)) {
+      args++;
+    }
+    memcpy(out, args, strlen(args));
+    return 0;
   }
 
   return -1;
@@ -297,4 +321,8 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
       {"stat-slot", true, MRG_ARG_INT},
       {"stat-value", true, MRG_ARG_INT},
       {NULL}}},
+    {"idcwrite",
+     "Write idc file to disk",
+     mrg_cmd_idc_write,
+     {{"path", true, MRG_ARG_LITERAL}, {NULL}}},
     {NULL}};
