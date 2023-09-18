@@ -2,6 +2,7 @@
 #include "arena.h"
 #include "mrg.h"
 #include "platform.h"
+#include "defaults.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -246,6 +247,8 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
 
         char *dst_flags = mrg_arena_malloc(a, tiles_len);
         MRG_IDC_WRITE(a, dst_flags, entry->room.flags, tiles_len, len);
+
+        *len += (size_t)tiles_len * 2;
         break;
       }
       case MRG_IDC_DIR_ENTITY:
@@ -283,9 +286,35 @@ int mrg_idc_save(struct mrg_arena *a, struct mrg_idc_file *f,
   return 0;
 }
 
-int mrg_idc_load(struct mrg_state *state, const char *path) { return -1; }
+int mrg_idc_load(struct mrg_arena *a, struct mrg_idc_file *idc,
+                 const char *path) {
+  size_t len = 0;
+  mrg_idc_free(idc);
+
+  if (!path || strlen(path) == 0) {
+    fprintf(stderr, "Unabel to deserialize idc %s\n", path);
+    return -1;
+  }
+
+  fprintf(stdout, "Reading idc from '%s'\n", path);
+
+  const char *data = mrg_pl_fread(a, path, &len);
+  if (!data) {
+    fprintf(stderr, "Unabel to deserialize idc %s\n", path);
+    return -1;
+  }
+
+  *idc = mrg_idc_de(a, data, len);
+
+  return 0;
+}
 
 void mrg_idc_free(struct mrg_idc_file *f) {
+  // free previous idc if it is not the default one!
+  if (f->header.version == MRG_IDC_DEFAULT_VERSION) {
+    return;
+  }
+
   for (size_t i = 0; i < f->header.n_entries; i++) {
     if (f->dirs[i].type == MRG_IDC_DIR_ROOM) {
       free(f->dirs[i].entry.room.tiles);

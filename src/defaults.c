@@ -15,7 +15,7 @@ struct mrg_idc_dir dirs[2] = {
                  "dbg.png"}}}};
 
 struct mrg_idc_file default_idc = {
-    0, {MRG_IDC_MAGIC, 0, 2, 0, 0}, (void *)dirs};
+    0, {MRG_IDC_MAGIC, MRG_IDC_DEFAULT_VERSION, 2, 0, 0}, (void *)dirs};
 
 struct mrg_idc_file mrg_default_idc(void) {
   memset(tiles, 0, (size_t)32 * 32);

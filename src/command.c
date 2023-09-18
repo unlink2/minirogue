@@ -58,6 +58,24 @@ int mrg_cmd_idc_write(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
                       state->console.prev_idc_path);
 }
 
+int mrg_cmd_idc_read(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                      const char *args, const struct mrg_cmd *tbl,
+                      struct mrg_state *state) {
+  size_t read = 0;
+  if (mrg_arg_parse(state->console.prev_idc_path, sizeof(char *), &cmd->args[0],
+                    args, &read) == -1 &&
+      state->console.prev_idc_path[0] == '\0') {
+    puts("Missing argument!\n", fp);
+    return -1;
+  }
+  puts(state->console.prev_idc_path, fp);
+
+  mrg_arena_clear(&state->tmp_arena);
+  return mrg_idc_load(&state->tmp_arena, &state->idc,
+                      state->console.prev_idc_path);
+}
+
+
 int mrg_arg_int(int *out, const char *args, size_t *read) {
   char buffer[64];
   const char *tok = mrg_tok(buffer, args, 64, read);
@@ -324,5 +342,9 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
     {"idcwrite",
      "Write idc file to disk",
      mrg_cmd_idc_write,
+     {{"path", true, MRG_ARG_LITERAL}, {NULL}}},
+    {"idcread",
+     "Read idc file from disk",
+     mrg_cmd_idc_read,
      {{"path", true, MRG_ARG_LITERAL}, {NULL}}},
     {NULL}};

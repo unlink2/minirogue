@@ -140,6 +140,8 @@ void mrg_state_free(struct mrg_state *state) {
   }
 
   mrg_console_free(&state->console);
+
+  mrg_idc_free(&state->idc);
 }
 
 int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {

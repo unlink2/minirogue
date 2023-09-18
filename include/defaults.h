@@ -3,6 +3,9 @@
 
 #include "idc.h"
 
+// indicates that the idc file is the default 
+// and should not be freed 
+#define MRG_IDC_DEFAULT_VERSION (-1)
 /**
  * Defines a default idc file
  * that can be loaded as a starting point or fallback
