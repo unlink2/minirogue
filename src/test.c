@@ -139,26 +139,26 @@ void test_idc(void **test) {
 
     assert_int_equal(MRG_IDC_DIR_ROOM, file.dirs[0].type);
     assert_int_equal(0x20, file.dirs[0].offset);
-    assert_int_equal(1, file.dirs[0].entry->room.room_id);
-    assert_int_equal(2, file.dirs[0].entry->room.room_w);
-    assert_int_equal(2, file.dirs[0].entry->room.room_h);
-    assert_int_equal(0x3C, file.dirs[0].entry->room.tiles_offset);
-    assert_int_equal(0x40, file.dirs[0].entry->room.flags_offset);
-    assert_non_null(file.dirs[0].entry->room.tiles);
-    assert_non_null(file.dirs[0].entry->room.flags);
+    assert_int_equal(1, file.dirs[0].entry.room.room_id);
+    assert_int_equal(2, file.dirs[0].entry.room.room_w);
+    assert_int_equal(2, file.dirs[0].entry.room.room_h);
+    assert_int_equal(0x3C, file.dirs[0].entry.room.tiles_offset);
+    assert_int_equal(0x40, file.dirs[0].entry.room.flags_offset);
+    assert_non_null(file.dirs[0].entry.room.tiles);
+    assert_non_null(file.dirs[0].entry.room.flags);
     const char expected_tiles[] = {1, 2, 3, 4};
     const char expected_flags[] = {4, 3, 2, 1};
-    assert_memory_equal(expected_tiles, file.dirs[0].entry->room.tiles, 4);
-    assert_memory_equal(expected_flags, file.dirs[0].entry->room.flags, 4);
-    assert_string_equal("1234567", file.dirs[0].entry->room.tile_set);
+    assert_memory_equal(expected_tiles, file.dirs[0].entry.room.tiles, 4);
+    assert_memory_equal(expected_flags, file.dirs[0].entry.room.flags, 4);
+    assert_string_equal("1234567", file.dirs[0].entry.room.tile_set);
 
     assert_int_equal(MRG_IDC_DIR_ENTITY, file.dirs[1].type);
     assert_int_equal(0x44, file.dirs[1].offset);
-    assert_int_equal(2, file.dirs[1].entry->entity.room_id);
-    assert_int_equal(1, file.dirs[1].entry->entity.x);
-    assert_int_equal(4, file.dirs[1].entry->entity.y);
-    assert_int_equal(0x500, file.dirs[1].entry->entity.flags);
-    assert_int_equal(0x07, file.dirs[1].entry->entity.type);
+    assert_int_equal(2, file.dirs[1].entry.entity.room_id);
+    assert_int_equal(1, file.dirs[1].entry.entity.x);
+    assert_int_equal(4, file.dirs[1].entry.entity.y);
+    assert_int_equal(0x500, file.dirs[1].entry.entity.flags);
+    assert_int_equal(0x07, file.dirs[1].entry.entity.type);
 
     // reverse
     size_t len = 0;

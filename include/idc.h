@@ -28,6 +28,9 @@
 
 #define MRG_IDC_LE(n) (n)
 
+#define mrg_idc_room mrg_room
+#define mrg_idc_entity mrg_entity
+
 /**
  * File header:
  * id: always MRG_IDC_MAGIC
@@ -44,6 +47,13 @@ struct mrg_idc_header {
 
 enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM, MRG_IDC_DIR_ENTITY };
 
+struct mrg_idc_entry {
+  union {
+    struct mrg_idc_entity entity;
+    struct mrg_idc_room room;
+  };
+};
+
 /**
  * Directory entry
  * type: directory entry typr
@@ -52,17 +62,7 @@ enum mrg_idc_dir_type { MRG_IDC_DIR_ROOM, MRG_IDC_DIR_ENTITY };
 struct mrg_idc_dir {
   int32_t type;
   int32_t offset;
-  struct mrg_idc_entry *entry; // actual data of this entry
-};
-
-#define mrg_idc_room mrg_room
-#define mrg_idc_entity mrg_entity
-
-struct mrg_idc_entry {
-  union {
-    struct mrg_idc_entity entity;
-    struct mrg_idc_room room;
-  };
+  struct mrg_idc_entry entry; // actual data of this entry
 };
 
 struct mrg_idc_file {
@@ -76,7 +76,6 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
 
 const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
                        size_t *len);
-
 
 // save id from state into path
 int mrg_idc_save(struct mrg_state *state, const char *path);

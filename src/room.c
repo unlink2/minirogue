@@ -32,11 +32,11 @@ struct mrg_room_tbl mrg_room_tbl_from_idc(struct mrg_state *state,
     }
 
     tbl.rooms[room_handle] = mrg_arena_malloc(a, sizeof(struct mrg_room));
-    *tbl.rooms[room_handle] = mrg_room_instance_from(state, &dir->entry->room);
+    *tbl.rooms[room_handle] = mrg_room_instance_from(state, &dir->entry.room);
 
     char tile_path[MRG_IDC_FILE_NAME_LEN + 1];
     memset(tile_path, 0, MRG_IDC_FILE_NAME_LEN + 1);
-    memcpy(tile_path, dir->entry->room.tile_set, MRG_IDC_FILE_NAME_LEN);
+    memcpy(tile_path, dir->entry.room.tile_set, MRG_IDC_FILE_NAME_LEN);
     mrg_tile_set_load(&state->tile_tbl, state->platform, tile_path,
                       state->tile_w, state->tile_h);
 

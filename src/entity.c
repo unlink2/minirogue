@@ -167,7 +167,7 @@ int mrg_entities_from_idc(struct mrg_state *state, struct mrg_idc_file *f) {
   for (size_t i = 0; i < f->header.n_entries; i++) {
     struct mrg_idc_dir *dir = &f->dirs[i];
     if (!(dir->type & MRG_IDC_DIR_ENTITY) &&
-        dir->entry->entity.room_id == state->map.room->room_id) {
+        dir->entry.entity.room_id == state->map.room->room_id) {
       continue;
     }
 
@@ -178,16 +178,16 @@ int mrg_entities_from_idc(struct mrg_state *state, struct mrg_idc_file *f) {
 
     // TODO: handle room id
     struct mrg_entity *e = &tbl->slots[handle];
-    mrg_entity_init_type(e, dir->entry->entity.type);
-    e->type = dir->entry->entity.type;
-    e->flags = dir->entry->entity.flags | e->flags;
-    e->x = dir->entry->entity.x;
-    e->y = dir->entry->entity.y;
+    mrg_entity_init_type(e, dir->entry.entity.type);
+    e->type = dir->entry.entity.type;
+    e->flags = dir->entry.entity.flags | e->flags;
+    e->x = dir->entry.entity.x;
+    e->y = dir->entry.entity.y;
 
     char tile_path[MRG_IDC_FILE_NAME_LEN + 1];
     memset(tile_path, 0, MRG_IDC_FILE_NAME_LEN + 1);
-    memcpy(tile_path, dir->entry->room.tile_set, MRG_IDC_FILE_NAME_LEN);
-    
+    memcpy(tile_path, dir->entry.room.tile_set, MRG_IDC_FILE_NAME_LEN);
+
     e->tileset_id = mrg_tile_set_load(&state->tile_tbl, state->platform,
                                       tile_path, state->tile_w, state->tile_h);
   }

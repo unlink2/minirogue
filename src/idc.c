@@ -1,6 +1,7 @@
 #include "idc.h"
 #include "arena.h"
 #include "mrg.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <arpa/inet.h>
@@ -114,14 +115,7 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
         return file;
       }
 
-      dir->entry = mrg_arena_malloc(a, sizeof(struct mrg_idc_entry));
-      if (!dir->entry) {
-        fprintf(stdout, "Failed to allocated idc entry! oom!\n");
-        file.ok = -1;
-        return file;
-      }
-
-      struct mrg_idc_entry *entry = dir->entry;
+      struct mrg_idc_entry *entry = &dir->entry;
       memset(entry, 0, sizeof(struct mrg_idc_entry));
 
       switch (dir->type) {
@@ -225,7 +219,7 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
   {
     for (size_t i = 0; i < f->header.n_entries; i++) {
       struct mrg_idc_dir *dir = &f->dirs[i];
-      struct mrg_idc_entry *entry = dir->entry;
+      struct mrg_idc_entry *entry = &dir->entry;
 
       int32_t *dst_entry = mrg_arena_malloc(a, MRG_IDC_ENTRY_LEN);
       *len += MRG_IDC_ENTRY_LEN;
