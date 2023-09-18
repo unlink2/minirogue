@@ -299,6 +299,7 @@ int mrg_idc_load(struct mrg_arena *a, struct mrg_idc_file *idc,
   fprintf(stdout, "Reading idc from '%s'\n", path);
 
   const char *data = mrg_pl_fread(a, path, &len);
+  fprintf(stdout, "'%s' read %ld bytes\n", path, len);
   if (!data) {
     fprintf(stderr, "Unabel to deserialize idc %s\n", path);
     return -1;
