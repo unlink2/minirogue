@@ -80,6 +80,9 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
   // directory
   {
     size_t current = file.header.directory_offset;
+
+    fprintf(stderr, "Reading idc directory at offset %ld\n", current);
+
     file.dirs = malloc(file.header.n_entries * sizeof(struct mrg_idc_dir));
 
     if (!file.dirs) {
@@ -111,11 +114,19 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
       struct mrg_idc_dir *dir = &file.dirs[i];
       size_t current = dir->offset;
       size_t entrylen = MRG_IDC_ENTRY_LEN;
-      if (len - current < entrylen) {
+
+      size_t remaining = len - current;
+      if (remaining < entrylen) {
         file.ok = -1;
-        fprintf(stderr, "Unable to parse idc. Incomplete entry!\n");
+        fprintf(stderr,
+                "Unable to parse idc. Incomplete entry at offset %ld! Expected "
+                "%ld bytes, "
+                "but got %ld bytes\n",
+                current, entrylen, remaining);
         return file;
       }
+
+      fprintf(stdout, "Reading entry %ld at offset %ld\n", i, current);
 
       struct mrg_idc_entry *entry = &dir->entry;
       memset(entry, 0, sizeof(struct mrg_idc_entry));
@@ -204,6 +215,7 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
   *len = 0;
   // header
   {
+    *len += MRG_IDC_HEADER_LEN;
     MRG_IDC_WRITE(a, mrg_arena_malloc(a, 3), MRG_IDC_MAGIC, 3, len);
     MRG_IDC_WRITE_INT8(a, mrg_arena_malloc(a, sizeof(int8_t)), 0, len);
     MRG_IDC_WRITE_INT32(a, mrg_arena_malloc(a, sizeof(int32_t)), 2, len);
@@ -281,9 +293,7 @@ int mrg_idc_save(struct mrg_arena *a, struct mrg_idc_file *f,
 
   fprintf(stdout, "Writing idc to '%s'\n", path);
 
-  mrg_pl_fwrite(path, data, len);
-
-  return 0;
+  return (int)mrg_pl_fwrite(path, data, len);
 }
 
 int mrg_idc_load(struct mrg_arena *a, struct mrg_idc_file *idc,
@@ -307,7 +317,7 @@ int mrg_idc_load(struct mrg_arena *a, struct mrg_idc_file *idc,
 
   *idc = mrg_idc_de(a, data, len);
 
-  return 0;
+  return idc->ok;
 }
 
 void mrg_idc_free(struct mrg_idc_file *f) {

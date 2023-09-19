@@ -130,4 +130,6 @@ struct mrg_entity {
 
 #define MRG_DEBUG
 
+#define mrg_panic(ec, msg) {fprintf(stderr, (msg)); exit(ec);}
+
 #endif

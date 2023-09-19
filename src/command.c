@@ -71,8 +71,14 @@ int mrg_cmd_idc_read(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
   puts(state->console.prev_idc_path, fp);
 
   mrg_arena_clear(&state->tmp_arena);
-  return mrg_idc_load(&state->tmp_arena, &state->idc,
+  int rc = mrg_idc_load(&state->tmp_arena, &state->idc,
                       state->console.prev_idc_path);
+
+  if (rc == -1) {
+    mrg_panic(-1, "Failed to parse idc file!\n");
+  }
+
+  return rc;
 }
 
 
