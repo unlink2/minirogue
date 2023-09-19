@@ -67,7 +67,6 @@ void mrg_pl_draw_debug(mrg_platform *platform);
 void mrg_pl_draw_debug_rec(mrg_platform *platform, int x, int y, int w, int h,
                            struct mrg_color color);
 
-
 void mrg_pl_print(mrg_platform *platform, const char *text, int x, int y,
                   int font_size, struct mrg_color color);
 
@@ -82,6 +81,10 @@ int mrg_pl_camera_target(mrg_platform *platform, struct mrg_camera *camera,
                          int x, int y);
 int mrg_pl_camera_offset(mrg_platform *platform, struct mrg_camera *camera,
                          int w, int h);
+
+int mrg_pl_camera_offset_rel(mrg_platform *platform, struct mrg_camera *camera,
+                             int dx, int dy);
+
 int mrg_pl_camera_end(mrg_platform *platform, struct mrg_camera *camera);
 
 void mrg_pl_camera_world_to_screen(struct mrg_platform *platform,

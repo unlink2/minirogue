@@ -33,7 +33,7 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   memset(&platform, 0, sizeof(platform));
 
   platform.screen_w = 800;
-  platform.screen_h = 600;
+  platform.screen_h = 640;
   platform.draw_debug = cfg->verbose;
 
   // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -71,16 +71,16 @@ int mrg_pl_video_begin(mrg_platform *platform) {
 
 struct mrg_camera mrg_pl_camera_init(mrg_platform *platform) {
   platform->cameras[0] = (Camera2D){0};
-  platform->cameras[0].offset = (Vector2){(float)platform->screen_w / 2.0F,
-                                          (float)platform->screen_h / 2.0F};
   platform->cameras[0].rotation = 0.0F;
-  platform->cameras[0].zoom = 2.0F;
+  platform->cameras[0].zoom = 1.5F;
 
   struct mrg_camera camera;
   memset(&camera, 0, sizeof(camera));
 
   // currently theres only one camera...
   camera.handle = 0;
+
+  mrg_pl_camera_offset_rel(platform, &camera, 0, 0);
 
   return camera;
 }
@@ -141,6 +141,14 @@ int mrg_pl_camera_target(mrg_platform *platform, struct mrg_camera *camera,
 int mrg_pl_camera_offset(mrg_platform *platform, struct mrg_camera *camera,
                          int w, int h) {
   platform->cameras[camera->handle].offset = (Vector2){(float)w, (float)h};
+  return 0;
+}
+
+int mrg_pl_camera_offset_rel(mrg_platform *platform, struct mrg_camera *camera,
+                             int dx, int dy) {
+  platform->cameras[0].offset =
+      (Vector2){(float)platform->screen_w / 2.0F + (float)dy,
+                (float)platform->screen_h / 2.0F + (float)dx};
   return 0;
 }
 

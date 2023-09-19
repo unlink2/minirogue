@@ -3,9 +3,18 @@
 
 #include "defs.h"
 
+enum mrg_camera_target {
+  MRG_CAMT_POINT,
+  MRG_CAMT_ENTITY,
+};
+
 struct mrg_camera {
   int handle;
+
+  enum mrg_camera_target target_type;
   int target_entity;
+  int target_x;
+  int target_y;
 };
 
 struct mrg_camera mrg_camera_init(struct mrg_state *state);

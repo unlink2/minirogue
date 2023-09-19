@@ -8,18 +8,30 @@ struct mrg_camera mrg_camera_init(struct mrg_state *state) {
 }
 
 int mrg_camera_update(struct mrg_state *state, struct mrg_camera *camera) {
-  if (camera->target_entity >= 0) {
-    struct mrg_entity *entity = &state->entity_tbl.slots[camera->target_entity];
-    if (!(entity->flags & MRG_ENTITY_FLAG_ALLOCED)) {
-      fprintf(stderr,
-              "Camera target entity %d is not allocated! Removing target...\n",
-              camera->target_entity);
-      camera->target_entity = -1;
-      return -1;
-    }
+  switch (camera->target_type) {
+  case MRG_CAMT_ENTITY:
+    if (camera->target_entity >= 0) {
+      struct mrg_entity *entity =
+          &state->entity_tbl.slots[camera->target_entity];
+      if (!(entity->flags & MRG_ENTITY_FLAG_ALLOCED)) {
+        fprintf(
+            stderr,
+            "Camera target entity %d is not allocated! Removing target...\n",
+            camera->target_entity);
+        camera->target_entity = -1;
+        return -1;
+      }
 
-    mrg_pl_camera_target(state->platform, camera, MRG_FIXED_WHOLE(entity->x),
-                         MRG_FIXED_WHOLE(entity->y));
+      mrg_pl_camera_offset_rel(state->platform, camera, 0, 0);
+      mrg_pl_camera_target(state->platform, camera, MRG_FIXED_WHOLE(entity->x),
+                           MRG_FIXED_WHOLE(entity->y));
+    }
+    break;
+  case MRG_CAMT_POINT:
+    mrg_pl_camera_offset(state->platform, camera, 0, 0);
+    mrg_pl_camera_target(state->platform, camera, camera->target_x,
+                         camera->target_y);
+    break;
   }
 
   return 0;
