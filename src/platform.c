@@ -32,8 +32,8 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   mrg_platform platform;
   memset(&platform, 0, sizeof(platform));
 
-  platform.screen_w = 800;
-  platform.screen_h = 640;
+  platform.screen_w = MRG_PL_SCREEN_W;
+  platform.screen_h = MRG_PL_SCREEN_H;
   platform.draw_debug = cfg->verbose;
 
   // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -72,7 +72,7 @@ int mrg_pl_video_begin(mrg_platform *platform) {
 struct mrg_camera mrg_pl_camera_init(mrg_platform *platform) {
   platform->cameras[0] = (Camera2D){0};
   platform->cameras[0].rotation = 0.0F;
-  platform->cameras[0].zoom = 1.5F;
+  platform->cameras[0].zoom = 1.0F;
 
   struct mrg_camera camera;
   memset(&camera, 0, sizeof(camera));
@@ -110,8 +110,17 @@ void mrg_pl_draw_debug_rec(mrg_platform *platform, int x, int y, int w, int h,
   if (!platform->draw_debug) {
     return;
   }
+  mrg_pl_draw_outlined_rec(platform, x, y, w, h, color);
+}
 
+void mrg_pl_draw_outlined_rec(mrg_platform *platform, int x, int y, int w,
+                              int h, struct mrg_color color) {
   DrawRectangleLines(x, y, w, h, (Color){color.r, color.g, color.b, color.a});
+}
+
+void mrg_pl_draw_filled_rec(mrg_platform *platform, int x, int y, int w, int h,
+                            struct mrg_color color) {
+  DrawRectangle(x, y, w, h, (Color){color.r, color.g, color.b, color.a});
 }
 
 int mrg_pl_video_end(mrg_platform *platform) {

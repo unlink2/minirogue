@@ -10,6 +10,9 @@
 
 #define MRG_DIR_PATH_SEP "/"
 
+#define MRG_PL_SCREEN_W 640
+#define MRG_PL_SCREEN_H 480
+
 /**
  * All platform specific APIs go here
  * DO NOT rely on mrg_platform outside of platfomr specific APIs!
@@ -63,6 +66,12 @@ int mrg_pl_video_begin(mrg_platform *platform);
 int mrg_pl_video_end(mrg_platform *platform);
 
 void mrg_pl_draw_debug(mrg_platform *platform);
+
+void mrg_pl_draw_outlined_rec(mrg_platform *platform, int x, int y, int w, int h,
+                             struct mrg_color color);
+
+void mrg_pl_draw_filled_rec(mrg_platform *platform, int x, int y, int w, int h,
+                            struct mrg_color color);
 
 void mrg_pl_draw_debug_rec(mrg_platform *platform, int x, int y, int w, int h,
                            struct mrg_color color);

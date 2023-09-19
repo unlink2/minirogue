@@ -84,6 +84,10 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
                                 mrg_platform *platform) {
   struct mrg_state state;
   memset(&state, 0, sizeof(state));
+
+  state.screen_w = MRG_PL_SCREEN_W;
+  state.screen_h = MRG_PL_SCREEN_H;
+
   state.platform = platform;
   state.room_arena = mrg_arena_init(4096);
   state.idc_arena = mrg_arena_init(4096);

@@ -11,7 +11,7 @@ struct mrg_console mrg_console_init(void) {
   struct mrg_console console;
   memset(&console, 0, sizeof(console));
   console.bs_delay = 0;
-  console.lines_to_draw = 25;
+  console.lines_to_draw = 20;
   console.line_scroll = 0;
 
   console.cmd_tbl = mrg_cmd_tbl;
@@ -27,6 +27,13 @@ int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
   int y = 32 + y_per_line * lines_to_draw;
   int input_y = y + y_per_line;
 
+  int font_size = 20;
+
+  mrg_pl_draw_filled_rec(state->platform, 0, 0, state->screen_w,
+                         state->screen_h, (struct mrg_color){0, 0, 0, 128});
+  mrg_pl_draw_outlined_rec(state->platform, 0, 0, state->screen_w,
+                           state->screen_h, (struct mrg_color){255, 0, 0, 255});
+
   for (size_t i = console->line_scroll;
        i < MIN(console->lines_len, lines_to_draw) + console->line_scroll; i++) {
     size_t index = console->lines_len - i - 1;
@@ -34,13 +41,14 @@ int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
       continue;
     }
 
-    mrg_pl_print(state->platform, console->lines[index], x, y, 20, MRG_WHITE);
+    mrg_pl_print(state->platform, console->lines[index], x, y, font_size,
+                 MRG_WHITE);
     y -= y_per_line;
   }
 
-  mrg_pl_print(state->platform, ">", x, input_y, 20, MRG_WHITE);
-  mrg_pl_print(state->platform, console->input.buffer, x + 20, input_y, 20,
-               MRG_WHITE);
+  mrg_pl_print(state->platform, ">", x, input_y, font_size, MRG_WHITE);
+  mrg_pl_print(state->platform, console->input.buffer, x + 20, input_y,
+               font_size, MRG_WHITE);
 
   return 0;
 }

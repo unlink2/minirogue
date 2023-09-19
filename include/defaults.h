@@ -3,8 +3,11 @@
 
 #include "idc.h"
 
-// indicates that the idc file is the default 
-// and should not be freed 
+#define MRG_DEFAULT_ROOM_W 40
+#define MRG_DEFAULT_ROOM_H 30
+
+// indicates that the idc file is the default
+// and should not be freed
 #define MRG_IDC_DEFAULT_VERSION (-1)
 /**
  * Defines a default idc file

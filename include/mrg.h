@@ -47,6 +47,9 @@ struct mrg_state {
   struct mrg_console console;
 
   struct mrg_idc_file idc;
+
+  int screen_w;
+  int screen_h;
 };
 
 int mrg_main(struct mrg_config *cfg);

@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MRG_DEFAULT_ROOM_W 34
-#define MRG_DEFAULT_ROOM_H 32
 
 int8_t tiles[MRG_DEFAULT_ROOM_W * MRG_DEFAULT_ROOM_H];
 int8_t flags[MRG_DEFAULT_ROOM_W * MRG_DEFAULT_ROOM_H];

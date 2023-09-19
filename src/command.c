@@ -339,7 +339,7 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
      {{"entity-handle", true, MRG_ARG_INT}, {NULL}}},
     {"maped", "Enter map editor", mrg_cmd_init_maped, {{NULL}}},
     {"setstat",
-     "Set entity stats",
+     "Set stats",
      mrg_cmd_set_stat,
      {{"entity-handle", true, MRG_ARG_INT},
       {"stat-slot", true, MRG_ARG_INT},
