@@ -35,9 +35,8 @@ int mrg_maped_load_room(struct mrg_state *state, int handle) {
     if (tbl->rooms[i]->iflags & MRG_ROOM_ALLOC) {
       mrg_map_free(&state->map);
       state->map = mrg_map_init(state, 0);
+      return 0;
     }
-
-    return 0;
   }
 
   fprintf(stderr, "Unabel to load room %d\n", handle);
