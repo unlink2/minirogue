@@ -149,8 +149,20 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
   for (size_t y = start_tile_y; y < end_h; y++) {
     for (size_t x = start_tile_x; x < end_w; x++) {
       size_t tile = MRG_MAP_COORDS_TO_TILE(map, x, y);
-      mrg_tile_draw(&state->tile_tbl, state->platform, map->tileset_id,
-                    map->room->tiles[tile], tx, ty);
+
+      int hflip = 1;
+      int vflip = 1;
+
+      if (map->room->flags[tile] & MRG_MAP_FLAG_HFLIP) {
+        hflip = -1;
+      }
+
+      if (map->room->flags[tile] & MRG_MAP_FLAG_VFLIP) {
+        vflip = -1;
+      }
+
+      mrg_tile_draw_adv(&state->tile_tbl, state->platform, map->tileset_id,
+                    map->room->tiles[tile], tx, ty, hflip, vflip);
 
 #ifdef MRG_DEBUG
       if (map->room->flags[tile] & MRG_MAP_FLAG_COLLISION) {

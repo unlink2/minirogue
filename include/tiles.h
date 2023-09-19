@@ -39,4 +39,7 @@ void mrg_tile_set_free(struct mrg_tile_set_tbl *tbl,
 void mrg_tile_draw(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
                    int handle, int tile, int x, int y);
 
+void mrg_tile_draw_adv(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
+                   int handle, int tile, int x, int y, int hflip, int vflip);
+
 #endif
