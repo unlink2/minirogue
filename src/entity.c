@@ -215,7 +215,7 @@ int mrg_entity_init_player(struct mrg_entity *entity) {
   entity->next_behavior = MRG_BEH_PLAYER_UPDATE;
   entity->next_draw = MRG_BEH_ENTITY_DRAW;
 
-  entity->tile_id = 1;
+  entity->tile_id = 33;
 
   fprintf(stdout, "Player created with behavior %d\n", entity->next_behavior);
   return 0;

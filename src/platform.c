@@ -40,7 +40,7 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   SetConfigFlags(FLAG_VSYNC_HINT);
 
   // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-  InitWindow(platform.screen_w, platform.screen_h, "mrg");
+  InitWindow(platform.screen_w * 2, platform.screen_h * 2, "mrg");
 
   platform.target = LoadRenderTexture(platform.screen_w, platform.screen_h);
 
