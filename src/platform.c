@@ -129,7 +129,6 @@ int mrg_pl_video_end(mrg_platform *platform) {
   BeginDrawing();
   float scalex = (float)GetScreenWidth() / (float)platform->screen_w;
   float scaley = (float)GetScreenHeight() / (float)platform->screen_h;
-  printf("%f %f\n", scalex, scaley);
   ClearBackground(BLACK);
   DrawTexturePro(
       platform->target.texture,
