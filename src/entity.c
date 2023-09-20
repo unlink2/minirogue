@@ -123,7 +123,13 @@ int mrg_beh_cursor_draw(struct mrg_state *state, struct mrg_entity *entity) {
   mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id,
                 entity->stats[MRG_STAT_USTAT1], MRG_FIXED_WHOLE(entity->x),
                 MRG_FIXED_WHOLE(entity->y));
-  mrg_beh_entity_draw(state, entity);
+
+  for (int i = 1; i < 3; i++) {
+    mrg_pl_draw_outlined_rec(
+        state->platform, MRG_FIXED_WHOLE(entity->x) - i,
+        MRG_FIXED_WHOLE(entity->y) - i, state->map.tile_w + i * 2,
+        state->map.tile_h + i * 2, (struct mrg_color){255, 159, 0, 255});
+  }
   return 0;
 }
 
@@ -223,10 +229,15 @@ int mrg_entity_init_player(struct mrg_entity *entity) {
 
 int mrg_entity_init_cursor(struct mrg_entity *entity) {
   mrg_entity_init(entity);
-  entity->type = MRG_ENTITY_CURSOR;
+  entity->type = MRG_ENTITY_PLAYER;
   entity->tile_id = 16;
   entity->next_behavior = MRG_BEH_CURSOR_UPDATE;
   entity->next_draw = MRG_BEH_CURSOR_DRAW;
+
+  entity->col_offset_x = 0;
+  entity->col_offset_y = 0;
+  entity->col_w = 0;
+  entity->col_w = 0;
 
   return 0;
 }
