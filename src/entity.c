@@ -120,16 +120,18 @@ int mrg_beh_entity_draw(struct mrg_state *state, struct mrg_entity *entity) {
 }
 
 int mrg_beh_cursor_draw(struct mrg_state *state, struct mrg_entity *entity) {
+  int offset = 2;
+  mrg_pl_draw_filled_rec(
+      state->platform, MRG_FIXED_WHOLE(entity->x) - offset,
+      MRG_FIXED_WHOLE(entity->y) - offset, state->map.tile_w + offset * 2,
+      state->map.tile_h + offset * 2, (struct mrg_color){255, 159, 0, 255});
+
+  mrg_pl_draw_filled_rec(state->platform, MRG_FIXED_WHOLE(entity->x),
+                         MRG_FIXED_WHOLE(entity->y), state->map.tile_w,
+                         state->map.tile_h, (struct mrg_color){0, 0, 0, 255});
   mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id,
                 entity->stats[MRG_STAT_USTAT1], MRG_FIXED_WHOLE(entity->x),
                 MRG_FIXED_WHOLE(entity->y));
-
-  for (int i = 1; i < 3; i++) {
-    mrg_pl_draw_outlined_rec(
-        state->platform, MRG_FIXED_WHOLE(entity->x) - i,
-        MRG_FIXED_WHOLE(entity->y) - i, state->map.tile_w + i * 2,
-        state->map.tile_h + i * 2, (struct mrg_color){255, 159, 0, 255});
-  }
   return 0;
 }
 
