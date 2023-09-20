@@ -20,14 +20,14 @@ struct mrg_console mrg_console_init(void) {
 }
 
 int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
-  int y_per_line = 16;
   int lines_to_draw = console->lines_to_draw;
+
+  int font_size = 16;
+  int y_per_line = font_size;
 
   int x = 10;
   int y = 32 + y_per_line * lines_to_draw;
   int input_y = y + y_per_line;
-
-  int font_size = 16;
 
   mrg_pl_draw_filled_rec(state->platform, 0, 0, state->screen_w,
                          state->screen_h, (struct mrg_color){0, 0, 0, 128});
@@ -46,9 +46,15 @@ int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
     y -= y_per_line;
   }
 
-  mrg_pl_print(state->platform, ">", x, input_y, font_size, MRG_WHITE);
-  mrg_pl_print(state->platform, console->input.buffer, x + 20, input_y,
-               font_size, MRG_WHITE);
+  int measure_prompt = MeasureText("> ", font_size);
+  mrg_pl_print(state->platform, "> ", x, input_y, font_size, MRG_WHITE);
+  mrg_pl_print(state->platform, console->input.buffer, x + measure_prompt,
+               input_y, font_size, MRG_WHITE);
+
+  int measure_input =
+      measure_prompt + MeasureText(console->input.buffer, font_size);
+  mrg_pl_print(state->platform, "_", x + measure_input, input_y + 2, font_size,
+               (struct mrg_color){255, 255, 255, 200});
 
   return 0;
 }
