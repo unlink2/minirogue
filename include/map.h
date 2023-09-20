@@ -8,7 +8,7 @@
 #include "room.h"
 
 #define MRG_LAYER_W 16
-#define MRG_LAYER_H 14
+#define MRG_LAYER_H 16
 #define MRG_LAYER_LEN (MRG_LAYER_W * MRG_LAYER_H)
 
 #define MRG_MAP_COORDS_TO_TILE(map, x, y) (y) * (map)->w + (x)

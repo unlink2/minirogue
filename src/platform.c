@@ -127,20 +127,21 @@ void mrg_pl_draw_filled_rec(mrg_platform *platform, int x, int y, int w, int h,
 int mrg_pl_video_end(mrg_platform *platform) {
   EndTextureMode();
   BeginDrawing();
-  float scale = MIN((float)GetScreenWidth() / platform->screen_w,
-                    (float)GetScreenHeight() / platform->screen_h);
-
+  float scalex = (float)GetScreenWidth() / (float)platform->screen_w;
+  float scaley = (float)GetScreenHeight() / (float)platform->screen_h;
+  printf("%f %f\n", scalex, scaley);
   ClearBackground(BLACK);
   DrawTexturePro(
       platform->target.texture,
       (Rectangle){0.0F, 0.0F, (float)platform->target.texture.width,
                   (float)-platform->target.texture.height},
       (Rectangle){
-          ((float)GetScreenWidth() - ((float)platform->screen_w * scale)) *
+          ((float)GetScreenWidth() - ((float)platform->screen_w * scalex)) *
               0.5F,
-          ((float)GetScreenHeight() - ((float)platform->screen_h * scale)) *
+          ((float)GetScreenHeight() - ((float)platform->screen_h * scaley)) *
               0.5F,
-          (float)platform->screen_w * scale, (float)platform->screen_h * scale},
+          (float)platform->screen_w * scalex,
+          (float)platform->screen_h * scaley},
       (Vector2){0, 0}, 0.0F, WHITE);
   EndDrawing();
 

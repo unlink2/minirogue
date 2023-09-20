@@ -42,3 +42,5 @@ int mrg_maped_load_room(struct mrg_state *state, int handle) {
   fprintf(stderr, "Unabel to load room %d\n", handle);
   return -1;
 }
+
+void mrg_maped_tile_picker_draw(struct mrg_state *state) {}
