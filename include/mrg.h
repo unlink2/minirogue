@@ -24,6 +24,7 @@ int mrg_mode_maped(struct mrg_state *state);
 struct mrg_state {
   int good;
   enum mrg_mode mode;
+  int frame;
 
   struct mrg_camera main_camera;
   struct mrg_input main_input;

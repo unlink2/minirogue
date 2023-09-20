@@ -1,5 +1,6 @@
 #include "map.h"
 #include "platform.h"
+#include "rand.h"
 #include "tiles.h"
 #include "mrg.h"
 #include <assert.h>
@@ -51,6 +52,12 @@ int mrg_map_update(struct mrg_state *state, struct mrg_map *map) {
 #ifdef MRG_DEBUG
   memset(map->dbg_flags, 0, map->w * map->h);
 #endif
+
+  if (state->frame % MRG_MAP_GLOBAL_ANIMATION_TIMER == 0 &&
+      (mrg_rand() & 0xFF) > 80) {
+    map->alt_anim = !map->alt_anim;
+  }
+
   return 0;
 }
 
@@ -163,13 +170,19 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
         vflip = -1;
       }
 
+      uint8_t tile_handle = map->room->tiles[tile];
+
+      if (map->room->flags[tile] & MRG_MAP_FLAG_GLOBAL_ANIMATION) {
+        tile_handle += map->alt_anim;
+      }
       mrg_tile_draw_adv(&state->tile_tbl, state->platform, map->tileset_id,
-                        map->room->tiles[tile], tx, ty, hflip, vflip);
+                        tile_handle, tx, ty, hflip, vflip);
 
 #ifdef MRG_DEBUG
-      if (map->room->flags[tile] & MRG_MAP_FLAG_COLLISION) {
+      if (map->room->flags[tile]) {
+        uint8_t c = map->room->flags[tile];
         mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
-                              (struct mrg_color){255, 0, 0, 255});
+                              (struct mrg_color){~c, c, 0, 255});
       }
 
       if (map->dbg_flags[tile] & MRG_MAP_DBG_FLAG_DID_COLLIDE) {
@@ -177,10 +190,6 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
                               (struct mrg_color){255, 255, 128, 0xA0});
       }
 
-      if (map->room->flags[tile] & MRG_MAP_FLAG_DAMAGE) {
-        mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
-                              (struct mrg_color){255, 255, 0, 255});
-      }
 #endif
 
       tx += map->tile_w;

@@ -74,6 +74,8 @@ int mrg_main_loop(struct mrg_state *state) {
     mrg_pl_draw_debug(state->platform);
 
     mrg_pl_video_end(platform);
+
+    state->frame++;
   }
   return 0;
 }
