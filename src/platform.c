@@ -129,18 +129,19 @@ int mrg_pl_video_end(mrg_platform *platform) {
   BeginDrawing();
   float scalex = (float)GetScreenWidth() / (float)platform->screen_w;
   float scaley = (float)GetScreenHeight() / (float)platform->screen_h;
+  float scale = MIN(scalex, scaley);
+
   ClearBackground(BLACK);
   DrawTexturePro(
       platform->target.texture,
       (Rectangle){0.0F, 0.0F, (float)platform->target.texture.width,
                   (float)-platform->target.texture.height},
       (Rectangle){
-          ((float)GetScreenWidth() - ((float)platform->screen_w * scalex)) *
+          ((float)GetScreenWidth() - ((float)platform->screen_w * scale)) *
               0.5F,
-          ((float)GetScreenHeight() - ((float)platform->screen_h * scaley)) *
+          ((float)GetScreenHeight() - ((float)platform->screen_h * scale)) *
               0.5F,
-          (float)platform->screen_w * scalex,
-          (float)platform->screen_h * scaley},
+          (float)platform->screen_w * scale, (float)platform->screen_h * scale},
       (Vector2){0, 0}, 0.0F, WHITE);
   EndDrawing();
 
