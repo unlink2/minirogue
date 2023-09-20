@@ -37,7 +37,7 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   platform.draw_debug = cfg->verbose;
 
   // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-  SetConfigFlags(FLAG_VSYNC_HINT);
+  SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
 
   // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(platform.screen_w * 2, platform.screen_h * 2, "mrg");
@@ -126,14 +126,21 @@ void mrg_pl_draw_filled_rec(mrg_platform *platform, int x, int y, int w, int h,
 int mrg_pl_video_end(mrg_platform *platform) {
   EndTextureMode();
   BeginDrawing();
+  float scale = MIN((float)GetScreenWidth() / platform->screen_w,
+                    (float)GetScreenHeight() / platform->screen_h);
 
-  // TODO: Keep aspect ratio of original source
+  ClearBackground(BLACK);
   DrawTexturePro(
       platform->target.texture,
-      (Rectangle){0, 0, (float)platform->target.texture.width,
+      (Rectangle){0.0F, 0.0F, (float)platform->target.texture.width,
                   (float)-platform->target.texture.height},
-      (Rectangle){0, 0, (float)GetScreenWidth(), (float)GetScreenHeight()},
-      (Vector2){0, 0}, 0, WHITE);
+      (Rectangle){
+          ((float)GetScreenWidth() - ((float)platform->screen_w * scale)) *
+              0.5F,
+          ((float)GetScreenHeight() - ((float)platform->screen_h * scale)) *
+              0.5F,
+          (float)platform->screen_w * scale, (float)platform->screen_h * scale},
+      (Vector2){0, 0}, 0.0F, WHITE);
   EndDrawing();
 
   mrg_arena_clear(&platform->arena);
@@ -314,14 +321,13 @@ void mrg_pl_tile_set_free(struct mrg_tile_set *set,
   free(set->data);
 }
 
-
 void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
                       int tile, int x, int y, int hflip, int vflip) {
   Texture2D texture = *(Texture2D *)set->data;
   Rectangle source = {
       (float)mrg_tile_img_x(tile, texture.width, set->tile_w),
       (float)mrg_tile_img_y(tile, texture.width, set->tile_w, set->tile_h),
-      (float) hflip * (float)set->tile_w, (float)vflip * (float)set->tile_h};
+      (float)hflip * (float)set->tile_w, (float)vflip * (float)set->tile_h};
   Vector2 position = {(float)x, (float)y};
 
   DrawTextureRec(texture, source, position, WHITE);
