@@ -11,7 +11,7 @@ struct mrg_console mrg_console_init(void) {
   struct mrg_console console;
   memset(&console, 0, sizeof(console));
   console.bs_delay = 0;
-  console.lines_to_draw = 20;
+  console.lines_to_draw = 25;
   console.line_scroll = 0;
 
   console.cmd_tbl = mrg_cmd_tbl;
@@ -20,14 +20,14 @@ struct mrg_console mrg_console_init(void) {
 }
 
 int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
-  int y_per_line = 20;
+  int y_per_line = 16;
   int lines_to_draw = console->lines_to_draw;
 
   int x = 10;
   int y = 32 + y_per_line * lines_to_draw;
   int input_y = y + y_per_line;
 
-  int font_size = 20;
+  int font_size = 16;
 
   mrg_pl_draw_filled_rec(state->platform, 0, 0, state->screen_w,
                          state->screen_h, (struct mrg_color){0, 0, 0, 128});

@@ -96,7 +96,8 @@ void mrg_pl_draw_debug(mrg_platform *platform) {
   if (platform->draw_debug) {
     char dbg[128];
     sprintf(dbg, "%d fps, %f ms", GetFPS(), GetFrameTime());
-    DrawText(dbg, 10, 10, 20, WHITE);
+
+    DrawText(dbg, 10, 10, 16, WHITE);
   }
 }
 
