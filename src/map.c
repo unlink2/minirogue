@@ -124,9 +124,11 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
   int camera_w = 0;
   int camera_h = 0;
 
+  map->w = map->room->room_w;
+  map->h = map->room->room_h;
+
   mrg_camera_bounds(state, &state->main_camera, &camera_x, &camera_y, &camera_w,
                     &camera_h);
-
   // start tile that is on screen
   int start_tile_x = 0;
   int start_tile_y = 0;
@@ -162,7 +164,7 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
       }
 
       mrg_tile_draw_adv(&state->tile_tbl, state->platform, map->tileset_id,
-                    map->room->tiles[tile], tx, ty, hflip, vflip);
+                        map->room->tiles[tile], tx, ty, hflip, vflip);
 
 #ifdef MRG_DEBUG
       if (map->room->flags[tile] & MRG_MAP_FLAG_COLLISION) {
