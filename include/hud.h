@@ -7,6 +7,8 @@ struct mrg_hud {
   int player_handle;
   int x;
   int y;
+  int w;
+  int h;
 };
 
 struct mrg_hud mrg_hud_init(struct mrg_state *state);
