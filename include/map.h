@@ -20,8 +20,13 @@ enum mrg_map_flags {
   MRG_MAP_FLAG_DAMAGE = 2,
   MRG_MAP_FLAG_VFLIP = 4,
   MRG_MAP_FLAG_HFLIP = 8,
+
   MRG_MAP_FLAG_GLOBAL_ANIMATION = 16,
-  MRG_MAP_FLAG_LIGHT_SOURCE = 32
+  MRG_MAP_FLAG_LIGHT_SOURCE = 32,
+
+  // TODO: change color of tile slightly on a
+  // global timer to achive a slight glowy effect
+  MRG_MAP_FLAG_GLOW = 64
 };
 
 enum mrg_map_dbg_flags { MRG_MAP_DBG_FLAG_DID_COLLIDE = 1 };

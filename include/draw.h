@@ -15,4 +15,12 @@ struct mrg_color {
 #define MRG_WHITE                                                              \
   (struct mrg_color) { 0xFF, 0xFF, 0xFF, 0xFF }
 
+#define MRG_COLOR0 MRG_BLACK
+#define MRG_COLOR1                                                             \
+  (struct mrg_color) { 0xFE, 0xF6, 0xFE, 0xFF }
+#define MRG_COLOR2                                                             \
+  (struct mrg_color) { 0x49 0x6A 0xB4, 0xFF }
+#define MRG_COLOR3                                                             \
+  (struct mrg_color) { 0xC9, 0x00, 0x00, 0xFF }
+
 #endif

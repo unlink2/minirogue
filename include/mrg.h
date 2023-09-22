@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "console.h"
 #include "entity.h"
+#include "hud.h"
 #include "input.h"
 #include "map.h"
 #include "tiles.h"
@@ -46,6 +47,7 @@ struct mrg_state {
   struct mrg_arena tmp_arena;
 
   struct mrg_console console;
+  struct mrg_hud hud;
 
   struct mrg_idc_file idc;
 

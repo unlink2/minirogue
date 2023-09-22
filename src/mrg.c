@@ -54,6 +54,8 @@ int mrg_main_loop(struct mrg_state *state) {
       break;
     }
 
+    mrg_hud_update(state, &state->hud);
+
     // draw
     mrg_pl_video_begin(platform);
 
@@ -62,6 +64,8 @@ int mrg_main_loop(struct mrg_state *state) {
     mrg_map_draw(state, &state->map);
     mrg_entity_tbl_draw(state, &state->entity_tbl);
     mrg_pl_camera_end(platform, &state->main_camera);
+
+    mrg_hud_draw(state, &state->hud);
 
     switch (state->mode) {
     case MRG_MODE_CONSOLE:
@@ -124,6 +128,7 @@ struct mrg_state mrg_state_init(struct mrg_config *cfg,
   mrg_entities_from_idc(&state, &state.idc);
 
   state.console = mrg_console_init();
+  state.hud = mrg_hud_init(&state);
 
   mrg_transition(&state, MRG_MODE_GAME);
 

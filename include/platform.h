@@ -67,8 +67,8 @@ int mrg_pl_video_end(mrg_platform *platform);
 
 void mrg_pl_draw_debug(mrg_platform *platform);
 
-void mrg_pl_draw_outlined_rec(mrg_platform *platform, int x, int y, int w, int h,
-                             struct mrg_color color);
+void mrg_pl_draw_outlined_rec(mrg_platform *platform, int x, int y, int w,
+                              int h, struct mrg_color color);
 
 void mrg_pl_draw_filled_rec(mrg_platform *platform, int x, int y, int w, int h,
                             struct mrg_color color);
@@ -138,7 +138,6 @@ void mrg_pl_tile_set_free(struct mrg_tile_set *set,
 
 void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
                       int tile, int x, int y, int hflip, int vflip);
-
 
 /**
  * Platform specific collision code
