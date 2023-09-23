@@ -168,18 +168,21 @@ int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {
     break;
   }
 
-  switch (mode) {
-  case MRG_MODE_MAPED:
-    state->maped = mrg_maped_init(state);
-    break;
-  case MRG_MODE_CONSOLE:
-    state->console.prev = state->mode;
-    // clear keyboard buffer before entering console
-    while (mrg_pl_char_pressed(state->platform)) {
+  // do not transition when we were just in console mode...
+  if (state->mode != MRG_MODE_CONSOLE || state->console.prev != mode) {
+    switch (mode) {
+    case MRG_MODE_MAPED:
+      state->maped = mrg_maped_init(state);
+      break;
+    case MRG_MODE_CONSOLE:
+      state->console.prev = state->mode;
+      // clear keyboard buffer before entering console
+      while (mrg_pl_char_pressed(state->platform)) {
+      }
+      break;
+    default:
+      break;
     }
-    break;
-  default:
-    break;
   }
 
   state->mode = mode;

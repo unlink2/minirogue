@@ -1,4 +1,5 @@
 #include "maped.h"
+#include "defs.h"
 #include "entity.h"
 #include "mrg.h"
 #include "platform.h"
