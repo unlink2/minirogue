@@ -27,4 +27,18 @@ void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
 
   mrg_pl_draw_outlined_rec(state->platform, hud->x + hud->w - 40,
                            hud->y + hud->h - 50, 32, 32, MRG_COLOR0);
+
+  mrg_hud_draw_key_frame(state, hud, hud->x + 10, hud->y + 10, "A");
+}
+
+void mrg_hud_draw_key_frame(struct mrg_state *state, struct mrg_hud *hud, int x,
+                            int y, const char *txt) {
+  mrg_pl_draw_outlined_rec(state->platform, x, y, 32, 32, MRG_COLOR0);
+
+  int font_size = 10;
+  int txt_size = mrg_pl_text_pxl(state->platform, txt, font_size);
+
+  mrg_pl_draw_filled_rec(state->platform, x, y, txt_size + 4, txt_size + 4,
+                         MRG_COLOR0);
+  mrg_pl_print(state->platform, txt, x + 1, y + 1, font_size, MRG_COLOR1);
 }

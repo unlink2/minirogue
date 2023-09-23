@@ -105,6 +105,10 @@ void mrg_pl_draw_debug(mrg_platform *platform) {
   }
 }
 
+int mrg_pl_text_pxl(mrg_platform *p, const char *text, int font_size) {
+  return MeasureText(text, font_size);
+}
+
 void mrg_pl_print(mrg_platform *platform, const char *text, int x, int y,
                   int font_size, struct mrg_color color) {
   DrawText(text, x, y, font_size, (Color){color.r, color.g, color.b, color.a});

@@ -46,13 +46,14 @@ int mrg_console_draw(struct mrg_state *state, struct mrg_console *console) {
     y -= y_per_line;
   }
 
-  int measure_prompt = MeasureText("> ", font_size);
+  int measure_prompt = mrg_pl_text_pxl(state->platform, "> ", font_size);
   mrg_pl_print(state->platform, "> ", x, input_y, font_size, MRG_WHITE);
   mrg_pl_print(state->platform, console->input.buffer, x + measure_prompt,
                input_y, font_size, MRG_WHITE);
 
   int measure_input =
-      measure_prompt + MeasureText(console->input.buffer, font_size);
+      measure_prompt +
+      mrg_pl_text_pxl(state->platform, console->input.buffer, font_size);
   mrg_pl_print(state->platform, "_", x + measure_input, input_y + 2, font_size,
                (struct mrg_color){255, 255, 255, 200});
 

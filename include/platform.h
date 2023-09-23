@@ -78,6 +78,7 @@ void mrg_pl_draw_filled_rec(mrg_platform *platform, int x, int y, int w, int h,
 void mrg_pl_draw_debug_rec(mrg_platform *platform, int x, int y, int w, int h,
                            struct mrg_color color);
 
+int mrg_pl_text_pxl(mrg_platform *p, const char *text, int font_size);
 void mrg_pl_print(mrg_platform *platform, const char *text, int x, int y,
                   int font_size, struct mrg_color color);
 
