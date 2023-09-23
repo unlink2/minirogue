@@ -47,90 +47,10 @@ int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
   return 0;
 }
 
-int mrg_beh_cursor_update(struct mrg_state *state, struct mrg_entity *entity) {
-  int step_x = state->map.tile_w;
-  int step_y = state->map.tile_h;
-
-  int16_t cursor_delay = 4;
-
-  if (state->mode == MRG_MODE_MAPED && entity->uflags == 0) {
-    if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
-      entity->y -= MRG_FIXED(step_y, 0);
-      entity->uflags = cursor_delay;
-    }
-
-    if (MRG_HELD(&state->main_input, MRG_ACTION_DOWN)) {
-      entity->y += MRG_FIXED(step_y, 0);
-      entity->uflags = cursor_delay;
-    }
-
-    if (MRG_HELD(&state->main_input, MRG_ACTION_LEFT)) {
-      entity->x -= MRG_FIXED(step_x, 0);
-      entity->uflags = cursor_delay;
-    }
-
-    if (MRG_HELD(&state->main_input, MRG_ACTION_RIGHT)) {
-      entity->x += MRG_FIXED(step_x, 0);
-      entity->uflags = cursor_delay;
-    }
-
-    /**
-     * USTAT1 contains tile index
-     */
-    if (MRG_HELD(&state->main_input, MRG_ACTION_SCRLUP)) {
-      entity->stats[MRG_STAT_USTAT1]++;
-      entity->uflags = cursor_delay;
-    }
-    if (MRG_HELD(&state->main_input, MRG_ACTION_SCRLDOWN)) {
-      entity->stats[MRG_STAT_USTAT1]--;
-      entity->uflags = cursor_delay;
-    }
-  }
-
-  if (state->mode == MRG_MODE_MAPED) {
-    if (MRG_HELD(&state->main_input, MRG_ACTION_A)) {
-      mrg_map_tile_set(&state->map, MRG_FIXED_WHOLE(entity->x),
-                       MRG_FIXED_WHOLE(entity->y),
-                       (int8_t)entity->stats[MRG_STAT_USTAT1]);
-    }
-
-    /**
-     * USTAT2 contains flag value
-     */
-    if (MRG_HELD(&state->main_input, MRG_ACTION_B)) {
-      mrg_map_flag_set(&state->map, MRG_FIXED_WHOLE(entity->x),
-                       MRG_FIXED_WHOLE(entity->y),
-                       (int8_t)entity->stats[MRG_STAT_USTAT2]);
-    }
-  }
-
-  if (entity->uflags > 0) {
-    entity->uflags--;
-  }
-
-  return 0;
-}
-
 int mrg_beh_entity_draw(struct mrg_state *state, struct mrg_entity *entity) {
   // cusor stores map tile index in ustat1
   mrg_tile_draw(&state->tile_tbl, state->platform, entity->tileset_id,
                 entity->tile_id, MRG_FIXED_WHOLE(entity->x),
-                MRG_FIXED_WHOLE(entity->y));
-  return 0;
-}
-
-int mrg_beh_cursor_draw(struct mrg_state *state, struct mrg_entity *entity) {
-  int offset = 2;
-  mrg_pl_draw_filled_rec(
-      state->platform, MRG_FIXED_WHOLE(entity->x) - offset,
-      MRG_FIXED_WHOLE(entity->y) - offset, state->map.tile_w + offset * 2,
-      state->map.tile_h + offset * 2, (struct mrg_color){255, 159, 0, 255});
-
-  mrg_pl_draw_filled_rec(state->platform, MRG_FIXED_WHOLE(entity->x),
-                         MRG_FIXED_WHOLE(entity->y), state->map.tile_w,
-                         state->map.tile_h, (struct mrg_color){0, 0, 0, 255});
-  mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id,
-                entity->stats[MRG_STAT_USTAT1], MRG_FIXED_WHOLE(entity->x),
                 MRG_FIXED_WHOLE(entity->y));
   return 0;
 }

@@ -1,6 +1,7 @@
 #include "mrg.h"
 #include "command.h"
 #include "defaults.h"
+#include "defs.h"
 #include "draw.h"
 #include "entity.h"
 #include "input.h"
@@ -9,7 +10,10 @@
 #include <stdio.h>
 #include <string.h>
 
-int mrg_mode_maped(struct mrg_state *state) { return 0; }
+int mrg_mode_maped(struct mrg_state *state) {
+  mrg_maped_update(state, &state->maped);
+  return 0;
+}
 
 int mrg_mode_game(struct mrg_state *state) {
   mrg_pl_video_draw_pixel(state->platform, 0, 0, MRG_WHITE);
@@ -70,6 +74,9 @@ int mrg_main_loop(struct mrg_state *state) {
     switch (state->mode) {
     case MRG_MODE_CONSOLE:
       mrg_console_draw(state, &state->console);
+      break;
+    case MRG_MODE_MAPED:
+      mrg_maped_draw(state, &state->maped);
       break;
     default:
       break;
