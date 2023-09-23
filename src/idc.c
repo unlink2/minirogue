@@ -99,7 +99,8 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
         return file;
       }
 
-      struct mrg_idc_dir dir = {0, 0, NULL};
+      struct mrg_idc_dir dir = {0, 0};
+      memset(&dir, 0, sizeof(dir));
 
       MRG_IDC_READ_INT32(&dir.type, data, sizeof(int32_t), current);
       MRG_IDC_READ_INT32(&dir.offset, data, sizeof(int32_t), current);
