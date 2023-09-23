@@ -85,7 +85,8 @@ enum mrg_entity_behavior {
   MRG_BEH_PLAYER_UPDATE,
   MRG_BEH_ENTITY_DRAW,
   MRG_BEH_CURSOR_UPDATE,
-  MRG_BEH_CURSOR_DRAW
+  MRG_BEH_CURSOR_DRAW,
+  MRG_BEH_ENTITY_DRAW_ALT,
 };
 
 // update functions that translate behaviors into commands
@@ -130,6 +131,10 @@ struct mrg_entity {
 
 #define MRG_DEBUG
 
-#define mrg_panic(ec, msg) {fprintf(stderr, (msg)); exit(ec);}
+#define mrg_panic(ec, msg)                                                     \
+  {                                                                            \
+    fprintf(stderr, (msg));                                                    \
+    exit(ec);                                                                  \
+  }
 
 #endif

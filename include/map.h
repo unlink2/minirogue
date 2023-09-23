@@ -47,8 +47,6 @@ struct mrg_map {
   size_t h;
   int tile_w;
   int tile_h;
-
-  bool alt_anim;
 };
 
 struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle);

@@ -53,10 +53,6 @@ int mrg_map_update(struct mrg_state *state, struct mrg_map *map) {
   memset(map->dbg_flags, 0, map->w * map->h);
 #endif
 
-  if (state->frame % MRG_MAP_GLOBAL_ANIMATION_TIMER == 0) {
-    map->alt_anim = !map->alt_anim;
-  }
-
   return 0;
 }
 
@@ -172,7 +168,7 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
       uint8_t tile_handle = map->room->tiles[tile];
 
       if (map->room->flags[tile] & MRG_MAP_FLAG_GLOBAL_ANIMATION) {
-        tile_handle += map->alt_anim;
+        tile_handle += state->alt_anim;
       }
       mrg_tile_draw_adv(&state->tile_tbl, state->platform, map->tileset_id,
                         tile_handle, tx, ty, hflip, vflip, 1, 1, MRG_WHITE);

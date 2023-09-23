@@ -86,6 +86,10 @@ int mrg_main_loop(struct mrg_state *state) {
 
     mrg_pl_video_end(platform);
 
+    if (state->frame % MRG_MAP_GLOBAL_ANIMATION_TIMER == 0) {
+      state->alt_anim = !state->alt_anim;
+    }
+
     state->frame++;
   }
   return 0;
@@ -189,6 +193,8 @@ int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {
 
   return 0;
 }
+
+void mrg_toggle_dbg(struct mrg_state *state) {}
 
 int mrg_main(struct mrg_config *cfg) {
   if (!cfg->verbose) {

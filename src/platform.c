@@ -57,6 +57,10 @@ mrg_platform mrg_platform_init(struct mrg_config *cfg) {
   return platform;
 }
 
+void mrg_pl_toggle_dbg(struct mrg_platform *platform) {
+  platform->draw_debug = !platform->draw_debug;
+}
+
 int mrg_platform_good(mrg_platform *platform) { return platform->good; }
 
 bool mrg_pl_video_open(mrg_platform *platform) { return !WindowShouldClose(); }

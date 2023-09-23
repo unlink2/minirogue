@@ -50,6 +50,8 @@ typedef struct {
 
 mrg_platform mrg_platform_init(struct mrg_config *cfg);
 
+void mrg_pl_toggle_dbg(struct mrg_platform *platform);
+
 // return >= 0 on success and -1 if the platform did not initialize correctly
 int mrg_platform_good(mrg_platform *platform);
 void mrg_platform_free(mrg_platform *platform);

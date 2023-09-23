@@ -20,6 +20,7 @@ struct mrg_entity_tbl mrg_entity_tbl_init(void);
 int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_beh_entity_draw(struct mrg_state *state, struct mrg_entity *entity);
+int mrg_entity_draw_alt(struct mrg_state *state, struct mrg_entity *entity);
 
 // alloc a new entity
 // return a handle to the allocated entity

@@ -8,8 +8,8 @@
 #include <string.h>
 
 const mrg_entity_tick mrg_behavior_tbl[] = {
-    mrg_beh_nop, mrg_beh_player_update, mrg_beh_entity_draw,
-    mrg_beh_cursor_update, mrg_beh_cursor_draw};
+    mrg_beh_nop,           mrg_beh_player_update, mrg_beh_entity_draw,
+    mrg_beh_cursor_update, mrg_beh_cursor_draw,   mrg_entity_draw_alt};
 
 int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity) {
   return 0;
@@ -141,9 +141,9 @@ int mrg_entity_init_player(struct mrg_entity *entity) {
 
   entity->type = MRG_ENTITY_PLAYER;
   entity->next_behavior = MRG_BEH_PLAYER_UPDATE;
-  entity->next_draw = MRG_BEH_ENTITY_DRAW;
+  entity->next_draw = MRG_BEH_ENTITY_DRAW_ALT;
 
-  entity->tile_id = 33;
+  entity->tile_id = 64;
 
   fprintf(stdout, "Player created with behavior %d\n", entity->next_behavior);
   return 0;
@@ -193,6 +193,14 @@ int mrg_entity_tbl_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl) {
 int mrg_entity_update(struct mrg_state *state, struct mrg_entity_tbl *tbl,
                       struct mrg_entity *entity) {
   return tbl->behavior_tbl[entity->next_behavior](state, entity);
+}
+
+int mrg_entity_draw_alt(struct mrg_state *state, struct mrg_entity *entity) {
+  int tile = entity->tile_id + state->alt_anim;
+
+  mrg_tile_draw(&state->tile_tbl, state->platform, entity->tileset_id, tile,
+                MRG_FIXED_WHOLE(entity->x), MRG_FIXED_WHOLE(entity->y));
+  return 0;
 }
 
 int mrg_entity_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl,

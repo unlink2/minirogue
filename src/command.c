@@ -1,4 +1,5 @@
 #include "command.h"
+#include "defs.h"
 #include "entity.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -288,6 +289,35 @@ int mrg_cmd_init_maped(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
   return mrg_transition(state, MRG_MODE_MAPED);
 }
 
+int mrg_cmd_tdbg(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                 const char *args, const struct mrg_cmd *tbl,
+                 struct mrg_state *state) {
+  mrg_toggle_dbg(state);
+  return 0;
+}
+
+int mrg_cmd_maped_play(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                       const char *args, const struct mrg_cmd *tbl,
+                       struct mrg_state *state) {
+  mrg_entity_tbl_clear(&state->entity_tbl);
+
+  int handle = mrg_entity_alloc(&state->entity_tbl);
+  if (handle == -1) {
+    return -1;
+  }
+
+  // TODO: make player loading more generic
+
+  // set up player for testing
+  struct mrg_entity *e = &state->entity_tbl.slots[handle];
+  mrg_entity_init_type(e, MRG_ENTITY_PLAYER);
+
+  e->tileset_id = mrg_tile_set_load(&state->tile_tbl, state->platform,
+                                    "dbg.png", state->tile_w, state->tile_h);
+
+  return mrg_transition(state, MRG_MODE_GAME);
+}
+
 int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,
                  const struct mrg_cmd *tbl, struct mrg_state *state) {
   const size_t buffer_len = 256;
@@ -332,11 +362,16 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
       {"y", true, MRG_ARG_INT},
       {NULL}}},
     {"player", "Find payer entity", mrg_cmd_find_player, NULL},
+    {"tdbg", "Toggle debug mode", mrg_cmd_tdbg, NULL},
     {"pos",
      "Entity position",
      mrg_cmd_entity_pos,
      {{"entity-handle", true, MRG_ARG_INT}, {NULL}}},
     {"maped", "Enter map editor", mrg_cmd_init_maped, {{NULL}}},
+    {"play",
+     "Play the currently selected maped map",
+     mrg_cmd_maped_play,
+     {{NULL}}},
     {"setstat",
      "Set stats",
      mrg_cmd_set_stat,
