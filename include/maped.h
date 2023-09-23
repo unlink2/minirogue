@@ -14,6 +14,8 @@ struct mrg_maped {
   int ok;
   bool tile_picker;
 
+  int cursor_handle;
+
   enum mrg_maped_mode mode;
 };
 

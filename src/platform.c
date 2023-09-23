@@ -225,6 +225,34 @@ void mrg_pl_camera_screen_to_world(struct mrg_platform *platform,
 
 struct mrg_input mrg_pl_input_init(void) { return mrg_input_init(0); }
 
+char mrg_pl_input_key(mrg_platform *platform, enum mrg_actions action) {
+  // TODO: allow config
+  switch (action) {
+  case MRG_ACTION_UP:
+    return 'W';
+  case MRG_ACTION_DOWN:
+    return 'S';
+  case MRG_ACTION_LEFT:
+    return 'A';
+  case MRG_ACTION_RIGHT:
+    return 'D';
+  case MRG_ACTION_DBG_TOGGLE_CONSOLE:
+    return '~';
+  case MRG_ACTION_BACKSPACE:
+  case MRG_ACTION_ENTER:
+  case MRG_ACTION_SCRLUP:
+  case MRG_ACTION_SCRLDOWN:
+    return ' ';
+  case MRG_ACTION_A:
+    return 'J';
+  case MRG_ACTION_B:
+    return 'K';
+  case MRG_ACTION_PAUSE:
+    return 'P';
+  }
+  return ' ';
+}
+
 uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   uint16_t input_state = 0;
 

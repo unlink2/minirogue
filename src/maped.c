@@ -25,6 +25,8 @@ struct mrg_maped mrg_maped_init(struct mrg_state *state) {
     return maped;
   }
 
+  maped.cursor_handle = handle;
+
   // set up cursor
   struct mrg_entity *e = &state->entity_tbl.slots[handle];
   mrg_entity_init_type(e, MRG_ENTITY_CURSOR);

@@ -117,6 +117,9 @@ void mrg_pl_camera_bounds(mrg_platform *platform, struct mrg_camera *camera,
 struct mrg_input mrg_pl_input_init(void);
 uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle);
 
+// returns the primary key name for the action as defined
+// by platform
+char mrg_pl_input_key(mrg_platform *platform, enum mrg_actions action);
 int mrg_pl_char_pressed(mrg_platform *platform);
 
 /**
