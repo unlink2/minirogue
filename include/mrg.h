@@ -7,6 +7,7 @@
 #include "hud.h"
 #include "input.h"
 #include "map.h"
+#include "maped.h"
 #include "tiles.h"
 #include "room.h"
 #include "arena.h"
@@ -53,6 +54,11 @@ struct mrg_state {
 
   int screen_w;
   int screen_h;
+
+  // mode specific data
+  union {
+    struct mrg_maped maped;
+  };
 };
 
 int mrg_main(struct mrg_config *cfg);

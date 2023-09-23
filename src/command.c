@@ -59,8 +59,8 @@ int mrg_cmd_idc_write(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
 }
 
 int mrg_cmd_idc_read(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
-                      const char *args, const struct mrg_cmd *tbl,
-                      struct mrg_state *state) {
+                     const char *args, const struct mrg_cmd *tbl,
+                     struct mrg_state *state) {
   size_t read = 0;
   if (mrg_arg_parse(state->console.prev_idc_path, sizeof(char *), &cmd->args[0],
                     args, &read) == -1 &&
@@ -72,7 +72,7 @@ int mrg_cmd_idc_read(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
 
   mrg_arena_clear(&state->tmp_arena);
   int rc = mrg_idc_load(&state->tmp_arena, &state->idc,
-                      state->console.prev_idc_path);
+                        state->console.prev_idc_path);
 
   if (rc == -1) {
     mrg_panic(-1, "Failed to parse idc file!\n");
@@ -80,7 +80,6 @@ int mrg_cmd_idc_read(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
 
   return rc;
 }
-
 
 int mrg_arg_int(int *out, const char *args, size_t *read) {
   char buffer[64];
@@ -286,7 +285,7 @@ const char *mrg_tok(char *dst, const char *tok, size_t dst_len, size_t *read) {
 int mrg_cmd_init_maped(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
                        const char *args, const struct mrg_cmd *tbl,
                        struct mrg_state *state) {
-  return mrg_maped_init(state);
+  return mrg_transition(state, MRG_MODE_MAPED);
 }
 
 int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,

@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 
-int mrg_maped_init(struct mrg_state *state) {
+struct mrg_maped mrg_maped_init(struct mrg_state *state) {
+  struct mrg_maped maped;
+  memset(&maped, 0, sizeof(maped));
   fprintf(stderr, "Launching maped...\n");
   state->mode = MRG_MODE_MAPED;
 
@@ -15,7 +17,8 @@ int mrg_maped_init(struct mrg_state *state) {
 
   int handle = mrg_entity_alloc(&state->entity_tbl);
   if (handle == -1) {
-    return -1;
+    maped.ok = -1;
+    return maped;
   }
 
   // set up cursor
@@ -26,7 +29,7 @@ int mrg_maped_init(struct mrg_state *state) {
                                     "dbg.png", state->tile_w, state->tile_h);
 
   mrg_maped_load_room(state, 0);
-  return 0;
+  return maped;
 }
 
 int mrg_maped_load_room(struct mrg_state *state, int handle) {
