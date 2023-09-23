@@ -324,15 +324,20 @@ void mrg_pl_tile_set_free(struct mrg_tile_set *set,
 }
 
 void mrg_pl_tile_draw(struct mrg_tile_set *set, struct mrg_platform *platform,
-                      int tile, int x, int y, int hflip, int vflip) {
+                      int tile, int x, int y, int hflip, int vflip, int xscale,
+                      int yscale, struct mrg_color tint) {
   Texture2D texture = *(Texture2D *)set->data;
   Rectangle source = {
       (float)mrg_tile_img_x(tile, texture.width, set->tile_w),
       (float)mrg_tile_img_y(tile, texture.width, set->tile_w, set->tile_h),
       (float)hflip * (float)set->tile_w, (float)vflip * (float)set->tile_h};
-  Vector2 position = {(float)x, (float)y};
 
-  DrawTextureRec(texture, source, position, WHITE);
+  Vector2 position = {0, 0};
+  Rectangle dst = {(float)x, (float)y, (float)set->tile_w * (float)xscale,
+                   (float)set->tile_h * (float)yscale};
+
+  DrawTexturePro(texture, source, dst, position, 0,
+                 (Color){tint.r, tint.g, tint.b, tint.a});
 }
 
 bool mrg_pl_col_recs(int x1, int y1, int w1, int h1, int x2, int y2, int w2,

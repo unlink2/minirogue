@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "defs.h"
+#include "draw.h"
 
 #define MRG_TILE_SET_TBL_LEN 4
 
@@ -39,7 +40,9 @@ void mrg_tile_set_free(struct mrg_tile_set_tbl *tbl,
 void mrg_tile_draw(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
                    int handle, int tile, int x, int y);
 
-void mrg_tile_draw_adv(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
-                   int handle, int tile, int x, int y, int hflip, int vflip);
+void mrg_tile_draw_adv(struct mrg_tile_set_tbl *tbl,
+                       struct mrg_platform *platform, int handle, int tile,
+                       int x, int y, int hflip, int vflip, int xscale,
+                       int yscale, struct mrg_color tint);
 
 #endif

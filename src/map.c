@@ -176,7 +176,7 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
         tile_handle += map->alt_anim;
       }
       mrg_tile_draw_adv(&state->tile_tbl, state->platform, map->tileset_id,
-                        tile_handle, tx, ty, hflip, vflip);
+                        tile_handle, tx, ty, hflip, vflip, 1, 1, MRG_WHITE);
 
 #ifdef MRG_DEBUG
       if (map->room->flags[tile]) {

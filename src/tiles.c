@@ -73,14 +73,15 @@ int mrg_tile_img_y(int tile, int img_w, int tile_w, int tile_h) {
   return (tile / (img_w / tile_w)) * tile_h;
 }
 
-
 void mrg_tile_draw(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
                    int handle, int tile, int x, int y) {
-  mrg_tile_draw_adv(tbl, platform, handle, tile, x, y, 1, 1);
+  mrg_tile_draw_adv(tbl, platform, handle, tile, x, y, 1, 1, 1, 1, MRG_COLOR1);
 }
 
-void mrg_tile_draw_adv(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platform,
-                   int handle, int tile, int x, int y, int hflip, int vflip) {
+void mrg_tile_draw_adv(struct mrg_tile_set_tbl *tbl,
+                       struct mrg_platform *platform, int handle, int tile,
+                       int x, int y, int hflip, int vflip, int xscale,
+                       int yscale, struct mrg_color tint) {
   struct mrg_tile_set *set = &tbl->sets[handle];
   if (!(set->flags & MRG_TILE_SET_FLAG_FREE)) {
     fprintf(stderr, "Attempted to use unallocated tile set handle %d!\n",
@@ -88,5 +89,6 @@ void mrg_tile_draw_adv(struct mrg_tile_set_tbl *tbl, struct mrg_platform *platfo
     return;
   }
 
-  mrg_pl_tile_draw(set, platform, tile, x, y, hflip, vflip);
+  mrg_pl_tile_draw(set, platform, tile, x, y, hflip, vflip, xscale, yscale,
+                   tint);
 }
