@@ -11,7 +11,7 @@
 #define MRG_LAYER_H 14
 #define MRG_LAYER_LEN (MRG_LAYER_W * MRG_LAYER_H)
 
-#define MRG_MAP_GLOBAL_ANIMATION_TIMER 5
+#define MRG_MAP_GLOBAL_ANIMATION_TIMER 10
 
 #define MRG_MAP_COORDS_TO_TILE(map, x, y) (y) * (map)->w + (x)
 

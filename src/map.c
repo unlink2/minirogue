@@ -53,8 +53,7 @@ int mrg_map_update(struct mrg_state *state, struct mrg_map *map) {
   memset(map->dbg_flags, 0, map->w * map->h);
 #endif
 
-  if (state->frame % MRG_MAP_GLOBAL_ANIMATION_TIMER == 0 &&
-      (mrg_rand() & 0xFF) > 80) {
+  if (state->frame % MRG_MAP_GLOBAL_ANIMATION_TIMER == 0) {
     map->alt_anim = !map->alt_anim;
   }
 
