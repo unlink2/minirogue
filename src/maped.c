@@ -91,7 +91,7 @@ int mrg_beh_cursor_update(struct mrg_state *state, struct mrg_entity *entity) {
       entity->uflags = cursor_delay;
     }
     if (MRG_HELD(&state->main_input, MRG_ACTION_SCRLDOWN)) {
-      entity->stats[MRG_STAT_USTAT1]--;
+      entity->stats[MRG_STAT_USTAT1] = MIN(0, entity->stats[MRG_STAT_USTAT1]);
       entity->uflags = cursor_delay;
     }
   }
