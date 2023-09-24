@@ -137,4 +137,16 @@ struct mrg_entity {
     exit(ec);                                                                  \
   }
 
+#ifdef MRG_DEBUG
+
+#define MRG_PRFSTART() fprintf(stdout, "prf_start %s\n", __func__);
+#define MRG_PRFEND() fprintf(stdout, "prf_end %s\n", __func__);
+
+#else
+
+#define MRG_PRGSTART()
+#define MRG_PRFEND()
+
+#endif
+
 #endif
