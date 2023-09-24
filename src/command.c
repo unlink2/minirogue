@@ -199,6 +199,7 @@ int mrg_cmd_set_stat(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
   }
 
   e->stats[slot] = stat;
+  printf("Set entity %d's stat slot %d to %d\n", handle, slot, stat);
 
   return 0;
 }

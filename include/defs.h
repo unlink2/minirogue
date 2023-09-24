@@ -70,13 +70,13 @@ enum mrg_entities { MRG_ENTITY_PLAYER, MRG_ENTITY_CURSOR, MRG_ENTITY_BAT };
 enum mrg_entity_flags { MRG_ENTITY_FLAG_ALLOCED = 1 };
 
 enum mrg_entity_stats {
-  MRG_STAT_LEVEL,
-  MRG_STAT_HP,
-  MRG_STAT_HP_MAX,
+  MRG_STAT_LEVEL = 0,
+  MRG_STAT_HP = 1,
+  MRG_STAT_HP_MAX = 2,
 
   // generic stats for per-entity config
-  MRG_STAT_USTAT1,
-  MRG_STAT_USTAT2,
+  MRG_STAT_USTAT1 = 3,
+  MRG_STAT_USTAT2 = 4,
   MRG_STATS_LEN
 };
 
@@ -129,9 +129,9 @@ struct mrg_entity {
 #define MRG_TILE_W 16
 #define MRG_TILE_H 16
 
-// uncomment to remove debug features 
+// uncomment to remove debug features
 #define MRG_DEBUG
-// uncomment to remove perftop outputs 
+// uncomment to remove perftop outputs
 #define MRG_PRFTOP
 
 #define mrg_panic(ec, msg)                                                     \
@@ -141,7 +141,6 @@ struct mrg_entity {
   }
 
 #ifdef MRG_PRFTOP
-
 
 #define MRG_PRFSTART() fprintf(stdout, "prftop-start %s\n", __func__);
 #define MRG_PRFEND() fprintf(stdout, "prftop-end %s\n", __func__);
