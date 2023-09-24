@@ -129,7 +129,10 @@ struct mrg_entity {
 #define MRG_TILE_W 16
 #define MRG_TILE_H 16
 
+// uncomment to remove debug features 
 #define MRG_DEBUG
+// uncomment to remove perftop outputs 
+#define MRG_PRFTOP
 
 #define mrg_panic(ec, msg)                                                     \
   {                                                                            \
@@ -137,10 +140,11 @@ struct mrg_entity {
     exit(ec);                                                                  \
   }
 
-#ifdef MRG_DEBUG
+#ifdef MRG_PRFTOP
 
-#define MRG_PRFSTART() fprintf(stdout, "prf_start %s\n", __func__);
-#define MRG_PRFEND() fprintf(stdout, "prf_end %s\n", __func__);
+
+#define MRG_PRFSTART() fprintf(stdout, "prftop-start %s\n", __func__);
+#define MRG_PRFEND() fprintf(stdout, "prftop-end %s\n", __func__);
 
 #else
 
