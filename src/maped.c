@@ -91,7 +91,8 @@ int mrg_beh_cursor_update(struct mrg_state *state, struct mrg_entity *entity) {
       entity->uflags = cursor_delay;
     }
     if (MRG_HELD(&state->main_input, MRG_ACTION_SCRLDOWN)) {
-      entity->stats[MRG_STAT_USTAT1] = MIN(0, entity->stats[MRG_STAT_USTAT1]);
+      entity->stats[MRG_STAT_USTAT1] =
+          MAX(0, entity->stats[MRG_STAT_USTAT1] - 1);
       entity->uflags = cursor_delay;
     }
   }
@@ -125,13 +126,14 @@ int mrg_beh_cursor_draw(struct mrg_state *state, struct mrg_entity *entity) {
   mrg_pl_draw_filled_rec(
       state->platform, MRG_FIXED_WHOLE(entity->x) - offset,
       MRG_FIXED_WHOLE(entity->y) - offset, state->map.tile_w + offset * 2,
-      state->map.tile_h + offset * 2, (struct mrg_color){255, 159, 0, 255});
+      state->map.tile_h + offset * 2, (struct mrg_color){255, 159, 0, 0x80});
 
   mrg_pl_draw_filled_rec(state->platform, MRG_FIXED_WHOLE(entity->x),
                          MRG_FIXED_WHOLE(entity->y), state->map.tile_w,
-                         state->map.tile_h, (struct mrg_color){0, 0, 0, 255});
-  mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id,
-                entity->stats[MRG_STAT_USTAT1], MRG_FIXED_WHOLE(entity->x),
-                MRG_FIXED_WHOLE(entity->y));
+                         state->map.tile_h, (struct mrg_color){0, 0, 0, 0x80});
+  mrg_tile_draw_adv(&state->tile_tbl, state->platform, state->map.tileset_id,
+                    entity->stats[MRG_STAT_USTAT1], MRG_FIXED_WHOLE(entity->x),
+                    MRG_FIXED_WHOLE(entity->y), 1, 1, 1, 1,
+                    (struct mrg_color){255, 255, 255, 200});
   return 0;
 }
