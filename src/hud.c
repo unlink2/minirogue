@@ -8,6 +8,7 @@
 #include "input.h"
 
 #define MRG_HUD_TILES_H 4
+#define MRG_HUD_KEYFRAME_SIZE 32
 
 struct mrg_hud mrg_hud_init(struct mrg_state *state) {
   struct mrg_hud hud;
@@ -25,19 +26,38 @@ struct mrg_hud mrg_hud_init(struct mrg_state *state) {
 void mrg_hud_update(struct mrg_state *state, struct mrg_hud *hud) {}
 
 void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
+
+  const int key_frame_y = hud->y + 10;
+
+  const int act_a_x = hud->x + 10;
+  const int act_b_x = act_a_x + 10 + MRG_HUD_KEYFRAME_SIZE;
+  const int act_pause_x = act_b_x + 10 + MRG_HUD_KEYFRAME_SIZE;
+  const int act_bag_x = act_pause_x + 10 + MRG_HUD_KEYFRAME_SIZE;
+
   mrg_window_frame_draw(state->platform, hud->x, hud->y, hud->w, hud->h);
 
-  mrg_pl_draw_outlined_rec(state->platform, hud->x + hud->w - 40,
-                           hud->y + hud->h - 50, 32, 32, MRG_COLOR0);
-
-  mrg_hud_draw_key_frame(state, hud, hud->x + 10, hud->y + 10,
+  mrg_hud_draw_key_frame(state, hud, act_a_x, key_frame_y,
                          mrg_pl_input_key(state->platform, MRG_ACTION_A));
+
+  mrg_hud_draw_key_frame(state, hud, act_b_x, key_frame_y,
+                         mrg_pl_input_key(state->platform, MRG_ACTION_B));
+
+  mrg_hud_draw_key_frame(state, hud, act_pause_x, key_frame_y,
+                         mrg_pl_input_key(state->platform, MRG_ACTION_PAUSE));
+  mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id, 10,
+                act_pause_x + 14, key_frame_y + 14);
+
+  mrg_hud_draw_key_frame(state, hud, act_bag_x, key_frame_y,
+                         mrg_pl_input_key(state->platform, MRG_ACTION_MENU));
+  mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id, 12,
+                act_bag_x + 14, key_frame_y + 14);
+
   switch (state->mode) {
   case MRG_MODE_MAPED:
     mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id,
                   state->entity_tbl.slots[state->maped.cursor_handle]
                       .stats[MRG_STAT_USTAT1],
-                  hud->x + 24, hud->y + 24);
+                  act_a_x + 14, key_frame_y + 14);
     break;
   default:
     break;
@@ -48,7 +68,8 @@ void mrg_hud_draw_key_frame(struct mrg_state *state, struct mrg_hud *hud, int x,
                             int y, const char txt) {
   char txt_str[2] = {txt, '\0'};
 
-  mrg_pl_draw_filled_rec(state->platform, x, y, 32, 32, MRG_COLOR0);
+  mrg_pl_draw_filled_rec(state->platform, x, y, MRG_HUD_KEYFRAME_SIZE,
+                         MRG_HUD_KEYFRAME_SIZE, MRG_COLOR0);
 
   int font_size = 10;
   int txt_size = mrg_pl_text_pxl(state->platform, txt_str, font_size);

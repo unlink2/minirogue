@@ -249,6 +249,8 @@ char mrg_pl_input_key(mrg_platform *platform, enum mrg_actions action) {
     return 'K';
   case MRG_ACTION_PAUSE:
     return 'P';
+  case MRG_ACTION_MENU:
+    return 'B';
   }
   return ' ';
 }
@@ -295,6 +297,11 @@ uint16_t mrg_pl_input_poll(mrg_platform *platform, int handle) {
   if (IsKeyDown(KEY_P)) {
     input_state |= MRG_ACTION_PAUSE;
   }
+
+  if (IsKeyDown(KEY_B)) {
+    input_state |= MRG_ACTION_MENU;
+  }
+
   return input_state;
 }
 

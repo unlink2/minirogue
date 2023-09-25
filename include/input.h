@@ -24,6 +24,7 @@ enum mrg_actions {
   MRG_ACTION_A = 512,
   MRG_ACTION_B = 1024,
   MRG_ACTION_PAUSE = 2048,
+  MRG_ACTION_MENU = 4096
 };
 
 struct mrg_input {
