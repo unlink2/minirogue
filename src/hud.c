@@ -4,6 +4,7 @@
 #include "mrg.h"
 #include "tiles.h"
 #include "window.h"
+#include <stdio.h>
 #include <string.h>
 #include "input.h"
 
@@ -36,17 +37,21 @@ void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
 
   mrg_window_frame_draw(state->platform, hud->x, hud->y, hud->w, hud->h);
 
+  // action a
   mrg_hud_draw_key_frame(state, hud, act_a_x, key_frame_y,
                          mrg_pl_input_key(state->platform, MRG_ACTION_A));
 
+  // action b
   mrg_hud_draw_key_frame(state, hud, act_b_x, key_frame_y,
                          mrg_pl_input_key(state->platform, MRG_ACTION_B));
 
+  // pause icon
   mrg_hud_draw_key_frame(state, hud, act_pause_x, key_frame_y,
                          mrg_pl_input_key(state->platform, MRG_ACTION_PAUSE));
   mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id, 10,
                 act_pause_x + 14, key_frame_y + 14);
 
+  // menu icon
   mrg_hud_draw_key_frame(state, hud, act_bag_x, key_frame_y,
                          mrg_pl_input_key(state->platform, MRG_ACTION_MENU));
   mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id, 12,
@@ -54,10 +59,21 @@ void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
 
   switch (state->mode) {
   case MRG_MODE_MAPED:
+    // action a icon maped
     mrg_tile_draw(&state->tile_tbl, state->platform, state->map.tileset_id,
                   state->entity_tbl.slots[state->maped.cursor_handle]
                       .stats[MRG_STAT_USTAT1],
                   act_a_x + 14, key_frame_y + 14);
+
+    // action b flags
+    {
+      char tileflags[16];
+      sprintf(tileflags, "%03d\n",
+              (int8_t)state->entity_tbl.slots[state->maped.cursor_handle]
+                  .stats[MRG_STAT_USTAT2]);
+      mrg_pl_print(state->platform, tileflags, act_b_x + 10, key_frame_y + 16,
+                   12, MRG_COLOR1);
+    }
     break;
   default:
     break;
