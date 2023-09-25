@@ -69,7 +69,7 @@ void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
     {
       char tileflags[16];
       sprintf(tileflags, "%03d\n",
-              (int8_t)state->entity_tbl.slots[state->maped.cursor_handle]
+              (uint8_t)state->entity_tbl.slots[state->maped.cursor_handle]
                   .stats[MRG_STAT_USTAT2]);
       mrg_pl_print(state->platform, tileflags, act_b_x + 10, key_frame_y + 16,
                    12, MRG_COLOR1);
