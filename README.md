@@ -33,3 +33,5 @@ This program is distributed under the terms of the MIT License.
 - If a function returns a struct that can fail, the failure should be indicated by a struct member (e.g. `good`) which is then set to -1
     - If the struct has some sort of id or handle the id or handle should be set to -1 instead
 - Never store pointers in serializeable structs, instead use handles that index into the apropriate tables 
+
+- Whenever possible use only 2-3 colors of the 8 in the palette for any given tile. This is not a hard rule as sometimes breaking it makes sense.
