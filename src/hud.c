@@ -78,6 +78,8 @@ void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
   default:
     break;
   }
+
+  mrg_hud_draw_bar(state, 30, 30, 100, 10, 10, 100, MRG_COLOR2, MRG_COLOR3);
 }
 
 void mrg_hud_draw_key_frame(struct mrg_state *state, struct mrg_hud *hud, int x,
@@ -93,4 +95,13 @@ void mrg_hud_draw_key_frame(struct mrg_state *state, struct mrg_hud *hud, int x,
   mrg_pl_draw_outlined_rec(state->platform, x, y, txt_size + 8, txt_size + 8,
                            MRG_COLOR1);
   mrg_pl_print(state->platform, txt_str, x + 2, y + 2, font_size, MRG_COLOR1);
+}
+
+void mrg_hud_draw_bar(struct mrg_state *state, int x, int y, int w, int h,
+                      int current, int max, struct mrg_color c1,
+                      struct mrg_color c2) {
+  int prop = current % max;
+
+  mrg_pl_draw_filled_rec(state->platform, x, y, w, h, c1);
+  mrg_pl_draw_filled_rec(state->platform, x, y, prop, h, c2);
 }
