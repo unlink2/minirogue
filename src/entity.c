@@ -182,6 +182,11 @@ int mrg_entity_init_player(struct mrg_entity *entity) {
   entity->stats[MRG_STAT_VEL_MAX] = MRG_FIXED(2, 0x80);
   entity->stats[MRG_STAT_ACCEL] = MRG_FIXED(0, 0x40);
 
+  entity->col_w = 12;
+  entity->col_h = 8;
+  entity->col_offset_x = 2;
+  entity->col_offset_y = 6;
+
   fprintf(stdout, "Player created with behavior %d\n", entity->next_behavior);
   return 0;
 }
@@ -246,7 +251,7 @@ int mrg_entity_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl,
 #ifdef MRG_DEBUG
   mrg_pl_draw_debug_rec(
       state->platform, entity->col_offset_x + MRG_FIXED_WHOLE(entity->x),
-      entity->col_offset_x + MRG_FIXED_WHOLE(entity->y), entity->col_w,
+      entity->col_offset_y + MRG_FIXED_WHOLE(entity->y), entity->col_w,
       entity->col_h, (struct mrg_color){255, 0, 0, 255});
 #endif
 
