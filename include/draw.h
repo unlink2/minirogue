@@ -10,6 +10,10 @@ struct mrg_color {
   uint8_t a;
 };
 
+// change alpha channel of given color
+#define MRG_COLOR_ALPHA(c, alpha)                                              \
+  (struct mrg_color) { (c).r, (c).g, (c).b, (alpha) }
+
 #define MRG_BLACK                                                              \
   (struct mrg_color) { 0, 0, 0, 0xFF }
 #define MRG_WHITE                                                              \

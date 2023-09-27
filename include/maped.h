@@ -31,7 +31,8 @@ void mrg_maped_draw(struct mrg_state *state, struct mrg_maped *maped);
 int mrg_beh_cursor_update(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_beh_cursor_draw(struct mrg_state *state, struct mrg_entity *entity);
 
-void mrg_hud_draw_bar(struct mrg_state *state, int x, int y, int w, int h, int current, int max,
-                      struct mrg_color c1, struct mrg_color c2);
+void mrg_hud_draw_bar(struct mrg_state *state, int x, int y, int w, int h,
+                      int current, int max, struct mrg_color c1,
+                      struct mrg_color c2);
 
 #endif

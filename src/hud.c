@@ -27,7 +27,7 @@ struct mrg_hud mrg_hud_init(struct mrg_state *state) {
 void mrg_hud_update(struct mrg_state *state, struct mrg_hud *hud) {}
 
 void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
-
+  const int alpha = 0xC0;
   const int key_frame_y = hud->y + 10;
 
   const int act_a_x = hud->x + 10;
@@ -35,7 +35,9 @@ void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
   const int act_pause_x = act_b_x + 10 + MRG_HUD_KEYFRAME_SIZE;
   const int act_bag_x = act_pause_x + 10 + MRG_HUD_KEYFRAME_SIZE;
 
-  mrg_window_frame_draw(state->platform, hud->x, hud->y, hud->w, hud->h);
+  const int hp_bar_x = act_a_x;
+  const int hp_bar_y = hud->y - 10;
+  // mrg_window_frame_draw(state->platform, hud->x, hud->y, hud->w, hud->h);
 
   // action a
   mrg_hud_draw_key_frame(state, hud, act_a_x, key_frame_y,
@@ -79,7 +81,9 @@ void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
     break;
   }
 
-  mrg_hud_draw_bar(state, 30, 30, 100, 10, 10, 100, MRG_COLOR2, MRG_COLOR3);
+  mrg_hud_draw_bar(state, hp_bar_x, hp_bar_y, 100, 10, 10, 100,
+                   MRG_COLOR_ALPHA(MRG_COLOR2, alpha),
+                   MRG_COLOR_ALPHA(MRG_COLOR3, alpha));
 }
 
 void mrg_hud_draw_key_frame(struct mrg_state *state, struct mrg_hud *hud, int x,
@@ -87,7 +91,8 @@ void mrg_hud_draw_key_frame(struct mrg_state *state, struct mrg_hud *hud, int x,
   char txt_str[2] = {txt, '\0'};
 
   mrg_pl_draw_filled_rec(state->platform, x, y, MRG_HUD_KEYFRAME_SIZE,
-                         MRG_HUD_KEYFRAME_SIZE, MRG_COLOR0);
+                         MRG_HUD_KEYFRAME_SIZE,
+                         MRG_COLOR_ALPHA(MRG_COLOR0, 0x60));
 
   int font_size = 10;
   int txt_size = mrg_pl_text_pxl(state->platform, txt_str, font_size);
