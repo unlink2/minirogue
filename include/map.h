@@ -39,6 +39,7 @@ struct mrg_map {
   struct mrg_room *room;
 
   int8_t *light;
+  int8_t global_light;
   int8_t *dbg_flags;
 
   int x;

@@ -35,6 +35,8 @@ struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle) {
   map.w = room->room_w;
   map.h = room->room_h;
 
+  map.global_light = 0x79;
+
   size_t tiles = map.w * map.h;
   map.light = malloc(tiles * sizeof(int8_t));
 
