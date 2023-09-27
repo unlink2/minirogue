@@ -22,6 +22,18 @@ int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity) {
 // implement better solution when generalizing for other entities
 void mrg_beh_move_col(struct mrg_state *state, struct mrg_entity *entity,
                       mrg_fixed *pos, mrg_fixed original_pos, mrg_fixed *vel) {
+  *pos += MRG_SIGN(*vel) * MRG_FIXED_FRACT(*vel);
+  enum mrg_map_flags tile_flags = mrg_map_collision(
+      &state->map, entity->col_offset_x + MRG_FIXED_WHOLE(entity->x),
+      entity->col_offset_y + MRG_FIXED_WHOLE(entity->y), entity->col_w,
+      entity->col_h);
+
+  if (tile_flags & MRG_MAP_FLAG_COLLISION) {
+    *pos = original_pos;
+    *vel = 0;
+    return;
+  }
+
   for (int i = 0; i < abs(MRG_FIXED_WHOLE(*vel)); i++) {
     *pos += MRG_SIGN(*vel) * MRG_FIXED(1, 0);
 
@@ -167,7 +179,7 @@ int mrg_entity_init_player(struct mrg_entity *entity) {
 
   entity->tile_id = 64;
 
-  entity->stats[MRG_STAT_VEL_MAX] = MRG_FIXED(4, 0);
+  entity->stats[MRG_STAT_VEL_MAX] = MRG_FIXED(2, 0x80);
   entity->stats[MRG_STAT_ACCEL] = MRG_FIXED(0, 0x40);
 
   fprintf(stdout, "Player created with behavior %d\n", entity->next_behavior);
