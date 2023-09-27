@@ -1,4 +1,5 @@
 #include "hud.h"
+#include "defs.h"
 #include "draw.h"
 #include "platform.h"
 #include "mrg.h"
@@ -27,6 +28,12 @@ struct mrg_hud mrg_hud_init(struct mrg_state *state) {
 void mrg_hud_update(struct mrg_state *state, struct mrg_hud *hud) {}
 
 void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
+  struct mrg_entity *player = &state->entity_tbl.slots[hud->player_handle];
+  if (!(player->flags & MRG_ENTITY_FLAG_ALLOCED)) {
+    fprintf(stderr, "Hud: Player %d is not allocated!", hud->player_handle);
+    return;
+  }
+
   const int alpha = 0xC0;
   const int key_frame_y = hud->y + 10;
 
@@ -81,7 +88,8 @@ void mrg_hud_draw(struct mrg_state *state, struct mrg_hud *hud) {
     break;
   }
 
-  mrg_hud_draw_bar(state, hp_bar_x, hp_bar_y, 100, 10, 10, 100,
+  mrg_hud_draw_bar(state, hp_bar_x, hp_bar_y, 100, 10,
+                   player->stats[MRG_STAT_HP], player->stats[MRG_STAT_HP_MAX],
                    MRG_COLOR_ALPHA(MRG_COLOR2, alpha),
                    MRG_COLOR_ALPHA(MRG_COLOR3, alpha));
 }
@@ -105,7 +113,11 @@ void mrg_hud_draw_key_frame(struct mrg_state *state, struct mrg_hud *hud, int x,
 void mrg_hud_draw_bar(struct mrg_state *state, int x, int y, int w, int h,
                       int current, int max, struct mrg_color c1,
                       struct mrg_color c2) {
-  int prop = current % max;
+
+  int prop = 0;
+  if (max > 0) {
+    prop = current % max;
+  }
 
   mrg_pl_draw_filled_rec(state->platform, x, y, w, h, c1);
   mrg_pl_draw_filled_rec(state->platform, x, y, prop, h, c2);
