@@ -168,7 +168,7 @@ int mrg_entity_init_player(struct mrg_entity *entity) {
   entity->tile_id = 64;
 
   entity->stats[MRG_STAT_VEL_MAX] = MRG_FIXED(4, 0);
-  entity->stats[MRG_STAT_ACCEL] = MRG_FIXED(1, 0);
+  entity->stats[MRG_STAT_ACCEL] = MRG_FIXED(0, 0x40);
 
   fprintf(stdout, "Player created with behavior %d\n", entity->next_behavior);
   return 0;
