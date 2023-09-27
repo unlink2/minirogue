@@ -1,10 +1,13 @@
 #include "entity.h"
+#include "defs.h"
 #include "fxp.h"
 #include "input.h"
+#include "map.h"
 #include "mrg.h"
 #include "platform.h"
 #include "idc.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 const mrg_entity_tick mrg_behavior_tbl[] = {
@@ -15,35 +18,54 @@ int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity) {
   return 0;
 }
 
-int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
+// TODO: this is pretty terrble, but also a nice and easy way for now...
+// implement better solution when generalizing for other entities
+void mrg_beh_move_col(struct mrg_state *state, struct mrg_entity *entity,
+                      mrg_fixed *pos, mrg_fixed original_pos, mrg_fixed *vel) {
+  for (int i = 0; i < abs(MRG_FIXED_WHOLE(*vel)); i++) {
+    *pos += MRG_SIGN(*vel) * MRG_FIXED(1, 0);
 
-  // mrg_fixed px = entity->x;
-  // mrg_fixed py = entity->y;
+    // check tile collision
+    enum mrg_map_flags tile_flags = mrg_map_collision(
+        &state->map, entity->col_offset_x + MRG_FIXED_WHOLE(entity->x),
+        entity->col_offset_y + MRG_FIXED_WHOLE(entity->y), entity->col_w,
+        entity->col_h);
+
+    if (tile_flags & MRG_MAP_FLAG_COLLISION) {
+      *pos = original_pos;
+      *vel = 0;
+    }
+  }
+}
+
+int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity) {
+  mrg_fixed px = entity->x;
+  mrg_fixed py = entity->y;
 
   if (state->mode == MRG_MODE_GAME) {
     if (MRG_HELD(&state->main_input, MRG_ACTION_UP)) {
-      entity->y -= MRG_FIXED(1, 0);
-    }
-
-    if (MRG_HELD(&state->main_input, MRG_ACTION_DOWN)) {
-      entity->y += MRG_FIXED(1, 0);
+      entity->vel_y = MAX(-1 * entity->stats[MRG_STAT_VEL_MAX],
+                          entity->vel_y - entity->stats[MRG_STAT_ACCEL]);
+    } else if (MRG_HELD(&state->main_input, MRG_ACTION_DOWN)) {
+      entity->vel_y = MIN(entity->stats[MRG_STAT_VEL_MAX],
+                          entity->vel_y + entity->stats[MRG_STAT_ACCEL]);
+    } else {
+      entity->vel_y = 0;
     }
 
     if (MRG_HELD(&state->main_input, MRG_ACTION_LEFT)) {
-      entity->x -= MRG_FIXED(1, 0);
-    }
-
-    if (MRG_HELD(&state->main_input, MRG_ACTION_RIGHT)) {
-      entity->x += MRG_FIXED(1, 0);
+      entity->vel_x = MAX(-1 * entity->stats[MRG_STAT_VEL_MAX],
+                          entity->vel_x - entity->stats[MRG_STAT_ACCEL]);
+    } else if (MRG_HELD(&state->main_input, MRG_ACTION_RIGHT)) {
+      entity->vel_x = MIN(entity->stats[MRG_STAT_VEL_MAX],
+                          entity->vel_x + entity->stats[MRG_STAT_ACCEL]);
+    } else {
+      entity->vel_x = 0;
     }
   }
 
-  // check tile collision
-  enum mrg_map_flags tile_flags = mrg_map_collision(
-      &state->map, entity->col_offset_x + MRG_FIXED_WHOLE(entity->x),
-      entity->col_offset_y + MRG_FIXED_WHOLE(entity->y), entity->col_w,
-      entity->col_h);
-
+  mrg_beh_move_col(state, entity, &entity->x, px, &entity->vel_x);
+  mrg_beh_move_col(state, entity, &entity->y, py, &entity->vel_y);
   return 0;
 }
 
@@ -144,6 +166,9 @@ int mrg_entity_init_player(struct mrg_entity *entity) {
   entity->next_draw = MRG_BEH_ENTITY_DRAW_ALT;
 
   entity->tile_id = 64;
+
+  entity->stats[MRG_STAT_VEL_MAX] = MRG_FIXED(4, 0);
+  entity->stats[MRG_STAT_ACCEL] = MRG_FIXED(1, 0);
 
   fprintf(stdout, "Player created with behavior %d\n", entity->next_behavior);
   return 0;

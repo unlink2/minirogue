@@ -77,6 +77,8 @@ enum mrg_entity_stats {
   // generic stats for per-entity config
   MRG_STAT_USTAT1 = 3,
   MRG_STAT_USTAT2 = 4,
+  MRG_STAT_VEL_MAX,
+  MRG_STAT_ACCEL,
   MRG_STATS_LEN
 };
 
@@ -108,6 +110,11 @@ struct mrg_entity {
   enum mrg_entity_behavior next_behavior;
   enum mrg_entity_behavior next_draw;
 
+  int animation_timer;
+
+  int vel_x;
+  int vel_y;
+
   int col_offset_x;
   int col_offset_y;
   int col_w;
@@ -125,6 +132,7 @@ struct mrg_entity {
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#define MRG_SIGN(x) ((x) >= 0 ? 1 : (-1))
 
 #define MRG_TILE_W 16
 #define MRG_TILE_H 16
