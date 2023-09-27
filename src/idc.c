@@ -282,6 +282,15 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
   return start;
 }
 
+int mrg_idc_insert(struct mrg_arena *a, struct mrg_idc_file *f,
+                   struct mrg_idc_entry entry) {
+  return 0;
+}
+
+int mrg_idc_remove(struct mrg_idc_file *f, struct mrg_idc_entry *entry) {
+  return 0;
+}
+
 int mrg_idc_save(struct mrg_arena *a, struct mrg_idc_file *f,
                  const char *path) {
   size_t len = 0;
