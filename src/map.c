@@ -184,7 +184,7 @@ int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
 
       if (map->dbg_flags[tile] & MRG_MAP_DBG_FLAG_DID_COLLIDE) {
         mrg_pl_draw_debug_rec(state->platform, tx, ty, map->tile_w, map->tile_h,
-                              (struct mrg_color){255, 255, 128, 0xA0});
+                              (struct mrg_color){255, 20, 150, 0xA0});
       }
 
 #endif

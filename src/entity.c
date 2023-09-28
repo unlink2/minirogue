@@ -249,10 +249,12 @@ int mrg_entity_draw(struct mrg_state *state, struct mrg_entity_tbl *tbl,
                     struct mrg_entity *entity) {
   int res = tbl->behavior_tbl[entity->next_draw](state, entity);
 #ifdef MRG_DEBUG
-  mrg_pl_draw_debug_rec(
-      state->platform, entity->col_offset_x + MRG_FIXED_WHOLE(entity->x),
-      entity->col_offset_y + MRG_FIXED_WHOLE(entity->y), entity->col_w,
-      entity->col_h, (struct mrg_color){255, 0, 0, 255});
+  if (entity->col_w > 0 && entity->col_h > 0) {
+    mrg_pl_draw_debug_rec(
+        state->platform, entity->col_offset_x + MRG_FIXED_WHOLE(entity->x),
+        entity->col_offset_y + MRG_FIXED_WHOLE(entity->y), entity->col_w,
+        entity->col_h, (struct mrg_color){255, 0, 0, 255});
+  }
 #endif
 
   return res;
