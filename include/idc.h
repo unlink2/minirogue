@@ -74,6 +74,9 @@ struct mrg_idc_file {
   size_t prealloced_len;
 };
 
+// create an empty idc struct
+struct mrg_idc_file mrg_idc_init(void);
+
 struct mrg_idc_dir mrg_idc_dir_init(enum mrg_idc_dir_type type,
                                     struct mrg_idc_entry entry);
 
@@ -84,8 +87,7 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
                        size_t *len);
 
 // insert a new directory entry
-int mrg_idc_insert(struct mrg_arena *a, struct mrg_idc_file *f,
-                   struct mrg_idc_dir entry);
+int mrg_idc_insert(struct mrg_idc_file *f, struct mrg_idc_dir entry);
 
 // remove an entry from the idc
 int mrg_idc_remove(struct mrg_idc_file *f, struct mrg_idc_dir *entry);

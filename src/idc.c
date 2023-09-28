@@ -302,26 +302,33 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
   return start;
 }
 
-int mrg_idc_insert(struct mrg_arena *a, struct mrg_idc_file *f,
-                   struct mrg_idc_dir entry) {
+int mrg_idc_insert(struct mrg_idc_file *f, struct mrg_idc_dir entry) {
   f->header.n_entries++;
-  void *new_dirs =
-      realloc(f->dirs, f->header.n_entries * sizeof(struct mrg_idc_dir));
+  size_t len = f->header.n_entries * sizeof(struct mrg_idc_dir);
+  if (f->dirs) {
+    void *new_dirs = realloc(f->dirs, len);
 
-  if (!new_dirs) {
-    fprintf(stderr, "Inserting new idc directory failed!\n");
-    return -1;
+    if (!new_dirs) {
+      fprintf(stderr, "Inserting new idc directory failed!\n");
+      return -1;
+    }
+
+    f->dirs = new_dirs;
+  } else {
+    f->dirs = malloc(len);
   }
-
-  f->dirs = new_dirs;
   f->dirs[f->header.n_entries - 1] = entry;
 
   return 0;
 }
 
 int mrg_idc_remove(struct mrg_idc_file *f, struct mrg_idc_dir *entry) {
-  if (f->header.n_entries <= 1) {
-    fprintf(stderr, "Unabel to remove the last entry\n");
+  if (f->header.n_entries == 1 && f->dirs) {
+    f->header.n_entries = 0;
+    free(f->dirs);
+    f->dirs = NULL;
+    return 0;
+  } else if (f->header.n_entries < 1 || !f->dirs) {
     return -1;
   }
 

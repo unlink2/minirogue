@@ -174,6 +174,54 @@ void test_idc(void **test) {
   mrg_arena_free(&a);
 }
 
+void test_idc_insert_remove(void **state) {
+  struct mrg_idc_file f = mrg_idc_init();
+
+  // we simply make up types here to make testing easier
+  struct mrg_idc_dir e0 = {.type = 1};
+  mrg_idc_insert(&f, e0);
+  assert_int_equal(1, f.dirs[f.header.n_entries - 1].type);
+
+  assert_int_equal(1, f.header.n_entries);
+  for (size_t i = 2; i < 10; i++) {
+    struct mrg_idc_dir e0 = {.type = i};
+    mrg_idc_insert(&f, e0);
+    assert_int_equal(i, f.dirs[f.header.n_entries - 1].type);
+  }
+  assert_int_equal(9, f.header.n_entries);
+  assert_int_equal(9, f.dirs[8].type);
+
+  // remove end
+  assert_int_equal(0, mrg_idc_remove(&f, &f.dirs[f.header.n_entries - 1]));
+  assert_int_equal(8, f.header.n_entries);
+  assert_int_equal(8, f.dirs[7].type);
+
+  // remove start
+  assert_int_equal(0, mrg_idc_remove(&f, &f.dirs[0]));
+  assert_int_equal(7, f.header.n_entries);
+  assert_int_equal(8, f.dirs[0].type);
+  assert_int_equal(7, f.dirs[6].type);
+
+  // remove middle
+  assert_int_equal(0, mrg_idc_remove(&f, &f.dirs[3]));
+  assert_int_equal(6, f.header.n_entries);
+  assert_int_equal(7, f.dirs[3].type);
+  assert_int_equal(6, f.dirs[5].type);
+
+  // simply remove the rest until none
+  assert_int_equal(0, mrg_idc_remove(&f, &f.dirs[0]));
+  assert_int_equal(0, mrg_idc_remove(&f, &f.dirs[1]));
+  assert_int_equal(0, mrg_idc_remove(&f, &f.dirs[2]));
+  assert_int_equal(0, mrg_idc_remove(&f, &f.dirs[3]));
+  assert_int_equal(0, mrg_idc_remove(&f, &f.dirs[4]));
+  assert_int_equal(0, mrg_idc_remove(&f, &f.dirs[5]));
+  assert_int_equal(0, f.header.n_entries);
+
+  assert_null(f.dirs);
+
+  mrg_idc_free(&f);
+}
+
 void test_mrg_tok(void **state) {
   const size_t dst_len = 128;
   char dst[dst_len];
@@ -232,11 +280,15 @@ void test_mrg_arg(void **state) {
 }
 
 int main(int arc, char **argv) {
-  const struct CMUnitTest tests[] = {
-      cmocka_unit_test(test_isqrt),    cmocka_unit_test(test_fixed),
-      cmocka_unit_test(test_mrg_join), cmocka_unit_test(test_entity_alloc),
-      cmocka_unit_test(test_arena),    cmocka_unit_test(test_idc),
-      cmocka_unit_test(test_mrg_tok),  cmocka_unit_test(test_mrg_arg)};
+  const struct CMUnitTest tests[] = {cmocka_unit_test(test_isqrt),
+                                     cmocka_unit_test(test_fixed),
+                                     cmocka_unit_test(test_mrg_join),
+                                     cmocka_unit_test(test_entity_alloc),
+                                     cmocka_unit_test(test_arena),
+                                     cmocka_unit_test(test_idc),
+                                     cmocka_unit_test(test_mrg_tok),
+                                     cmocka_unit_test(test_mrg_arg),
+                                     cmocka_unit_test(test_idc_insert_remove)};
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }
