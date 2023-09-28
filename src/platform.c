@@ -135,8 +135,8 @@ void mrg_pl_draw_filled_rec(mrg_platform *platform, int x, int y, int w, int h,
 int mrg_pl_video_end(mrg_platform *platform) {
   EndTextureMode();
   BeginDrawing();
-  float scalex = (float)GetScreenWidth() / (float)platform->screen_w;
-  float scaley = (float)GetScreenHeight() / (float)platform->screen_h;
+  float scalex = floorf((float)GetScreenWidth() / (float)platform->screen_w);
+  float scaley = floorf((float)GetScreenHeight() / (float)platform->screen_h);
   float scale = MIN(scalex, scaley);
 
   ClearBackground(BLACK);
