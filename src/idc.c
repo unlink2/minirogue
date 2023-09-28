@@ -27,6 +27,16 @@ int32_t mrg_idc_chksm(const char *data, size_t len) {
   return sum;
 }
 
+struct mrg_idc_file mrg_idc_init(void) {
+  struct mrg_idc_file f;
+  memset(&f, 0, sizeof(f));
+
+  memcpy(f.header.magic, MRG_IDC_MAGIC, 3);
+  f.header.version = 0;
+
+  return f;
+}
+
 struct mrg_idc_dir mrg_idc_dir_init(enum mrg_idc_dir_type type,
                                     struct mrg_idc_entry entry) {
   struct mrg_idc_dir dir;
