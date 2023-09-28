@@ -73,6 +73,9 @@ struct mrg_idc_file {
   size_t prealloced_len;
 };
 
+struct mrg_idc_dir mrg_idc_dir_init(enum mrg_idc_dir_type type,
+                                    struct mrg_idc_entry entry);
+
 struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
                                size_t len);
 
@@ -80,11 +83,11 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
                        size_t *len);
 
 // insert a new directory entry
- int mrg_idc_insert(struct mrg_arena *a, struct mrg_idc_file *f,
-                         struct mrg_idc_entry entry);
+int mrg_idc_insert(struct mrg_arena *a, struct mrg_idc_file *f,
+                   struct mrg_idc_dir entry);
 
 // remove an entry from the idc
-int mrg_idc_remove(struct mrg_idc_file *f, struct mrg_idc_entry *entry);
+int mrg_idc_remove(struct mrg_idc_file *f, struct mrg_idc_dir *entry);
 
 // save id from state into path
 int mrg_idc_save(struct mrg_arena *a, struct mrg_idc_file *f, const char *path);

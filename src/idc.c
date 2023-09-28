@@ -27,6 +27,16 @@ int32_t mrg_idc_chksm(const char *data, size_t len) {
   return sum;
 }
 
+struct mrg_idc_dir mrg_idc_dir_init(enum mrg_idc_dir_type type,
+                                    struct mrg_idc_entry entry) {
+  struct mrg_idc_dir dir;
+
+  dir.type = type;
+  dir.entry = entry;
+  dir.offset = 0;
+  return dir;
+}
+
 struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
                                size_t len) {
   struct mrg_idc_file file;
@@ -283,11 +293,23 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
 }
 
 int mrg_idc_insert(struct mrg_arena *a, struct mrg_idc_file *f,
-                   struct mrg_idc_entry entry) {
+                   struct mrg_idc_dir entry) {
+  f->header.n_entries++;
+  void *new_dirs =
+      realloc(f->dirs, f->header.n_entries * sizeof(struct mrg_idc_dir));
+
+  if (!new_dirs) {
+    fprintf(stderr, "Inserting new idc directory failed!\n");
+    return -1;
+  }
+
+  f->dirs = new_dirs;
+  f->dirs[f->header.n_entries - 1] = entry;
+
   return 0;
 }
 
-int mrg_idc_remove(struct mrg_idc_file *f, struct mrg_idc_entry *entry) {
+int mrg_idc_remove(struct mrg_idc_file *f, struct mrg_idc_dir *entry) {
   return 0;
 }
 
