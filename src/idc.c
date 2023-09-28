@@ -9,6 +9,10 @@
 #include <string.h>
 #include <arpa/inet.h>
 
+/**
+ * TODO: validate length when writing and reading 
+ */
+
 #define MRG_IDC_READ(dst, src, len, current)                                   \
   memcpy((dst), (src) + (current), (len));                                     \
   (current) += (len);
