@@ -310,6 +310,23 @@ int mrg_idc_insert(struct mrg_arena *a, struct mrg_idc_file *f,
 }
 
 int mrg_idc_remove(struct mrg_idc_file *f, struct mrg_idc_dir *entry) {
+  if (f->header.n_entries <= 1) {
+    fprintf(stderr, "Unabel to remove the last entry\n");
+    return -1;
+  }
+
+  // find the entry
+  // and move the last entry into its position
+  // unless the removed entry is the last entry!
+  for (size_t i = 0; i < f->header.n_entries; i++) {
+    if (&f->dirs[i] == entry) {
+      f->dirs[i] = f->dirs[f->header.n_entries - 1];
+      break;
+    }
+  }
+
+  f->header.n_entries--;
+
   return 0;
 }
 

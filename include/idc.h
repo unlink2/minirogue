@@ -9,6 +9,7 @@
  * Data fromat holding all game idca
  * all numbers are in little endian
  * File extension: .idc (integrated idca container)
+ * Note: the order of directory entries is not guaranteed!
  * Notes:
  *  - Tile set handles: tile sets are stored as \0 terminated strings for
  *    headers that required a tile set. They are then loaded and the apropriate
