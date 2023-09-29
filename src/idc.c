@@ -3,6 +3,7 @@
 #include "mrg.h"
 #include "platform.h"
 #include "defaults.h"
+#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +11,7 @@
 #include <arpa/inet.h>
 
 /**
- * TODO: validate length when writing and reading 
+ * TODO: validate length when writing and reading
  */
 
 #define MRG_IDC_READ(dst, src, len, current)                                   \
@@ -20,6 +21,18 @@
 #define MRG_IDC_READ_INT32(dst, src, len, current)                             \
   MRG_IDC_READ(dst, src, len, current);                                        \
   *(dst) = (int32_t)ntohl(*(dst));
+
+size_t mrg_idc_entry_len(enum mrg_idc_dir_type type) {
+  switch (type) {
+  case MRG_IDC_DIR_ENTITY:
+  case MRG_IDC_DIR_ROOM:
+    return MRG_IDC_ENTRY_ENTITY_ROOM_LEN;
+  default:
+    assert(0);
+  }
+
+  return -1;
+}
 
 int32_t mrg_idc_chksm(const char *data, size_t len) {
   int32_t sum = 0;
@@ -138,7 +151,7 @@ struct mrg_idc_file mrg_idc_de(struct mrg_arena *a, const char *data,
     for (size_t i = 0; i < file.header.n_entries; i++) {
       struct mrg_idc_dir *dir = &file.dirs[i];
       size_t current = dir->offset;
-      size_t entrylen = MRG_IDC_ENTRY_LEN;
+      size_t entrylen = mrg_idc_entry_len(dir->type);
 
       size_t remaining = len - current;
       if (remaining < entrylen) {
@@ -260,8 +273,10 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
       struct mrg_idc_dir *dir = &f->dirs[i];
       struct mrg_idc_entry *entry = &dir->entry;
 
-      int32_t *dst_entry = mrg_arena_malloc(a, MRG_IDC_ENTRY_LEN);
-      *len += MRG_IDC_ENTRY_LEN;
+      size_t entry_len = mrg_idc_entry_len(dir->type);
+
+      int32_t *dst_entry = mrg_arena_malloc(a, entry_len);
+      *len += entry_len;
 
       size_t offset = (char *)dst_entry - start;
       MRG_IDC_WRITE_INT32(a, dst_dirs++, dir->type, len);
@@ -273,9 +288,9 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
         MRG_IDC_WRITE_INT32(a, dst_entry++, entry->room.room_id, len);
         MRG_IDC_WRITE_INT32(a, dst_entry++, entry->room.room_w, len);
         MRG_IDC_WRITE_INT32(a, dst_entry++, entry->room.room_h, len);
-        MRG_IDC_WRITE_INT32(a, dst_entry++, offset + MRG_IDC_ENTRY_LEN, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++, offset + entry_len, len);
         MRG_IDC_WRITE_INT32(a, dst_entry++,
-                            offset + MRG_IDC_ENTRY_LEN + tiles_len, len);
+                            offset + entry_len + tiles_len, len);
         MRG_IDC_WRITE(a, dst_entry, entry->room.tile_set, MRG_IDC_FILE_NAME_LEN,
                       len);
 

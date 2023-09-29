@@ -115,15 +115,18 @@ void test_idc(void **test) {
         0, 0, 0, MRG_IDC_DIR_ROOM, 0, 0, 0,
         MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN, 0, 0, 0, MRG_IDC_DIR_ENTITY,
         0, 0, 0,
-        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN + MRG_IDC_ENTRY_LEN + 4 +
-            4, // end of
-               // dir
+        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN +
+            MRG_IDC_ENTRY_ENTITY_ROOM_LEN + 4 + 4, // end of
+                                                   // dir
         0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0,
-        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN + MRG_IDC_ENTRY_LEN, 0, 0, 0,
-        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN + MRG_IDC_ENTRY_LEN + 4, '1',
-        '2', '3', '4', '5', '6', '7', '\0', // end of room entry
-        1, 2, 3, 4,                         // end of room tile map
-        4, 3, 2, 1,                         // end of room flags map
+        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN +
+            MRG_IDC_ENTRY_ENTITY_ROOM_LEN,
+        0, 0, 0,
+        MRG_IDC_DIR_LEN * 2 + MRG_IDC_HEADER_LEN +
+            MRG_IDC_ENTRY_ENTITY_ROOM_LEN + 4,
+        '1', '2', '3', '4', '5', '6', '7', '\0', // end of room entry
+        1, 2, 3, 4,                              // end of room tile map
+        4, 3, 2, 1,                              // end of room flags map
         0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 5, 0, 0, 0, 0, 7, '1', '2',
         '3', '4', '5', '6', '7', '\0', // end of entity entry
     };

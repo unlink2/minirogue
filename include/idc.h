@@ -25,7 +25,8 @@
 #define MRG_IDC_DIR_LEN sizeof(int32_t) * 2
 
 // an entry cannot be larger than this by default!
-#define MRG_IDC_ENTRY_LEN sizeof(int32_t) * 5 + MRG_IDC_FILE_NAME_LEN
+#define MRG_IDC_ENTRY_ENTITY_ROOM_LEN                                          \
+  sizeof(int32_t) * 5 + MRG_IDC_FILE_NAME_LEN
 
 #define MRG_IDC_LE(n) (n)
 
