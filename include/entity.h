@@ -4,6 +4,7 @@
 #include "fxp.h"
 #include "defs.h"
 #include "room.h"
+#include <stdbool.h>
 #include <stddef.h>
 
 struct mrg_entity_tbl {
@@ -16,6 +17,15 @@ struct mrg_entity_tbl {
 };
 
 struct mrg_entity_tbl mrg_entity_tbl_init(void);
+
+/**
+ * Spawn an entity of tpye t and with flags f
+ * if tmp is set to true the entity will not be stored in the idc, but will
+ * simply be spawned into the table
+ * if tmp is true it will be added to the table as well as the idc
+ */
+int mrg_entity_spawn(struct mrg_state *state, enum mrg_entities type,
+                     enum mrg_entity_flags flags, bool tmp);
 
 int mrg_beh_nop(struct mrg_state *state, struct mrg_entity *entity);
 int mrg_beh_player_update(struct mrg_state *state, struct mrg_entity *entity);

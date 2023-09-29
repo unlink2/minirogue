@@ -319,6 +319,35 @@ int mrg_cmd_maped_play(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
   return mrg_transition(state, MRG_MODE_GAME);
 }
 
+int mrg_cmd_spawn_entity(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
+                         const char *args, const struct mrg_cmd *tbl,
+                         struct mrg_state *state) {
+  int flags = 0;
+  const size_t tlen = 64;
+  char type_str[tlen];
+  memset(type_str, 0, tlen);
+
+  size_t read = 0;
+
+  mrg_arg_parse(&type_str, tlen, &cmd->args[0], args, &read);
+  args += read;
+
+  mrg_arg_parse(&flags, sizeof(flags), &cmd->args[1], args, &read);
+  args += read;
+
+  enum mrg_entities type = 0;
+  if (strncmp("player", type_str, tlen) == 0) {
+    type = MRG_ENTITY_PLAYER;
+  } else {
+    puts("Unknown entity type!", fp);
+    puts("Valid types: player,", fp);
+
+    return -1;
+  }
+
+  return 0;
+}
+
 int mrg_cmd_exec(void *fp, mrg_fputs puts, const char *args,
                  const struct mrg_cmd *tbl, struct mrg_state *state) {
   const size_t buffer_len = 256;
@@ -363,6 +392,10 @@ const struct mrg_cmd mrg_cmd_tbl[] = {
       {"y", true, MRG_ARG_INT},
       {NULL}}},
     {"player", "Find payer entity", mrg_cmd_find_player, NULL},
+    {"spawn",
+     "Spawn entity at player position",
+     mrg_cmd_spawn_entity,
+     {{"type", true, MRG_ARG_STRING}, {"flags", true, MRG_ARG_INT}, NULL}},
     {"tdbg", "Toggle debug mode", mrg_cmd_tdbg, NULL},
     {"pos",
      "Entity position",

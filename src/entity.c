@@ -164,6 +164,9 @@ int mrg_entity_init_type(struct mrg_entity *entity, enum mrg_entities type) {
   case MRG_ENTITY_CURSOR:
     return mrg_entity_init_cursor(entity);
   case MRG_ENTITY_BAT:
+  case MRG_ENTITY_ENEMY_SPAWNER:
+  case MRG_ENTITY_LOOT_SPWANER:
+  case MRG_ENTITY_PROP_SPAWNER:
     break;
   }
 

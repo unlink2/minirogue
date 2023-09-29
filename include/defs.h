@@ -65,7 +65,16 @@ struct mrg_room {
  */
 #define MRG_ENTITY_SLOTS_MAX 128
 
-enum mrg_entities { MRG_ENTITY_PLAYER, MRG_ENTITY_CURSOR, MRG_ENTITY_BAT };
+enum mrg_entities {
+  MRG_ENTITY_PLAYER,
+  MRG_ENTITY_CURSOR,
+  MRG_ENTITY_BAT,
+  // a spwaner is a placeholder entity intended for
+  // the map generator
+  MRG_ENTITY_ENEMY_SPAWNER,
+  MRG_ENTITY_LOOT_SPWANER,
+  MRG_ENTITY_PROP_SPAWNER
+};
 
 enum mrg_entity_flags { MRG_ENTITY_FLAG_ALLOCED = 1 };
 
