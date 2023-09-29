@@ -16,6 +16,10 @@
  *    handle is stored in the parsed result.
  *    Tile sets are looked for in the assets folder.
  *    File names may not be longer than MRG_IDC_FILE_NAME_LEN
+ * - Once an entry type is defined it can never be changed! Changing the layout
+ * would be a breaking change so consider adding types carefully! If a change is
+ * required regardless, the entry will have to be a new type that composes of
+ * the old and new type!
  */
 
 // magic identifier
