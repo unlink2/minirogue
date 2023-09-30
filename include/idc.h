@@ -23,6 +23,26 @@
  */
 
 /**
+ * IDC header
+ * ========================
+ * | size | type | name   |
+ * | 3    | bytes| magic  |
+ * | 1    | int8 | version|
+ * | 4    | int32| n_entrs|
+ * | 4    | int32| dirof  |
+ * ========================
+ */
+
+/**
+ * IDC directory
+ * ========================
+ * | size | type | name   |
+ * | 4    | int32| type   |
+ * | 4    | int32| entryof|
+ * ========================
+ */
+
+/**
  * Entity Entry
  * ========================
  * | size | type | name   |
@@ -46,7 +66,7 @@
  * | 4    | int32| flagsof|
  * | 8    | str  | tileset|
  * ========================
- * Tile map at tilesof: room_w * room_h bytes 
+ * Tile map at tilesof: room_w * room_h bytes
  * Flags map at flagspf: room_w * room_h bytes
  */
 
