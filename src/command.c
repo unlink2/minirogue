@@ -322,6 +322,9 @@ int mrg_cmd_maped_play(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
 int mrg_cmd_spawn_entity(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
                          const char *args, const struct mrg_cmd *tbl,
                          struct mrg_state *state) {
+
+  const char *types[] = {"player", NULL};
+
   int flags = 0;
   const size_t tlen = 64;
   char type_str[tlen];
@@ -335,10 +338,14 @@ int mrg_cmd_spawn_entity(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
   mrg_arg_parse(&flags, sizeof(flags), &cmd->args[1], args, &read);
   args += read;
 
-  enum mrg_entities type = 0;
-  if (strncmp("player", type_str, tlen) == 0) {
-    type = MRG_ENTITY_PLAYER;
-  } else {
+  enum mrg_entities type = -1;
+  for (int i = 0; types[i]; i++) {
+    if (strncmp(types[i], type_str, tlen) == 0) {
+      type = i;
+      break;
+    }
+  }
+  if (type == -1) {
     puts("Unknown entity type!", fp);
     puts("Valid types: player,", fp);
 
