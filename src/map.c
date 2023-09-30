@@ -51,6 +51,10 @@ struct mrg_map mrg_map_init(struct mrg_state *state, int room_handle) {
 }
 
 int mrg_map_update(struct mrg_state *state, struct mrg_map *map) {
+  if (map->ok == -1) {
+    return -1;
+  }
+
 #ifdef MRG_DEBUG
   memset(map->dbg_flags, 0, map->w * map->h);
 #endif
@@ -123,6 +127,10 @@ void mrg_map_flag_set(struct mrg_map *map, int x, int y, int8_t flag) {
 }
 
 int mrg_map_draw(struct mrg_state *state, struct mrg_map *map) {
+  if (map->ok == -1) {
+    return -1;
+  }
+
   int camera_x = 0;
   int camera_y = 0;
   int camera_w = 0;
@@ -204,6 +212,10 @@ void mrg_map_to_tile(struct mrg_map *map, int xi, int yi, int *xo, int *yo) {
 }
 
 void mrg_map_free(struct mrg_map *map) {
+  if (map->ok == -1) {
+    return;
+  }
+  map->ok = -1;
   free(map->light);
   map->light = NULL;
 #ifdef MRG_DEBUG
