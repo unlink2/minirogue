@@ -5,6 +5,7 @@
 #include "platform.h"
 #include "room.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct mrg_maped mrg_maped_init(struct mrg_state *state) {
@@ -40,12 +41,9 @@ struct mrg_maped mrg_maped_init(struct mrg_state *state) {
 
 int mrg_maped_load_room(struct mrg_state *state, int handle) {
   struct mrg_room_tbl *tbl = &state->room_tbl;
-  for (size_t i = 0; i < tbl->len; i++) {
-    if (tbl->rooms[i]->iflags & MRG_ROOM_ALLOC) {
-      mrg_map_free(&state->map);
-      state->map = mrg_map_init(state, 0);
-    }
-    return 0;
+  if (tbl->rooms[handle]->iflags & MRG_ROOM_ALLOC) {
+    mrg_map_free(&state->map);
+    state->map = mrg_map_init(state, 0);
   }
 
   fprintf(stderr, "Unabel to load room %d\n", handle);

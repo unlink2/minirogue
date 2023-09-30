@@ -67,6 +67,8 @@ int mrg_main(struct mrg_config *cfg);
 
 void mrg_toggle_dbg(struct mrg_state *state);
 
+void mrg_state_invalidate(struct mrg_state *state);
+
 int mrg_transition(struct mrg_state *state, enum mrg_mode mode);
 
 #endif

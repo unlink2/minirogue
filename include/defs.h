@@ -31,7 +31,7 @@ enum mrg_mode {
 
 #define MRG_IDC_FILE_NAME_LEN 8
 
-enum mrg_room_flags { MRG_ROOM_ALLOC };
+enum mrg_room_flags { MRG_ROOM_ALLOC = 1 };
 
 /**
  * Room definition

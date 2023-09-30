@@ -79,6 +79,8 @@ int mrg_cmd_idc_read(void *fp, mrg_fputs puts, const struct mrg_cmd *cmd,
     mrg_panic(-1, "Failed to parse idc file!\n");
   }
 
+  mrg_state_invalidate(state);
+
   return rc;
 }
 

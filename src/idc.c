@@ -289,8 +289,8 @@ const char *mrg_idc_se(struct mrg_arena *a, struct mrg_idc_file *f,
         MRG_IDC_WRITE_INT32(a, dst_entry++, entry->room.room_w, len);
         MRG_IDC_WRITE_INT32(a, dst_entry++, entry->room.room_h, len);
         MRG_IDC_WRITE_INT32(a, dst_entry++, offset + entry_len, len);
-        MRG_IDC_WRITE_INT32(a, dst_entry++,
-                            offset + entry_len + tiles_len, len);
+        MRG_IDC_WRITE_INT32(a, dst_entry++, offset + entry_len + tiles_len,
+                            len);
         MRG_IDC_WRITE(a, dst_entry, entry->room.tile_set, MRG_IDC_FILE_NAME_LEN,
                       len);
 
