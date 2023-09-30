@@ -22,6 +22,34 @@
  * the old and new type!
  */
 
+/**
+ * Entity Entry
+ * ========================
+ * | size | type | name   |
+ * | 4    | int32| room_id|
+ * | 4    | fixed| x      |
+ * | 4    | fixed| y      |
+ * | 4    | int32| flags  |
+ * | 4    | int32| type   |
+ * | 8    | str  | tileset|
+ * ========================
+ */
+
+/**
+ * Room Entry
+ * ========================
+ * | size | type | name   |
+ * | 4    | int32| room_id|
+ * | 4    | int32| room_w |
+ * | 4    | int32| room_h |
+ * | 4    | int32| tilesof|
+ * | 4    | int32| flagsof|
+ * | 8    | str  | tileset|
+ * ========================
+ * Tile map at tilesof: room_w * room_h bytes 
+ * Flags map at flagspf: room_w * room_h bytes
+ */
+
 // magic identifier
 #define MRG_IDC_MAGIC "idc"
 
