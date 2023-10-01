@@ -196,7 +196,9 @@ int mrg_transition(struct mrg_state *state, enum mrg_mode mode) {
 
 void mrg_state_invalidate(struct mrg_state *state) {}
 
-void mrg_toggle_dbg(struct mrg_state *state) {}
+void mrg_toggle_dbg(struct mrg_state *state) {
+  mrg_pl_toggle_dbg(state->platform);
+}
 
 int mrg_main(struct mrg_config *cfg) {
   if (!cfg->verbose) {
